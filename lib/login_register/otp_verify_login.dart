@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/home.dart';
+import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/widgets.dart';
 
 class OTPVerifyLogin extends StatefulWidget {
@@ -152,10 +153,10 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                 InputButton(
                     label: "SUBMIT",
                     onPress: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Home()));
+                              builder: (context) => const BottomNav()));
                     })
               ],
             )),

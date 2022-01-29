@@ -1,10 +1,9 @@
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/login.dart';
 import 'package:mpost/login_register/otp_verify.dart';
-import 'package:mpost/login_register/otp_verify_login.dart';
+import 'package:mpost/mpost/home.dart';
 import 'package:mpost/widgets.dart';
 
 class Register extends StatefulWidget {
@@ -242,7 +241,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Login()));
+                              builder: (context) => const Home()));
                     })
               ],
             )),

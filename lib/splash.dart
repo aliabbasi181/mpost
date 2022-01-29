@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/log_and_reg.dart';
 import 'login_register/register.dart';
 
 class Splash extends StatefulWidget {
@@ -20,8 +21,8 @@ class _SplashState extends State<Splash> {
 
   _navigateToHome() async {
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const Register()));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => const LoginAndRegister()));
   }
 
   Widget build(BuildContext context) {

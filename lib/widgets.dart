@@ -1,5 +1,6 @@
 // ignore_for_file: use_full_hex_values_for_flutter_colors
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 
@@ -17,7 +18,7 @@ class _InputFieldState extends State<InputField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+      padding: const EdgeInsets.fromLTRB(30, 5, 30, 5),
       decoration: BoxDecoration(
           border: Border.all(color: const Color(0XFFFd9d9d9), width: 1.5),
           borderRadius: BorderRadius.circular(10)),
@@ -81,7 +82,7 @@ class InputPhoneNumber extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 10, 30, 10),
+      padding: const EdgeInsets.fromLTRB(20, 5, 30, 5),
       decoration: BoxDecoration(
           border: Border.all(color: const Color(0XFFFd9d9d9), width: 1.5),
           borderRadius: BorderRadius.circular(10)),
@@ -166,7 +167,7 @@ class _InputEmailFieldState extends State<InputEmailField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+      padding: const EdgeInsets.fromLTRB(30, 5, 30, 5),
       decoration: BoxDecoration(
           border: Border.all(
               color: validEmail ? const Color(0XFFFd9d9d9) : Colors.red,
@@ -190,6 +191,49 @@ class _InputEmailFieldState extends State<InputEmailField> {
           }
         },
         decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: widget.hint,
+            hintStyle: const TextStyle(
+                color: Color(0XFFFbdbfc1),
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                fontFamily: "Montserrat")),
+      ),
+    );
+  }
+}
+
+class SearchInputField extends StatefulWidget {
+  String hint;
+  TextEditingController controller = TextEditingController();
+  SearchInputField({Key? key, required this.hint, required this.controller})
+      : super(key: key);
+
+  @override
+  _SearchInputFieldState createState() => _SearchInputFieldState();
+}
+
+class _SearchInputFieldState extends State<SearchInputField> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 5, 30, 5),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.white, width: 1.5),
+          borderRadius: BorderRadius.circular(10)),
+      child: TextField(
+        controller: widget.controller,
+        style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            fontFamily: "Montserrat"),
+        decoration: InputDecoration(
+            prefixIcon: const Icon(
+              CupertinoIcons.search,
+              size: 35,
+              color: Color(0XFFFbdbfc1),
+            ),
             border: InputBorder.none,
             hintText: widget.hint,
             hintStyle: const TextStyle(
