@@ -1,9 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/login_register/login.dart';
 import 'package:mpost/login_register/otp_verify.dart';
-import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/widgets.dart';
 
@@ -24,101 +22,105 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Icon(
-                            Icons.arrow_back_rounded,
-                            size: 40,
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      'Register',
-                      style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      'Please fill in a few details below',
-                      style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          color: Constants.descriptionColor),
-                    ),
-                    SizedBox(
-                      height: Constants.getWidth(context) * 0.1,
-                    ),
-                    InputLabel(label: "Name", isReq: true),
-                    InputField(
-                      hint: "e.g John Deo",
-                      controller: name,
-                    ),
-                    SizedBox(
-                      height: Constants.getWidth(context) * 0.05,
-                    ),
-                    InputLabel(label: "Email", isReq: true),
-                    InputEmailField(
-                      hint: "e.g name@email.com",
-                      controller: email,
-                    ),
-                    SizedBox(
-                      height: Constants.getWidth(context) * 0.05,
-                    ),
-                    InputLabel(label: "Phone Number", isReq: true),
-                    CountryCodePicker(
-                      initialSelection: "Kenya",
-                      showDropDownButton: true,
-                      showCountryOnly: true,
-                      favorite: const ['+254', 'KE'],
-                      flagWidth: 40,
-                      onChanged: (code) {
-                        setState(() {
-                          countryCode = code.toString();
-                        });
-                      },
-                    ),
-                    InputLabel(label: "Mobile Number", isReq: true),
-                    InputPhoneNumber(
-                      hint: "Mobile Number",
-                      countryCode: countryCode,
-                      controller: phone,
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                InputButton(
-                    label: "CONTINUE",
-                    onPress: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OTPVerify(
-                                  phone: "$countryCode ${phone.text}")));
-                    })
-              ],
-            )),
+        child: SingleChildScrollView(
+          child: Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(
+                              Icons.arrow_back_rounded,
+                              size: 40,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        'Register',
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        'Please fill in a few details below',
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                            color: Constants.descriptionColor),
+                      ),
+                      SizedBox(
+                        height: Constants.getWidth(context) * 0.05,
+                      ),
+                      InputLabel(label: "Name", isReq: true),
+                      InputField(
+                        hint: "e.g John Deo",
+                        controller: name,
+                      ),
+                      SizedBox(
+                        height: Constants.getWidth(context) * 0.04,
+                      ),
+                      InputLabel(label: "Email", isReq: true),
+                      InputEmailField(
+                        hint: "e.g name@email.com",
+                        controller: email,
+                      ),
+                      SizedBox(
+                        height: Constants.getWidth(context) * 0.05,
+                      ),
+                      InputLabel(label: "Phone Number", isReq: true),
+                      CountryCodePicker(
+                        initialSelection: "Kenya",
+                        showDropDownButton: true,
+                        showCountryOnly: true,
+                        favorite: const ['+254', 'KE'],
+                        flagWidth: 40,
+                        onChanged: (code) {
+                          setState(() {
+                            countryCode = code.toString();
+                          });
+                        },
+                      ),
+                      InputLabel(label: "Mobile Number", isReq: true),
+                      InputPhoneNumber(
+                        hint: "Mobile Number",
+                        countryCode: countryCode,
+                        controller: phone,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InputButton(
+                      label: "CONTINUE",
+                      onPress: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OTPVerify(
+                                    phone: "$countryCode ${phone.text}")));
+                      })
+                ],
+              )),
+        ),
       ),
     );
   }

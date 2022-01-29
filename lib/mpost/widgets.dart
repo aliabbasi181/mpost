@@ -97,6 +97,9 @@ class _FadeTilesState extends State<FadeTiles> {
               ),
               Text(
                 widget.title,
+                maxLines: 1,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     color: Colors.black,
                     fontFamily: "Montserrat",
@@ -108,7 +111,7 @@ class _FadeTilesState extends State<FadeTiles> {
           Icon(
             widget.icon,
             color: Colors.black,
-            size: 40,
+            size: 35,
           )
         ],
       ),
@@ -294,7 +297,7 @@ class _MoreForYouSectionState extends State<MoreForYouSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: Constants.getWidth(context) * 0.29,
+      width: Constants.getWidth(context) * 0.28,
       padding: const EdgeInsets.all(20),
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(

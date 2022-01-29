@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
         children: [
           Container(
             decoration: BoxDecoration(color: Constants.primaryColor),
-            padding: const EdgeInsets.fromLTRB(30, 10, 30, 30),
+            padding: const EdgeInsets.fromLTRB(30, 10, 30, 15),
             child: SafeArea(
               child: Column(
                 children: [
@@ -53,7 +53,7 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 5,
                   ),
                   SearchInputField(
                     hint: "Search the MPost App",
@@ -64,7 +64,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(14),
             color: const Color(0XFFFf2f8fa),
             width: Constants.getWidth(context),
             child: RichText(
@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
                     ])),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(10, 30, 10, 30),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 30),
             child: Column(
               children: [
                 Row(
@@ -180,7 +180,7 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 5,
                 ),
                 SectionLabel(
                   title: "Get Showtimes",
@@ -226,7 +226,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 5,
                 ),
                 SectionLabel(
                   title: "New Year Awesome Offers",
@@ -259,7 +259,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 5,
                 ),
                 SectionLabel(
                   title: "More for your everyday",
@@ -283,7 +283,7 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 5,
                 ),
                 SectionLabel(
                   title: "Best events in January",
@@ -332,7 +332,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 5,
                 ),
                 BannerSection(
                     image: "asset/images/delivery_man.png",
@@ -377,7 +377,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 5,
                 ),
                 SectionLabel(
                   title: "Book Bus",
