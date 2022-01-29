@@ -162,7 +162,12 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                       height: 10,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Register()));
+                      },
                       child: Container(
                         width: Constants.getWidth(context),
                         padding: const EdgeInsets.all(22),
