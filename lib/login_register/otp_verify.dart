@@ -80,7 +80,7 @@ class _OTPVerifyState extends State<OTPVerify> {
                       "You'r almost there!",
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 26,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
@@ -90,7 +90,7 @@ class _OTPVerifyState extends State<OTPVerify> {
                       "You only have to enteron OTP code we sent via SMS to your registered phone number",
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: Constants.descriptionColor),
                     ),
@@ -118,7 +118,7 @@ class _OTPVerifyState extends State<OTPVerify> {
                             "Resend code in $_countDown seconds",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Constants.descriptionColor),
                           )

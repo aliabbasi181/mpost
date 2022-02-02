@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
                       'Login',
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 26,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
@@ -60,7 +60,7 @@ class _LoginState extends State<Login> {
                       'Login to continue using mpost',
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: Constants.descriptionColor),
                     ),
@@ -72,7 +72,7 @@ class _LoginState extends State<Login> {
                       showDropDownButton: true,
                       showCountryOnly: true,
                       favorite: const ['+254', 'KE'],
-                      flagWidth: 40,
+                      flagWidth: 30,
                       onChanged: (code) {
                         setState(() {
                           countryCode = code.toString();

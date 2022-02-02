@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/mpost/delivery.dart';
-import 'package:mpost/mpost/drawer.dart';
+import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 
@@ -23,7 +22,7 @@ class _HomeState extends State<Home> {
         children: [
           Container(
             decoration: BoxDecoration(color: Constants.primaryColor),
-            padding: const EdgeInsets.fromLTRB(30, 10, 30, 15),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
             child: SafeArea(
               child: Column(
                 children: [
@@ -31,7 +30,7 @@ class _HomeState extends State<Home> {
                     children: const [
                       Icon(
                         Icons.menu_rounded,
-                        size: 45,
+                        size: 35,
                         color: Colors.white,
                       ),
                       Expanded(
@@ -64,7 +63,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.all(12),
             color: const Color(0XFFFf2f8fa),
             width: Constants.getWidth(context),
             child: RichText(
@@ -74,7 +73,7 @@ class _HomeState extends State<Home> {
                     style: const TextStyle(
                         color: Colors.black,
                         fontFamily: "Montserrat",
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500),
                     children: [
                       TextSpan(
@@ -86,7 +85,7 @@ class _HomeState extends State<Home> {
                     ])),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 30),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
             child: Column(
               children: [
                 Row(
@@ -128,7 +127,7 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -164,7 +163,7 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -187,7 +186,7 @@ class _HomeState extends State<Home> {
                   icon: CupertinoIcons.arrow_right,
                 ),
                 Container(
-                  height: 270,
+                  height: 210,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
@@ -233,7 +232,7 @@ class _HomeState extends State<Home> {
                   icon: CupertinoIcons.arrow_right,
                 ),
                 Container(
-                  height: 300,
+                  height: 220,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
@@ -290,7 +289,7 @@ class _HomeState extends State<Home> {
                   icon: CupertinoIcons.arrow_right,
                 ),
                 Container(
-                  height: 300,
+                  height: 280,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
@@ -336,8 +335,8 @@ class _HomeState extends State<Home> {
                 ),
                 BannerSection(
                     image: "asset/images/delivery_man.png",
-                    imageHeight: 200,
-                    imageWidth: 200,
+                    imageHeight: 150,
+                    imageWidth: 150,
                     title: "Tap a delivery",
                     titleColor: Colors.black,
                     subTitle: "Pick a delivery package",
@@ -353,7 +352,7 @@ class _HomeState extends State<Home> {
                   icon: CupertinoIcons.arrow_right,
                 ),
                 Container(
-                  height: 300,
+                  height: 220,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
@@ -385,8 +384,8 @@ class _HomeState extends State<Home> {
                 ),
                 BannerSection(
                     image: "asset/images/bus_icon.png",
-                    imageHeight: 200,
-                    imageWidth: 250,
+                    imageHeight: 150,
+                    imageWidth: 200,
                     title: "Transport",
                     titleColor: Colors.white,
                     subTitle: "Book affordable busses",

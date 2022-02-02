@@ -31,8 +31,8 @@ class _SplashState extends State<Splash> {
         color: Constants.primaryColor,
         child: const Center(
           child: Image(
-            width: 250,
-            height: 250,
+            width: 200,
+            height: 200,
             image: AssetImage("asset/images/mpost_logo.png"),
           ),
         ),

@@ -30,7 +30,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
             "Welcome to MPost!",
             style: TextStyle(
                 color: Colors.black,
-                fontSize: 28,
+                fontSize: 18,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w700),
           ),
@@ -40,7 +40,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: "Montserrat",
-                fontSize: 18,
+                fontSize: 12,
                 fontWeight: FontWeight.w400,
                 color: Constants.descriptionColor),
           ),
@@ -56,7 +56,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
             "Welcome to MPost!",
             style: TextStyle(
                 color: Colors.black,
-                fontSize: 28,
+                fontSize: 18,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w700),
           ),
@@ -66,7 +66,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: "Montserrat",
-                fontSize: 18,
+                fontSize: 12,
                 fontWeight: FontWeight.w400,
                 color: Constants.descriptionColor),
           ),
@@ -82,7 +82,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
             "Welcome to MPost!",
             style: TextStyle(
                 color: Colors.black,
-                fontSize: 28,
+                fontSize: 18,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w700),
           ),
@@ -92,7 +92,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: "Montserrat",
-                fontSize: 18,
+                fontSize: 12,
                 fontWeight: FontWeight.w400,
                 color: Constants.descriptionColor),
           ),
@@ -127,7 +127,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20),
+                            fontSize: 16),
                       ),
                     )
                   ],
@@ -137,7 +137,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                 thickness: 1.5,
               ),
               Container(
-                height: Constants.getHeight(context) * 0.55,
+                height: Constants.getHeight(context) * 0.57,
                 child: IntroSlider(
                     backgroundColorAllSlides: Colors.transparent,
                     showDoneBtn: false,
@@ -147,7 +147,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                     slides: _slides,
                     colorDot: const Color(0XFFFd1e5f3),
                     colorActiveDot: const Color(0XFFF1482be),
-                    sizeDot: 12),
+                    sizeDot: 10),
               ),
               Container(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -173,7 +173,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                         },
                         child: Container(
                           width: Constants.getWidth(context),
-                          padding: const EdgeInsets.all(22),
+                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                               border: Border.all(
                                   width: 1.5, color: const Color(0XFFF1482be)),
@@ -185,7 +185,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                             style: TextStyle(
                                 color: const Color(0XFFF1482be),
                                 fontFamily: "Montserrat",
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -199,7 +199,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                                   "By logging in or registring, you agre to our ",
                               style: TextStyle(
                                   fontFamily: "Montserrat",
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: Constants.descriptionColor),
                               children: [
@@ -209,7 +209,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                                 ..onTap = () => Navigator.pop(context),
                               style: TextStyle(
                                   fontFamily: "Montserrat",
-                                  fontSize: 18,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Constants.primaryColor),
                             ),
@@ -220,7 +220,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                                 ..onTap = () => Navigator.pop(context),
                               style: TextStyle(
                                   fontFamily: "Montserrat",
-                                  fontSize: 18,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Constants.primaryColor),
                             ),

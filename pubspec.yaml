@@ -75,6 +75,8 @@ flutter:
     - asset/images/hotel_icon.png
     - asset/images/bus_icon.png
     - asset/images/delivery_man.png
+    - asset/images/use_my_location_icon.png
+    - asset/images/location_history.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

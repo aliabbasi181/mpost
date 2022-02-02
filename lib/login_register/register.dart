@@ -40,7 +40,7 @@ class _RegisterState extends State<Register> {
                             },
                             child: const Icon(
                               Icons.arrow_back_rounded,
-                              size: 40,
+                              size: 35,
                             ),
                           )
                         ],
@@ -52,7 +52,7 @@ class _RegisterState extends State<Register> {
                         'Register',
                         style: TextStyle(
                             fontFamily: "Montserrat",
-                            fontSize: 26,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
@@ -62,7 +62,7 @@ class _RegisterState extends State<Register> {
                         'Please fill in a few details below',
                         style: TextStyle(
                             fontFamily: "Montserrat",
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: Constants.descriptionColor),
                       ),
@@ -91,7 +91,7 @@ class _RegisterState extends State<Register> {
                         showDropDownButton: true,
                         showCountryOnly: true,
                         favorite: const ['+254', 'KE'],
-                        flagWidth: 40,
+                        flagWidth: 30,
                         onChanged: (code) {
                           setState(() {
                             countryCode = code.toString();
@@ -169,7 +169,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       'How you will use Mpost',
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 26,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
@@ -179,7 +179,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       'Chose from one of the options below to help us personalise your experience',
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: Constants.descriptionColor),
                     ),
@@ -197,7 +197,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                         subtitle: Text("Shoping and paying for services",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
-                                fontSize: 16,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: Constants.descriptionColor)),
                         trailing: Radio(
@@ -222,7 +222,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                         subtitle: Text("Shoping and paying for services",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
-                                fontSize: 16,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: Constants.descriptionColor)),
                         trailing: Radio(

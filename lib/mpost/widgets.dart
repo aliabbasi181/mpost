@@ -42,11 +42,14 @@ class _MenuIconState extends State<MenuIcon> {
         ),
         Text(
           widget.title,
+          maxLines: 1,
+          softWrap: true,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(
               color: Colors.black,
               fontFamily: "Montserrat",
               fontWeight: FontWeight.w600,
-              fontSize: 16),
+              fontSize: 14),
         )
       ],
     );
@@ -72,7 +75,7 @@ class _FadeTilesState extends State<FadeTiles> {
   Widget build(BuildContext context) {
     return Container(
       width: Constants.getWidth(context) * 0.41,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: const Color(0XFFFf4f4f4),
@@ -90,10 +93,10 @@ class _FadeTilesState extends State<FadeTiles> {
                     color: Constants.descriptionColor,
                     fontFamily: "Montserrat",
                     fontWeight: FontWeight.w600,
-                    fontSize: 16),
+                    fontSize: 12),
               ),
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
               Text(
                 widget.title,
@@ -104,7 +107,7 @@ class _FadeTilesState extends State<FadeTiles> {
                     color: Colors.black,
                     fontFamily: "Montserrat",
                     fontWeight: FontWeight.w700,
-                    fontSize: 20),
+                    fontSize: 18),
               ),
             ],
           ),
@@ -141,8 +144,8 @@ class _CinemaSectionState extends State<CinemaSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 20),
-            height: 200,
+            margin: const EdgeInsets.only(bottom: 15),
+            height: 150,
             width: Constants.getWidth(context) * 0.85,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -154,7 +157,7 @@ class _CinemaSectionState extends State<CinemaSection> {
             style: TextStyle(
                 color: Constants.descriptionColor,
                 fontFamily: "Montserrat",
-                fontSize: 16),
+                fontSize: 12),
           ),
           const SizedBox(
             height: 0,
@@ -165,7 +168,7 @@ class _CinemaSectionState extends State<CinemaSection> {
                 color: Colors.black,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w500,
-                fontSize: 20),
+                fontSize: 18),
           ),
         ],
       ),
@@ -188,16 +191,6 @@ class OfferSection extends StatefulWidget {
 
 class _OfferSectionState extends State<OfferSection> {
   @override
-  initState() {
-    var str = widget.title.split(' ');
-    widget.title = "";
-    for (int i = 0; i < str.length; i++) {
-      if (i < 4) {
-        widget.title += str[i] + " ";
-      }
-    }
-  }
-
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 5),
@@ -205,8 +198,8 @@ class _OfferSectionState extends State<OfferSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 20),
-            height: 200,
+            margin: const EdgeInsets.only(bottom: 15),
+            height: 150,
             width: Constants.getWidth(context) * 0.41,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -218,7 +211,7 @@ class _OfferSectionState extends State<OfferSection> {
             style: TextStyle(
                 color: Constants.descriptionColor,
                 fontFamily: "Montserrat",
-                fontSize: 16),
+                fontSize: 12),
           ),
           const SizedBox(
             height: 0,
@@ -232,7 +225,7 @@ class _OfferSectionState extends State<OfferSection> {
                 color: Colors.black,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w500,
-                fontSize: 20),
+                fontSize: 16),
           ),
         ],
       ),
@@ -265,13 +258,13 @@ class _SectionLabelState extends State<SectionLabel> {
                 color: Colors.black,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w700,
-                fontSize: 22),
+                fontSize: 18),
           ),
           Icon(
             widget.icon == CupertinoIcons.arrow_right
                 ? CupertinoIcons.arrow_right
                 : null,
-            size: 35,
+            size: 25,
           )
         ],
       ),
@@ -298,7 +291,7 @@ class _MoreForYouSectionState extends State<MoreForYouSection> {
   Widget build(BuildContext context) {
     return Container(
       width: Constants.getWidth(context) * 0.28,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
           color: const Color(0XFFFf4f4f4),
@@ -316,7 +309,7 @@ class _MoreForYouSectionState extends State<MoreForYouSection> {
                 color: Colors.black,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w600,
-                fontSize: 16),
+                fontSize: 14),
           ),
           const SizedBox(
             height: 0,
@@ -330,7 +323,7 @@ class _MoreForYouSectionState extends State<MoreForYouSection> {
                 color: Constants.descriptionColor,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w500,
-                fontSize: 14),
+                fontSize: 12),
           ),
           const SizedBox(
             height: 10,
@@ -343,8 +336,8 @@ class _MoreForYouSectionState extends State<MoreForYouSection> {
             children: [
               Image(
                 image: AssetImage(widget.icon),
-                width: 50,
-                height: 50,
+                width: 40,
+                height: 40,
               )
             ],
           )
@@ -378,7 +371,7 @@ class _BestEventsSectionState extends State<BestEventsSection> {
           Stack(
             children: [
               Container(
-                margin: const EdgeInsets.only(bottom: 20),
+                margin: const EdgeInsets.only(bottom: 15),
                 height: 200,
                 width: Constants.getWidth(context) * 0.5,
                 decoration: BoxDecoration(
@@ -419,7 +412,7 @@ class _BestEventsSectionState extends State<BestEventsSection> {
                 color: Colors.black,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w500,
-                fontSize: 20),
+                fontSize: 16),
           ),
         ],
       ),
@@ -460,7 +453,7 @@ class _BannerSectionState extends State<BannerSection> {
         Container(
           width: Constants.getWidth(context),
           margin: const EdgeInsets.only(left: 10, right: 10),
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             color: widget.backgroundColor,
             borderRadius: BorderRadius.circular(15),
@@ -478,7 +471,7 @@ class _BannerSectionState extends State<BannerSection> {
                       color: widget.titleColor,
                       fontFamily: "Montserrat",
                       fontWeight: FontWeight.w700,
-                      fontSize: 25),
+                      fontSize: 18),
                 ),
               ),
               const SizedBox(
@@ -493,7 +486,7 @@ class _BannerSectionState extends State<BannerSection> {
                   style: TextStyle(
                       color: widget.subTitleColor,
                       fontFamily: "Montserrat",
-                      fontSize: 18),
+                      fontSize: 14),
                 ),
               ),
               const SizedBox(

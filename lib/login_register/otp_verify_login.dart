@@ -81,7 +81,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                       "Verify OTP",
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 26,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
@@ -92,7 +92,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                             text: "OTP sent to ${widget.phone}, ",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 color: Constants.descriptionColor),
                             children: [
@@ -102,7 +102,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                               ..onTap = () => Navigator.pop(context),
                             style: TextStyle(
                                 fontFamily: "Montserrat",
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Constants.primaryColor),
                           )
@@ -122,7 +122,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                             "Resend code in $_countDown seconds",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Constants.descriptionColor),
                           )
