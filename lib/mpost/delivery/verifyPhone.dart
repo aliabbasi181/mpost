@@ -1,19 +1,19 @@
 import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/widgets.dart';
 
-class OTPVerifyLogin extends StatefulWidget {
+class VerifyPhone extends StatefulWidget {
   String phone;
-  OTPVerifyLogin({Key? key, required this.phone}) : super(key: key);
+  VerifyPhone({Key? key, required this.phone}) : super(key: key);
 
   @override
-  _OTPVerifyLoginState createState() => _OTPVerifyLoginState();
+  _VerifyPhoneState createState() => _VerifyPhoneState();
 }
 
-class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
+class _VerifyPhoneState extends State<VerifyPhone> {
   String countryCode = "254";
   TextEditingController otp = TextEditingController();
   late Timer _timer;
@@ -66,7 +66,19 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                       },
                       child: const Icon(
                         Icons.arrow_back_rounded,
-                        size: 40,
+                        size: 30,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    const Expanded(
+                      child: Text(
+                        'Add your number ABBasi',
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500),
                       ),
                     )
                   ],
@@ -78,10 +90,10 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                       height: 20,
                     ),
                     const Text(
-                      "Verify OTP",
+                      "Verify Code",
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 22,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
@@ -89,7 +101,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                     ),
                     RichText(
                         text: TextSpan(
-                            text: "OTP sent to ${widget.phone}, ",
+                            text: "Enter your SMS verification code ",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
                                 fontSize: 14,
@@ -108,7 +120,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                           )
                         ])),
                     SizedBox(
-                      height: Constants.getWidth(context) * 0.1,
+                      height: Constants.getWidth(context) * 0.08,
                     ),
                     InputField(
                       hint: "Enter 6 digit code",
@@ -148,14 +160,11 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                           ),
                   ],
                 ),
-                const Spacer(),
+                Spacer(),
                 InputButton(
                     label: "SUBMIT",
                     onPress: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const BottomNav()));
+                      Navigator.pop(context, widget.phone);
                     })
               ],
             )),

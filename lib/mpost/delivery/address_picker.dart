@@ -12,6 +12,7 @@ class AddressPicker extends StatefulWidget {
 }
 
 class _AddressPickerState extends State<AddressPicker> {
+  String address = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,30 +54,33 @@ class _AddressPickerState extends State<AddressPicker> {
                   height: 10,
                 ),
                 InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) {
-                          return SafeArea(
-                            bottom: false,
-                            child: Container(
-                              margin: const EdgeInsets.only(top: 50),
-                              width: Constants.getWidth(context),
-                              height: Constants.getHeight(context),
-                              padding: const EdgeInsets.all(20),
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20))),
+                  onTap: () async {
+                    try {
+                      address = await showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) {
+                            return SafeArea(
+                              bottom: false,
                               child: Container(
-                                child: MyBottomSheet(),
+                                margin: const EdgeInsets.only(top: 50),
+                                width: Constants.getWidth(context),
+                                height: Constants.getHeight(context),
+                                padding: const EdgeInsets.all(20),
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20))),
+                                child: Container(
+                                  child: const MyBottomSheet(),
+                                ),
                               ),
-                            ),
-                          );
-                        });
+                            );
+                          });
+                      Navigator.pop(context, address);
+                    } catch (ex) {}
                   },
                   child: Container(
                       width: Constants.getWidth(context),
@@ -143,6 +147,7 @@ class MyBottomSheet extends StatefulWidget {
 
 class _MyBottomSheetState extends State<MyBottomSheet> {
   TextEditingController searchController = TextEditingController();
+  String address = '';
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -210,11 +215,17 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                 ),
               ),
               ListTile(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ConfirmAddress()));
+                onTap: () async {
+                  try {
+                    address = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ConfirmAddress(
+                                  address: "Kilimani Mall",
+                                  subAddress: "Tigoni Road, Nairobi, Kenya",
+                                )));
+                    Navigator.pop(context, address);
+                  } catch (ex) {}
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: Container(

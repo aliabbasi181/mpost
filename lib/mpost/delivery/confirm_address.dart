@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/delivery/add_building.dart';
+import 'package:mpost/mpost/delivery/add_floor.dart';
+import 'package:mpost/mpost/delivery/delivery.dart';
 
 class ConfirmAddress extends StatefulWidget {
-  const ConfirmAddress({Key? key}) : super(key: key);
+  String address, subAddress;
+  ConfirmAddress({Key? key, required this.address, required this.subAddress})
+      : super(key: key);
 
   @override
   _ConfirmAddressState createState() => _ConfirmAddressState();
 }
 
 class _ConfirmAddressState extends State<ConfirmAddress> {
+  String building = "", floor = "";
   @override
+  initState() {
+    print(building);
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -40,27 +51,27 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const ListTile(
+                  ListTile(
                     horizontalTitleGap: 0,
                     minVerticalPadding: 0,
                     contentPadding: EdgeInsets.zero,
                     title: Text(
-                      "Kilimani Road",
-                      style: TextStyle(
+                      widget.address,
+                      style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.w500),
                     ),
                     subtitle: Text(
-                      "Nairobi, Kenya",
-                      style: TextStyle(
+                      widget.subAddress,
+                      style: const TextStyle(
                           color: Color(0XFFF80868a),
                           fontSize: 12,
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.w500),
                     ),
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.keyboard_arrow_right_rounded,
                       color: Color(0XFFFc1c1c1),
                       size: 30,
@@ -72,20 +83,33 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     height: 0,
                   ),
                   ListTile(
-                    onTap: () {},
+                    onTap: () async {
+                      building = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddBuilding(
+                                    text: building,
+                                  )));
+                      setState(() {});
+                    },
                     horizontalTitleGap: 0,
                     minVerticalPadding: 0,
                     contentPadding: EdgeInsets.zero,
-                    title: const Text(
-                      "Building, Landmark",
-                      style: TextStyle(
+                    title: Text(
+                      building.isEmpty ? "Building, landmark" : building,
+                      maxLines: 1,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.w500),
                     ),
                     subtitle: Text(
-                      "Missing Details",
+                      building.isEmpty
+                          ? "Missing Details"
+                          : "Building, landmark",
                       style: TextStyle(
                           color: Constants.primaryColor,
                           fontSize: 14,
@@ -104,20 +128,31 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     height: 0,
                   ),
                   ListTile(
-                    onTap: () {},
+                    onTap: () async {
+                      floor = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddFloor(
+                                    text: floor,
+                                  )));
+                      setState(() {});
+                    },
                     horizontalTitleGap: 0,
                     minVerticalPadding: 0,
                     contentPadding: EdgeInsets.zero,
-                    title: const Text(
-                      "Floor, door, etc",
-                      style: TextStyle(
+                    title: Text(
+                      floor.isEmpty ? "Floor, door, etc" : floor,
+                      maxLines: 1,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.w500),
                     ),
                     subtitle: Text(
-                      "Missing Details",
+                      floor.isEmpty ? "Missing Details" : "Floor, door, etc",
                       style: TextStyle(
                           color: Constants.primaryColor,
                           fontSize: 14,
@@ -135,42 +170,40 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     thickness: 1,
                     height: 0,
                   ),
-                  ListTile(
-                    onTap: () {},
-                    horizontalTitleGap: 0,
-                    minVerticalPadding: 0,
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text(
-                      "Kilimani Road",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: "Montserrat",
-                          fontWeight: FontWeight.w500),
-                    ),
-                    subtitle: const Text(
-                      "Nairobi, Kenya",
-                      style: TextStyle(
-                          color: Color(0XFFF80868a),
-                          fontSize: 12,
-                          fontFamily: "Montserrat",
-                          fontWeight: FontWeight.w500),
-                    ),
-                    trailing: const Icon(
-                      Icons.keyboard_arrow_right_rounded,
-                      color: Color(0XFFFc1c1c1),
-                      size: 30,
-                    ),
-                  ),
-                  const Divider(
-                    color: Color(0XFFFeceef0),
-                    thickness: 1,
-                    height: 0,
+                  const SizedBox(
+                    height: 60,
                   ),
                 ],
               ),
             ),
-          )
+          ),
+          InkWell(
+            onTap: () {
+              building.isNotEmpty && floor.isNotEmpty
+                  ? Navigator.pop(
+                      context, widget.address + " " + building + " " + floor)
+                  : null;
+            },
+            child: Container(
+              width: Constants.getWidth(context),
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+              decoration: BoxDecoration(
+                  color: building.isNotEmpty && floor.isNotEmpty
+                      ? const Color(0XFFF1482be)
+                      : Constants.descriptionColor,
+                  borderRadius: BorderRadius.circular(10)),
+              child: const Text(
+                "CONFIRM ADDRESS",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "Montserrat",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
         ],
       ),
     );
