@@ -74,7 +74,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     ),
                     const Expanded(
                       child: Text(
-                        'Add your number ABBasi',
+                        'Add your number',
                         style: TextStyle(
                             fontFamily: "Montserrat",
                             fontSize: 18,

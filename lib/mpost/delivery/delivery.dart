@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/otp_verify_login.dart';
 import 'package:mpost/mpost/delivery/addPhoneNumber.dart';
@@ -145,13 +146,19 @@ class _DeliveryState extends State<Delivery> {
                               height: 5,
                             ),
                             Container(
-                              height: 120,
-                              decoration: BoxDecoration(
-                                  color: Colors.amber,
-                                  borderRadius: BorderRadius.circular(20)),
-                              width: Constants.getWidth(context),
-                              child: const Center(child: Text("Map")),
-                            ),
+                                height: 120,
+                                decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(20)),
+                                width: Constants.getWidth(context),
+                                child: GoogleMap(
+                                  initialCameraPosition: const CameraPosition(
+                                      target: LatLng(-1.2888736, 36.7913343),
+                                      zoom: 13),
+                                  mapType: MapType.terrain,
+                                  onTap: (latlng) {},
+                                  myLocationButtonEnabled: false,
+                                )),
                             const SizedBox(
                               height: 5,
                             ),

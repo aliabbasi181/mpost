@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/confirm_address.dart';
 import 'package:mpost/widgets.dart';
@@ -20,13 +21,16 @@ class _AddressPickerState extends State<AddressPicker> {
         alignment: Alignment.bottomCenter,
         children: [
           Container(
-            width: Constants.getWidth(context),
-            height: Constants.getHeight(context),
-            color: Colors.amber,
-            child: const Center(
-              child: Text("MAP"),
-            ),
-          ),
+              width: Constants.getWidth(context),
+              height: Constants.getHeight(context),
+              color: Colors.amber,
+              child: GoogleMap(
+                initialCameraPosition: const CameraPosition(
+                    target: LatLng(-1.2888736, 36.7913343), zoom: 13),
+                mapType: MapType.terrain,
+                onTap: (latlng) {},
+                myLocationButtonEnabled: false,
+              )),
           Container(
             width: Constants.getWidth(context),
             height: Constants.getHeight(context) * 0.35,

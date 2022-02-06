@@ -3,6 +3,7 @@ import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/add_building.dart';
 import 'package:mpost/mpost/delivery/add_floor.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ConfirmAddress extends StatefulWidget {
   String address, subAddress;
@@ -27,13 +28,15 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
         alignment: Alignment.bottomCenter,
         children: [
           Container(
-            width: Constants.getWidth(context),
-            height: Constants.getHeight(context),
-            color: Colors.amber,
-            child: const Center(
-              child: Text("Confirm Address MAP"),
-            ),
-          ),
+              width: Constants.getWidth(context),
+              height: Constants.getHeight(context),
+              color: Colors.amber,
+              child: GoogleMap(
+                initialCameraPosition: const CameraPosition(
+                    target: LatLng(-1.2888736, 36.7913343), zoom: 14),
+                mapType: MapType.terrain,
+                onTap: (latlng) {},
+              )),
           Container(
             width: Constants.getWidth(context),
             height: Constants.getHeight(context) * 0.40,
