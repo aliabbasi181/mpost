@@ -55,7 +55,7 @@ class _BottomNavState extends State<BottomNav> {
                 color: Constants.primaryColor,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w500,
-                fontSize: 18),
+                fontSize: 16),
             activeColor: Constants.primaryColor,
             tabs: [
               GButton(
@@ -66,7 +66,7 @@ class _BottomNavState extends State<BottomNav> {
                 border: Border.all(width: 1.5, color: Constants.primaryColor),
                 activeBorder:
                     Border.all(width: 2, color: Constants.primaryColor),
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(6),
                 curve: Curves.ease,
                 duration: const Duration(seconds: 1),
               ),
@@ -76,7 +76,9 @@ class _BottomNavState extends State<BottomNav> {
                 text: 'Activity',
                 iconActiveColor: Constants.primaryColor,
                 border: Border.all(width: 1.5, color: Constants.primaryColor),
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(6),
+                activeBorder:
+                    Border.all(width: 2, color: Constants.primaryColor),
               ),
               GButton(
                 iconColor: Constants.primaryColor,
@@ -84,7 +86,9 @@ class _BottomNavState extends State<BottomNav> {
                 text: 'Payment',
                 iconActiveColor: Constants.primaryColor,
                 border: Border.all(width: 1.5, color: Constants.primaryColor),
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(6),
+                activeBorder:
+                    Border.all(width: 2, color: Constants.primaryColor),
               ),
               GButton(
                 iconColor: Constants.primaryColor,
@@ -92,7 +96,9 @@ class _BottomNavState extends State<BottomNav> {
                 text: 'Profile',
                 iconActiveColor: Constants.primaryColor,
                 border: Border.all(width: 1.5, color: Constants.primaryColor),
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(6),
+                activeBorder:
+                    Border.all(width: 2, color: Constants.primaryColor),
               ),
             ],
             selectedIndex: _selectedIndex,

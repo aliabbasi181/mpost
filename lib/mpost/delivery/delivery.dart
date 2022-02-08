@@ -148,7 +148,6 @@ class _DeliveryState extends State<Delivery> {
                             Container(
                                 height: 120,
                                 decoration: BoxDecoration(
-                                    color: Colors.amber,
                                     borderRadius: BorderRadius.circular(20)),
                                 width: Constants.getWidth(context),
                                 child: GoogleMap(

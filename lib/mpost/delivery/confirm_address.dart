@@ -7,7 +7,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ConfirmAddress extends StatefulWidget {
   String address, subAddress;
-  ConfirmAddress({Key? key, required this.address, required this.subAddress})
+  LatLng latLng;
+  ConfirmAddress(
+      {Key? key,
+      required this.address,
+      required this.subAddress,
+      required this.latLng})
       : super(key: key);
 
   @override
@@ -16,9 +21,16 @@ class ConfirmAddress extends StatefulWidget {
 
 class _ConfirmAddressState extends State<ConfirmAddress> {
   String building = "", floor = "";
+  final Set<Marker> markers = new Set();
+
   @override
   initState() {
-    print(building);
+    markers.add(Marker(
+      //add first marker
+      markerId: MarkerId(widget.address),
+      position: widget.latLng,
+      icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+    ));
     super.initState();
   }
 
@@ -30,11 +42,13 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
           Container(
               width: Constants.getWidth(context),
               height: Constants.getHeight(context),
-              color: Colors.amber,
               child: GoogleMap(
-                initialCameraPosition: const CameraPosition(
-                    target: LatLng(-1.2888736, 36.7913343), zoom: 14),
+                initialCameraPosition: CameraPosition(
+                    target:
+                        LatLng(widget.latLng.latitude, widget.latLng.longitude),
+                    zoom: 13),
                 mapType: MapType.terrain,
+                markers: markers,
                 onTap: (latlng) {},
               )),
           Container(

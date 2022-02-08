@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/models/places_search.dart';
 import 'package:mpost/mpost/delivery/confirm_address.dart';
+import 'package:mpost/services/places_service.dart';
 import 'package:mpost/widgets.dart';
+import 'package:provider/provider.dart';
 
 class AddressPicker extends StatefulWidget {
   const AddressPicker({Key? key}) : super(key: key);
@@ -15,22 +19,42 @@ class AddressPicker extends StatefulWidget {
 class _AddressPickerState extends State<AddressPicker> {
   String address = "";
   @override
+  initState() {
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
+    applicationBloc.getUserLocation();
     return Scaffold(
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Container(
-              width: Constants.getWidth(context),
-              height: Constants.getHeight(context),
-              color: Colors.amber,
-              child: GoogleMap(
-                initialCameraPosition: const CameraPosition(
-                    target: LatLng(-1.2888736, 36.7913343), zoom: 13),
-                mapType: MapType.terrain,
-                onTap: (latlng) {},
-                myLocationButtonEnabled: false,
-              )),
+          Column(
+            children: [
+              Container(
+                  width: Constants.getWidth(context),
+                  height: Constants.getHeight(context) * 0.7,
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                        target: applicationBloc.userLocation, zoom: 13),
+                    mapType: MapType.terrain,
+                    onTap: (latlng) {},
+                    myLocationButtonEnabled: false,
+                  )),
+              Container(
+                height: Constants.getHeight(context) * 0.3,
+              )
+            ],
+          ),
+          applicationBloc.userLocation == const LatLng(-1.2888736, 36.7913343)
+              ? Container(
+                  height: Constants.getHeight(context),
+                  width: Constants.getWidth(context),
+                  color: Colors.black.withOpacity(0.7),
+                  child: const Center(child: CircularProgressIndicator()),
+                )
+              : Container(),
           Container(
             width: Constants.getWidth(context),
             height: Constants.getHeight(context) * 0.35,
@@ -154,6 +178,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
   String address = '';
   @override
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return SingleChildScrollView(
       child: Container(
           child: Column(
@@ -194,8 +219,9 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
               Container(
                 padding: const EdgeInsets.fromLTRB(5, 0, 30, 0),
                 decoration: BoxDecoration(
-                    color: Color(0XFFFfcfcfc),
-                    border: Border.all(color: Color(0XFFFefefef), width: 1.5),
+                    color: const Color(0XFFFfcfcfc),
+                    border:
+                        Border.all(color: const Color(0XFFFefefef), width: 1.5),
                     borderRadius: BorderRadius.circular(10)),
                 child: TextField(
                   controller: searchController,
@@ -216,159 +242,75 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           fontFamily: "Montserrat")),
+                  onChanged: (value) => applicationBloc.searchPlaces(value),
                 ),
               ),
-              ListTile(
-                onTap: () async {
-                  try {
-                    address = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ConfirmAddress(
-                                  address: "Kilimani Mall",
-                                  subAddress: "Tigoni Road, Nairobi, Kenya",
-                                )));
-                    Navigator.pop(context, address);
-                  } catch (ex) {}
-                },
-                contentPadding: EdgeInsets.zero,
-                leading: Container(
-                  child: const Icon(Icons.location_on_rounded,
-                      color: Color(0XFFF80868a)),
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: const Color(0XFFFefefef),
-                      borderRadius: BorderRadius.circular(100)),
-                ),
-                title: const Text(
-                  "Kilimani Mall",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: "Montserrat",
-                      fontWeight: FontWeight.w500),
-                ),
-                subtitle: const Padding(
-                  padding: EdgeInsets.only(top: 3),
-                  child: Text(
-                    "Tigoni Road, Nairobi, Kenya",
-                    style: TextStyle(
-                        color: Color(0XFFF80868a),
-                        fontSize: 12,
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              const Divider(
-                color: Color(0XFFFeceef0),
-                thickness: 1,
-                height: 5,
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Container(
-                  child: const Icon(Icons.location_on_rounded,
-                      color: Color(0XFFF80868a)),
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: const Color(0XFFFefefef),
-                      borderRadius: BorderRadius.circular(100)),
-                ),
-                title: const Text(
-                  "Kilimani Police Station",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: "Montserrat",
-                      fontWeight: FontWeight.w500),
-                ),
-                subtitle: const Padding(
-                  padding: EdgeInsets.only(top: 3),
-                  child: Text(
-                    "Jabavu Road, Nairobi, Kenya",
-                    style: TextStyle(
-                        color: Color(0XFFF80868a),
-                        fontSize: 12,
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              const Divider(
-                color: Color(0XFFFeceef0),
-                thickness: 1,
-                height: 5,
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Container(
-                  child: const Icon(Icons.location_on_rounded,
-                      color: Color(0XFFF80868a)),
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: const Color(0XFFFefefef),
-                      borderRadius: BorderRadius.circular(100)),
-                ),
-                title: const Text(
-                  "Kilimani Primary School",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: "Montserrat",
-                      fontWeight: FontWeight.w500),
-                ),
-                subtitle: const Padding(
-                  padding: EdgeInsets.only(top: 3),
-                  child: Text(
-                    "Argwings Kodhek Road, Nairobi, Kenya",
-                    style: TextStyle(
-                        color: Color(0XFFF80868a),
-                        fontSize: 12,
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              const Divider(
-                color: Color(0XFFFeceef0),
-                thickness: 1,
-                height: 5,
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Container(
-                  child: const Icon(Icons.location_on_rounded,
-                      color: Color(0XFFF80868a)),
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: const Color(0XFFFefefef),
-                      borderRadius: BorderRadius.circular(100)),
-                ),
-                title: const Text(
-                  "Kilimani Road",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: "Montserrat",
-                      fontWeight: FontWeight.w500),
-                ),
-                subtitle: const Padding(
-                  padding: EdgeInsets.only(top: 3),
-                  child: Text(
-                    "Nairobi, Kenya",
-                    style: TextStyle(
-                        color: Color(0XFFF80868a),
-                        fontSize: 12,
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              const Divider(
-                color: Color(0XFFFeceef0),
-                thickness: 1,
-                height: 5,
+              Container(
+                height: Constants.getHeight(context) * 0.6,
+                child: ListView.builder(
+                    itemCount: applicationBloc.searchResults.length,
+                    itemBuilder: (context, index) {
+                      PlacesSerch place = applicationBloc.searchResults[index];
+                      String country;
+                      try {
+                        country = place.country["secondary_text"];
+                      } catch (ex) {
+                        country = "";
+                      }
+
+                      return Column(children: [
+                        ListTile(
+                          onTap: () async {
+                            try {
+                              LatLng latlng =
+                                  await applicationBloc.getPlace(place.placeID);
+                              address = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ConfirmAddress(
+                                            address: place.description,
+                                            subAddress: country,
+                                            latLng: latlng,
+                                          )));
+                              Navigator.pop(context, address);
+                            } catch (ex) {}
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          leading: Container(
+                            child: const Icon(Icons.location_on_rounded,
+                                color: Color(0XFFF80868a)),
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: const Color(0XFFFefefef),
+                                borderRadius: BorderRadius.circular(100)),
+                          ),
+                          title: Text(
+                            place.description,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w500),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 3),
+                            child: Text(
+                              country,
+                              style: const TextStyle(
+                                  color: Color(0XFFF80868a),
+                                  fontSize: 12,
+                                  fontFamily: "Montserrat",
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        const Divider(
+                          color: Color(0XFFFeceef0),
+                          thickness: 1,
+                          height: 5,
+                        ),
+                      ]);
+                    }),
               ),
             ],
           ),
