@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/widgets.dart';
+import 'package:provider/provider.dart';
 
 class OTPVerifyLogin extends StatefulWidget {
   String phone;
@@ -50,6 +52,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
   }
 
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -132,30 +135,45 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                                 color: const Color(0XFFF1482be),
                                 borderRadius: BorderRadius.circular(5)),
                             child: InkWell(
-                              onTap: () {
-                                print("data");
-                                setState(() {
-                                  _runTimer();
-                                });
+                              onTap: () async {
+                                if (await applicationBloc.login(widget.phone)) {
+                                  print("data");
+                                  setState(() {
+                                    _runTimer();
+                                  });
+                                }
                               },
-                              child: const Text(
-                                "Resend OTP",
-                                style: TextStyle(
+                              child: Text(
+                                !applicationBloc.loading
+                                    ? "Resend OTP"
+                                    : "Please wait...",
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600),
                               ),
                             ),
                           ),
+                    applicationBloc.otpVerified != true
+                        ? const Text(
+                            "Invalid Code.\nMake sure your number or re-check the OTP you received.",
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          )
+                        : const Text("")
                   ],
                 ),
                 const Spacer(),
                 InputButton(
-                    label: "SUBMIT",
-                    onPress: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const BottomNav()));
+                    label:
+                        !applicationBloc.loading ? "SUBMIT" : "Please wait...",
+                    onPress: () async {
+                      if (await applicationBloc.verifyOTP(
+                          otp.text, widget.phone)) {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const BottomNav()));
+                      }
                     })
               ],
             )),

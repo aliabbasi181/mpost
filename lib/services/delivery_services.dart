@@ -1,0 +1,46 @@
+import 'package:dio/dio.dart';
+import 'package:mpost/models/address.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/delivery/delivery.dart';
+
+class DeliveryService {
+  Future<bool> confirmOrder(
+      Address from, Address to, DeliveryDetail recpDetail) async {
+    String url = Constants.hostUrl + "delivery-requests";
+    if (Constants.token.isNotEmpty) {
+      Map<String, dynamic> payload = {
+        "pickup_address": {
+          "latitude": from.lat,
+          "longitude": from.lng,
+          "address": from.address,
+          "detailed_address": from.detailedAddress
+        },
+        "delivery_address": {
+          "latitude": to.lat,
+          "longitude": to.lng,
+          "address": to.address,
+          "detailed_address": to.detailedAddress
+        },
+        "recipient_name": recpDetail.recpName,
+        "recipient_mobile": recpDetail.phone,
+        "type_of_item": recpDetail.typeOfItem,
+        "note": recpDetail.note,
+        "instructions": recpDetail.instructions,
+      };
+      var response = await Dio().post(url,
+          data: jsonEncode(payload),
+          options: Options(headers: Constants.requestHeadersWithToken));
+      if (response.statusCode == 200) {
+        print(response.data);
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      print("you are not loggedin");
+      return false;
+    }
+  }
+}

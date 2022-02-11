@@ -1,13 +1,15 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/login_register/otp_verify_login.dart';
 import 'package:mpost/mpost/delivery/addPhoneNumber.dart';
 import 'package:mpost/mpost/delivery/address_picker.dart';
 import 'package:mpost/mpost/delivery/delivery_details.dart';
-import 'package:mpost/mpost/home.dart';
 import 'package:mpost/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:mpost/models/address.dart';
 
 class Delivery extends StatefulWidget {
   const Delivery({Key? key}) : super(key: key);
@@ -16,12 +18,24 @@ class Delivery extends StatefulWidget {
   _DeliveryState createState() => _DeliveryState();
 }
 
+class DeliveryDetail {
+  String recpName, phone, typeOfItem, note, instructions;
+  DeliveryDetail(
+      this.recpName, this.phone, this.typeOfItem, this.note, this.instructions);
+}
+
 class _DeliveryState extends State<Delivery> {
-  String pickFrom = "", deliver = "";
+  Address pickFrom = Address(0, 0, "", ""), deliver = Address(0, 0, "", "");
+  var cameraPosition =
+      const CameraPosition(target: LatLng(-1.2888736, 36.7913343));
+  late GoogleMapController googleMapController;
   String pickupTime = "";
   String phone = "";
+  late DeliveryDetail recpDetail;
+  String itemType = "Delivery details";
   @override
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -81,6 +95,18 @@ class _DeliveryState extends State<Delivery> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const AddressPicker()));
+                                  print(pickFrom.lng);
+                                  // googleMapController.animateCamera(
+                                  //     CameraUpdate.newCameraPosition(
+                                  //         CameraPosition(
+                                  //             target: LatLng(pickFrom.lat,
+                                  //                 pickFrom.lng))));
+                                  // googleMapController.moveCamera(
+                                  //     CameraUpdate.newCameraPosition(
+                                  //         CameraPosition(
+                                  //             target: LatLng(pickFrom.lat,
+                                  //                 pickFrom.lng))));
+                                  setState(() {});
                                 } catch (ex) {}
                                 setState(() {});
                               },
@@ -90,9 +116,9 @@ class _DeliveryState extends State<Delivery> {
                                 size: 30,
                               ),
                               title: Text(
-                                pickFrom.isEmpty
+                                pickFrom.address.isEmpty
                                     ? "Pick up item at?"
-                                    : pickFrom,
+                                    : pickFrom.detailedAddress,
                                 maxLines: 2,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
@@ -126,7 +152,9 @@ class _DeliveryState extends State<Delivery> {
                                 size: 30,
                               ),
                               title: Text(
-                                deliver.isEmpty ? "Deliver to?" : deliver,
+                                deliver.address.isEmpty
+                                    ? "Deliver to?"
+                                    : deliver.detailedAddress,
                                 maxLines: 2,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
@@ -145,29 +173,58 @@ class _DeliveryState extends State<Delivery> {
                             const SizedBox(
                               height: 5,
                             ),
-                            Container(
-                                height: 120,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20)),
-                                width: Constants.getWidth(context),
-                                child: GoogleMap(
-                                  initialCameraPosition: const CameraPosition(
-                                      target: LatLng(-1.2888736, 36.7913343),
-                                      zoom: 13),
-                                  mapType: MapType.terrain,
-                                  onTap: (latlng) {},
-                                  myLocationButtonEnabled: false,
-                                )),
+                            (pickFrom.lat == 0)
+                                ? Container(
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    width: Constants.getWidth(context),
+                                    child: GoogleMap(
+                                      onMapCreated:
+                                          (GoogleMapController controller) {
+                                        googleMapController = controller;
+                                      },
+                                      initialCameraPosition: CameraPosition(
+                                          target: pickFrom.lat == 0
+                                              ? const LatLng(
+                                                  -1.2888736, 36.7913343)
+                                              : LatLng(
+                                                  pickFrom.lat, pickFrom.lng),
+                                          zoom: 13),
+                                      mapType: MapType.terrain,
+                                      onTap: (latlng) {},
+                                      myLocationButtonEnabled: false,
+                                    ))
+                                : Container(
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    width: Constants.getWidth(context),
+                                    child: GoogleMap(
+                                      initialCameraPosition: CameraPosition(
+                                          target: LatLng(
+                                              pickFrom.lat, pickFrom.lng),
+                                          zoom: 13),
+                                      mapType: MapType.terrain,
+                                      onTap: (latlng) {},
+                                      myLocationButtonEnabled: false,
+                                    )),
                             const SizedBox(
                               height: 5,
                             ),
                             ListTile(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const DeliveryDetails()));
+                              onTap: () async {
+                                try {
+                                  recpDetail = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const DeliveryDetails()));
+                                  itemType = recpDetail.typeOfItem;
+                                  setState(() {});
+                                } catch (ex) {}
                               },
                               title: const Text(
                                 "Your order",
@@ -177,11 +234,11 @@ class _DeliveryState extends State<Delivery> {
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w500),
                               ),
-                              subtitle: const Padding(
-                                padding: EdgeInsets.only(top: 3),
+                              subtitle: Padding(
+                                padding: const EdgeInsets.only(top: 3),
                                 child: Text(
-                                  "Delivery details",
-                                  style: TextStyle(
+                                  itemType,
+                                  style: const TextStyle(
                                       color: Color(0XFFF80868a),
                                       fontSize: 12,
                                       fontFamily: "Montserrat",
@@ -232,19 +289,21 @@ class _DeliveryState extends State<Delivery> {
                                   setState(() {});
                                 } catch (ex) {}
                               },
-                              title: Text(
-                                pickupTime.isEmpty ? "Pickup time" : pickupTime,
-                                style: const TextStyle(
+                              title: const Text(
+                                "Pickup time",
+                                style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w500),
                               ),
-                              subtitle: const Padding(
-                                padding: EdgeInsets.only(top: 3),
+                              subtitle: Padding(
+                                padding: const EdgeInsets.only(top: 3),
                                 child: Text(
-                                  "As soon as possible",
-                                  style: TextStyle(
+                                  pickupTime.isEmpty
+                                      ? "As soon as possible"
+                                      : pickupTime,
+                                  style: const TextStyle(
                                       color: Color(0XFFF80868a),
                                       fontSize: 12,
                                       fontFamily: "Montserrat",
@@ -273,19 +332,21 @@ class _DeliveryState extends State<Delivery> {
                                   setState(() {});
                                 } catch (ex) {}
                               },
-                              title: Text(
-                                phone.isEmpty ? "Add your phone number" : phone,
-                                style: const TextStyle(
+                              title: const Text(
+                                "Add your phone number",
+                                style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w500),
                               ),
-                              subtitle: const Padding(
-                                padding: EdgeInsets.only(top: 3),
+                              subtitle: Padding(
+                                padding: const EdgeInsets.only(top: 3),
                                 child: Text(
-                                  "In case we need to contact you about your package",
-                                  style: TextStyle(
+                                  phone.isEmpty
+                                      ? "In case we need to contact you about your package"
+                                      : phone,
+                                  style: const TextStyle(
                                       color: Color(0XFFF80868a),
                                       fontSize: 12,
                                       fontFamily: "Montserrat",
@@ -330,10 +391,17 @@ class _DeliveryState extends State<Delivery> {
             Container(
               padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
               child: InputButton(
-                  label: "CONFIRM ORDER",
-                  onPress: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const Home()));
+                  label: !applicationBloc.loading
+                      ? "CONFIRM ORDER"
+                      : "Please wait...",
+                  onPress: () async {
+                    if (await applicationBloc.confirmOrder(
+                        pickFrom, deliver, recpDetail)) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Center(
+                        child: Text("Order placed successfully!"),
+                      )));
+                    }
                   }),
             )
           ],

@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/widgets.dart';
+import 'package:provider/provider.dart';
 
 class VerifyPhone extends StatefulWidget {
   String phone;
@@ -50,6 +52,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
   }
 
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -144,15 +147,18 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                                 color: const Color(0XFFF1482be),
                                 borderRadius: BorderRadius.circular(5)),
                             child: InkWell(
-                              onTap: () {
-                                print("data");
-                                setState(() {
-                                  _runTimer();
-                                });
+                              onTap: () async {
+                                if (await applicationBloc.login(widget.phone)) {
+                                  setState(() {
+                                    _runTimer();
+                                  });
+                                }
                               },
-                              child: const Text(
-                                "Resend OTP",
-                                style: TextStyle(
+                              child: Text(
+                                !applicationBloc.loading
+                                    ? "Resend OTP"
+                                    : "Please wait...",
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600),
                               ),
@@ -163,8 +169,11 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                 Spacer(),
                 InputButton(
                     label: "SUBMIT",
-                    onPress: () {
-                      Navigator.pop(context, widget.phone);
+                    onPress: () async {
+                      if (await applicationBloc.verifyOTP(
+                          otp.text, widget.phone)) {
+                        Navigator.pop(context, widget.phone);
+                      }
                     })
               ],
             )),

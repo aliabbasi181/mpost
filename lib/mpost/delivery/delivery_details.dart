@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/home.dart';
 import 'package:mpost/widgets.dart';
 
@@ -18,6 +19,7 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
   TextEditingController instructions = TextEditingController();
   TextEditingController phone = TextEditingController();
   String pickCategory = "";
+  late DeliveryDetail deliveryDetail;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,7 +211,6 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                           ),
                           ListTile(
                             onTap: () async {
-                              print("hiiii");
                               try {
                                 pickCategory = await showModalBottomSheet(
                                     context: context,
@@ -328,8 +329,9 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
               child: InputButton(
                   label: "SAVE",
                   onPress: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const Home()));
+                    deliveryDetail = DeliveryDetail(name.text, phone.text,
+                        pickCategory, note.text, instructions.text);
+                    Navigator.pop(context, deliveryDetail);
                   }),
             )
           ],

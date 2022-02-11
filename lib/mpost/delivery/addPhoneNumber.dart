@@ -1,9 +1,11 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/otp_verify_login.dart';
 import 'package:mpost/mpost/delivery/verifyPhone.dart';
 import 'package:mpost/widgets.dart';
+import 'package:provider/provider.dart';
 
 class AddPhoneNumber extends StatefulWidget {
   const AddPhoneNumber({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class _AddPhoneNumberState extends State<AddPhoneNumber> {
   TextEditingController phone = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -89,15 +92,20 @@ class _AddPhoneNumberState extends State<AddPhoneNumber> {
                 ),
                 const Spacer(),
                 InputButton(
-                    label: "CONTINUE",
+                    label: !applicationBloc.loading
+                        ? "CONTINUE"
+                        : "Please wait...",
                     onPress: () async {
                       try {
-                        String res = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VerifyPhone(
-                                    phone: "$countryCode ${phone.text}")));
-                        Navigator.pop(context, res);
+                        if (await applicationBloc
+                            .login(countryCode + phone.text)) {
+                          String res = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => VerifyPhone(
+                                      phone: "$countryCode${phone.text}")));
+                          Navigator.pop(context, res);
+                        }
                       } catch (ex) {}
                     })
               ],

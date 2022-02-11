@@ -83,6 +83,9 @@ class _AddFloorState extends State<AddFloor> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             fontFamily: "Montserrat"),
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                         decoration: const InputDecoration(
                             prefixIcon: Icon(
                               CupertinoIcons.home,

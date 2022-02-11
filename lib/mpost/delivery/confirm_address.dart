@@ -47,7 +47,7 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     target:
                         LatLng(widget.latLng.latitude, widget.latLng.longitude),
                     zoom: 13),
-                mapType: MapType.terrain,
+                mapType: MapType.normal,
                 markers: markers,
                 onTap: (latlng) {},
               )),
@@ -112,24 +112,22 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     horizontalTitleGap: 0,
                     minVerticalPadding: 0,
                     contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      building.isEmpty ? "Building, landmark" : building,
+                    title: const Text(
+                      "Building, landmark",
                       maxLines: 1,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.w500),
                     ),
                     subtitle: Text(
-                      building.isEmpty
-                          ? "Missing Details"
-                          : "Building, landmark",
+                      building.isEmpty ? "Missing Details" : building,
                       style: TextStyle(
                           color: Constants.primaryColor,
-                          fontSize: 14,
+                          fontSize: 12,
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.w500),
                     ),
@@ -157,22 +155,22 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     horizontalTitleGap: 0,
                     minVerticalPadding: 0,
                     contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      floor.isEmpty ? "Floor, door, etc" : floor,
+                    title: const Text(
+                      "Floor, door, etc",
                       maxLines: 1,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.w500),
                     ),
                     subtitle: Text(
-                      floor.isEmpty ? "Missing Details" : "Floor, door, etc",
+                      floor.isEmpty ? "Missing Details" : floor,
                       style: TextStyle(
                           color: Constants.primaryColor,
-                          fontSize: 14,
+                          fontSize: 12,
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.w500),
                     ),

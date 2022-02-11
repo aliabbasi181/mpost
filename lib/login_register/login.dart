@@ -1,8 +1,10 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/otp_verify_login.dart';
 import 'package:mpost/widgets.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -18,6 +20,7 @@ class _LoginState extends State<Login> {
   TextEditingController phone = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -84,17 +87,28 @@ class _LoginState extends State<Login> {
                       countryCode: countryCode,
                       controller: phone,
                     ),
+                    applicationBloc.loginOTPSent != true
+                        ? const Text(
+                            "Error sending OTP.\nCheck your phone number, country code and make sure you are connected to internet.",
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          )
+                        : const Text("")
                   ],
                 ),
                 const Spacer(),
                 InputButton(
-                    label: "GET OTP",
-                    onPress: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OTPVerifyLogin(
-                                  phone: "$countryCode ${phone.text}")));
+                    label:
+                        !applicationBloc.loading ? "GET OTP" : "Please wait...",
+                    onPress: () async {
+                      if (await applicationBloc
+                          .login(countryCode + phone.text)) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OTPVerifyLogin(
+                                    phone: "$countryCode${phone.text}")));
+                      }
                     })
               ],
             )),

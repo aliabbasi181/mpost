@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/register.dart';
 import 'package:mpost/widgets.dart';
+import 'package:provider/provider.dart';
 
 class OTPVerify extends StatefulWidget {
   String phone;
@@ -49,6 +51,7 @@ class _OTPVerifyState extends State<OTPVerify> {
   }
 
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -128,15 +131,18 @@ class _OTPVerifyState extends State<OTPVerify> {
                                 color: const Color(0XFFF1482be),
                                 borderRadius: BorderRadius.circular(5)),
                             child: InkWell(
-                              onTap: () {
-                                print("data");
-                                setState(() {
-                                  _runTimer();
-                                });
+                              onTap: () async {
+                                if (await applicationBloc.login(widget.phone)) {
+                                  setState(() {
+                                    _runTimer();
+                                  });
+                                }
                               },
-                              child: const Text(
-                                "Resend OTP",
-                                style: TextStyle(
+                              child: Text(
+                                !applicationBloc.loading
+                                    ? "Resend OTP"
+                                    : "Please wait...",
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600),
                               ),
@@ -146,12 +152,18 @@ class _OTPVerifyState extends State<OTPVerify> {
                 ),
                 Spacer(),
                 InputButton(
-                    label: "CONTINUE",
-                    onPress: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HowYouWillUse()));
+                    label: !applicationBloc.loading
+                        ? "CONTINUE"
+                        : "Please wait...",
+                    onPress: () async {
+                      if (await applicationBloc.verifyOTP(
+                          otp.text, widget.phone)) {
+                        Constants.registerMobile = widget.phone;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HowYouWillUse()));
+                      }
                     })
               ],
             )),

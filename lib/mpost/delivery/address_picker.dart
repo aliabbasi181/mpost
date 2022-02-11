@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/models/address.dart';
 import 'package:mpost/models/places_search.dart';
 import 'package:mpost/mpost/delivery/confirm_address.dart';
 import 'package:mpost/services/places_service.dart';
@@ -17,7 +18,7 @@ class AddressPicker extends StatefulWidget {
 }
 
 class _AddressPickerState extends State<AddressPicker> {
-  String address = "";
+  late Address address;
   @override
   initState() {
     super.initState();
@@ -30,23 +31,6 @@ class _AddressPickerState extends State<AddressPicker> {
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Column(
-            children: [
-              Container(
-                  width: Constants.getWidth(context),
-                  height: Constants.getHeight(context) * 0.7,
-                  child: GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                        target: applicationBloc.userLocation, zoom: 13),
-                    mapType: MapType.terrain,
-                    onTap: (latlng) {},
-                    myLocationButtonEnabled: false,
-                  )),
-              Container(
-                height: Constants.getHeight(context) * 0.3,
-              )
-            ],
-          ),
           applicationBloc.userLocation == const LatLng(-1.2888736, 36.7913343)
               ? Container(
                   height: Constants.getHeight(context),
@@ -54,7 +38,23 @@ class _AddressPickerState extends State<AddressPicker> {
                   color: Colors.black.withOpacity(0.7),
                   child: const Center(child: CircularProgressIndicator()),
                 )
-              : Container(),
+              : Column(
+                  children: [
+                    Container(
+                        width: Constants.getWidth(context),
+                        height: Constants.getHeight(context) * 0.7,
+                        child: GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                              target: applicationBloc.userLocation, zoom: 13),
+                          mapType: MapType.terrain,
+                          onTap: (latlng) {},
+                          myLocationButtonEnabled: false,
+                        )),
+                    Container(
+                      height: Constants.getHeight(context) * 0.3,
+                    )
+                  ],
+                ),
           Container(
             width: Constants.getWidth(context),
             height: Constants.getHeight(context) * 0.35,
@@ -175,7 +175,8 @@ class MyBottomSheet extends StatefulWidget {
 
 class _MyBottomSheetState extends State<MyBottomSheet> {
   TextEditingController searchController = TextEditingController();
-  String address = '';
+  late Address address;
+  String detailAddress = "";
   @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
@@ -246,7 +247,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                 ),
               ),
               Container(
-                height: Constants.getHeight(context) * 0.6,
+                height: Constants.getHeight(context) * 0.7,
                 child: ListView.builder(
                     itemCount: applicationBloc.searchResults.length,
                     itemBuilder: (context, index) {
@@ -264,7 +265,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                             try {
                               LatLng latlng =
                                   await applicationBloc.getPlace(place.placeID);
-                              address = await Navigator.push(
+                              //address = Address(latlng.latitude, latlng.longitude, place.description, "");
+                              detailAddress = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ConfirmAddress(
@@ -272,6 +274,11 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                             subAddress: country,
                                             latLng: latlng,
                                           )));
+                              address = Address(
+                                  latlng.latitude,
+                                  latlng.longitude,
+                                  place.description,
+                                  detailAddress);
                               Navigator.pop(context, address);
                             } catch (ex) {}
                           },
@@ -288,17 +295,17 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                             place.description,
                             style: const TextStyle(
                                 color: Colors.black,
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontFamily: "Montserrat",
                                 fontWeight: FontWeight.w500),
                           ),
                           subtitle: Padding(
-                            padding: const EdgeInsets.only(top: 3),
+                            padding: const EdgeInsets.only(top: 1),
                             child: Text(
                               country,
                               style: const TextStyle(
                                   color: Color(0XFFF80868a),
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   fontFamily: "Montserrat",
                                   fontWeight: FontWeight.w500),
                             ),
