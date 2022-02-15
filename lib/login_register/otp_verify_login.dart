@@ -23,7 +23,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
 
   _runTimer() {
     const oneSec = Duration(seconds: 1);
-    _countDown = 25;
+    _countDown = 90;
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -114,7 +114,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                       height: Constants.getWidth(context) * 0.1,
                     ),
                     InputField(
-                      hint: "Enter 6 digit code",
+                      hint: "Enter OTP code",
                       controller: otp,
                     ),
                     SizedBox(
@@ -167,7 +167,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                     label:
                         !applicationBloc.loading ? "SUBMIT" : "Please wait...",
                     onPress: () async {
-                      if (await applicationBloc.verifyOTP(
+                      if (await applicationBloc.verifyLoginOTP(
                           otp.text, widget.phone)) {
                         Navigator.pushReplacement(
                             context,

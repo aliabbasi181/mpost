@@ -39,6 +39,7 @@ dependencies:
   geolocator: ^8.1.1
   google_maps_flutter: ^2.1.1
   http: ^0.13.4
+  accordion: ^2.1.2
 
 
 dev_dependencies:

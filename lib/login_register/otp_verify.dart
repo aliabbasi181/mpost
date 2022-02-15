@@ -22,7 +22,7 @@ class _OTPVerifyState extends State<OTPVerify> {
 
   _runTimer() {
     const oneSec = Duration(seconds: 1);
-    _countDown = 25;
+    _countDown = 90;
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -110,7 +110,7 @@ class _OTPVerifyState extends State<OTPVerify> {
                     ),
                     InputLabel(label: "OTP", isReq: true),
                     InputField(
-                      hint: "Enter 6 digit code",
+                      hint: "Enter OTP code",
                       controller: otp,
                     ),
                     SizedBox(
@@ -148,9 +148,16 @@ class _OTPVerifyState extends State<OTPVerify> {
                               ),
                             ),
                           ),
+                    applicationBloc.newPhone != true
+                        ? const Text(
+                            "Invalid Code.\nMake sure your number or re-check the OTP you received.",
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          )
+                        : const Text("")
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 InputButton(
                     label: !applicationBloc.loading
                         ? "CONTINUE"

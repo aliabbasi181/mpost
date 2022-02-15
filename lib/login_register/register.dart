@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/login_register/login.dart';
 import 'package:mpost/login_register/otp_verify.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/widgets.dart';
@@ -130,8 +131,8 @@ class _RegisterState extends State<Register> {
                     Constants.registerEmail = email.text;
                     Constants.registerPassword = "Test@123";
                     Constants.registerMobile = countryCode + phone.text;
-
-                    if (await applicationBloc.register()) {
+                    if (await applicationBloc
+                        .requestOTP(countryCode + phone.text)) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -269,10 +270,10 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       print(
                           Constants.registerName.trim().split(' ').last.trim());
                       if (await applicationBloc.register()) {}
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const BottomNav()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()));
                     })
               ],
             )),

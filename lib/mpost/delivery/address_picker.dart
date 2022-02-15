@@ -262,6 +262,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                       return Column(children: [
                         ListTile(
                           onTap: () async {
+                            print("PLACE ID:" + place.placeID);
                             try {
                               LatLng latlng =
                                   await applicationBloc.getPlace(place.placeID);

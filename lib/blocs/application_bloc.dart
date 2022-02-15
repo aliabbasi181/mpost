@@ -22,6 +22,7 @@ class ApplicaitonBloc with ChangeNotifier {
   bool loginOTPSent = true;
   bool otpVerified = true;
   bool loading = false;
+  bool newPhone = true;
 
   // register variables
 
@@ -49,13 +50,26 @@ class ApplicaitonBloc with ChangeNotifier {
     return loginOTPSent;
   }
 
-  Future<bool> verifyOTP(String code, String phone) async {
+  Future<bool> verifyLoginOTP(String code, String phone) async {
     loading = true;
     notifyListeners();
     otpVerified = await loginRegisterService.verifyOtpLogin(code, phone);
     loading = false;
     notifyListeners();
     return otpVerified;
+  }
+
+  Future<bool> verifyOTP(String code, String phone) async {
+    loading = true;
+    notifyListeners();
+    if (await loginRegisterService.verifyOtp(code, phone)) {
+      loading = false;
+      notifyListeners();
+      return true;
+    }
+    loading = false;
+    notifyListeners();
+    return false;
   }
 
   Future<bool> requestOTP(String phone) async {
@@ -67,6 +81,7 @@ class ApplicaitonBloc with ChangeNotifier {
       return true;
     }
     loading = false;
+    newPhone = false;
     notifyListeners();
     return false;
   }

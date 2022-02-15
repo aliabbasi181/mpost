@@ -30,14 +30,14 @@ class LoginRegisterService {
   Future<bool> verifyOtpLogin(String code, String phone) async {
     try {
       String url = Constants.hostUrl + "auth/verify-otp";
-      print(code + "," + phone + "," + url);
       var response = await http.post(
         Uri.parse(url),
         headers: Constants.requestHeaders,
         body: jsonEncode(
             <String, dynamic>{"mobile": phone, "login": true, "otp": code}),
       );
-      print(response.statusCode);
+      print(response.body);
+      var json = jsonDecode(response.body);
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
         Constants.token = json['access_token'];
@@ -46,7 +46,29 @@ class LoginRegisterService {
         return false;
       }
     } catch (ex) {
-      //print(ex);
+      print(ex);
+      return false;
+    }
+  }
+
+  Future<bool> verifyOtp(String code, String phone) async {
+    try {
+      String url = Constants.hostUrl + "auth/verify-otp";
+      print(phone);
+      var response = await http.post(
+        Uri.parse(url),
+        headers: Constants.requestHeaders,
+        body: jsonEncode(<String, dynamic>{"mobile": phone, "otp": code}),
+      );
+      print(response.body);
+      var json = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (ex) {
+      print(ex);
       return false;
     }
   }
@@ -98,11 +120,10 @@ class LoginRegisterService {
           "type": Constants.registerType
         }),
       );
-      print(response.body);
-      print(response.body);
       if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
+        Constants.token = json['access_token'];
         return true;
-        //var json = jsonDecode(response.body.toString());
       } else {
         return false;
       }
