@@ -23,6 +23,7 @@ class ApplicaitonBloc with ChangeNotifier {
   bool otpVerified = true;
   bool loading = false;
   bool newPhone = true;
+  int totalCost = -1;
 
   // register variables
 
@@ -108,7 +109,21 @@ class ApplicaitonBloc with ChangeNotifier {
       notifyListeners();
       return true;
     }
+    loading = false;
+    notifyListeners();
     return false;
+  }
+
+  getDistance(String from, String to) async {
+    loading = true;
+    notifyListeners();
+    String distance = await placesService.calculateDistance(from, to);
+    if (distance == "error") {
+      totalCost = -2;
+    }
+    print(distance);
+    double cost = double.parse(distance);
+    totalCost = (135 + (cost * 25)).round();
     loading = false;
     notifyListeners();
   }

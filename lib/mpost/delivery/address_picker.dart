@@ -279,7 +279,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                   latlng.latitude,
                                   latlng.longitude,
                                   place.description,
-                                  detailAddress);
+                                  detailAddress,
+                                  place.placeID);
                               Navigator.pop(context, address);
                             } catch (ex) {}
                           },

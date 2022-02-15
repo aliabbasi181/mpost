@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (context) => ApplicaitonBloc(),
         child: const MaterialApp(
-          home: ChoosePayment(),
+          home: Delivery(),
         ));
   }
 }

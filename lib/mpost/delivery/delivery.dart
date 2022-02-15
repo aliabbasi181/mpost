@@ -6,7 +6,9 @@ import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/addPhoneNumber.dart';
 import 'package:mpost/mpost/delivery/address_picker.dart';
+import 'package:mpost/mpost/delivery/confirm_address.dart';
 import 'package:mpost/mpost/delivery/delivery_details.dart';
+import 'package:mpost/mpost/payment/choose_payment.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:mpost/models/address.dart';
@@ -25,7 +27,8 @@ class DeliveryDetail {
 }
 
 class _DeliveryState extends State<Delivery> {
-  Address pickFrom = Address(0, 0, "", ""), deliver = Address(0, 0, "", "");
+  Address pickFrom = Address(0, 0, "", "", ""),
+      deliver = Address(0, 0, "", "", "");
   var cameraPosition =
       const CameraPosition(target: LatLng(-1.2888736, 36.7913343));
   late GoogleMapController googleMapController;
@@ -33,6 +36,8 @@ class _DeliveryState extends State<Delivery> {
   String phone = "";
   late DeliveryDetail recpDetail;
   String itemType = "Delivery details";
+  String price = "135";
+
   @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
@@ -95,17 +100,11 @@ class _DeliveryState extends State<Delivery> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const AddressPicker()));
-                                  print(pickFrom.lng);
-                                  // googleMapController.animateCamera(
-                                  //     CameraUpdate.newCameraPosition(
-                                  //         CameraPosition(
-                                  //             target: LatLng(pickFrom.lat,
-                                  //                 pickFrom.lng))));
-                                  // googleMapController.moveCamera(
-                                  //     CameraUpdate.newCameraPosition(
-                                  //         CameraPosition(
-                                  //             target: LatLng(pickFrom.lat,
-                                  //                 pickFrom.lng))));
+                                  if (pickFrom.PlaceId != "" &&
+                                      deliver.PlaceId != "") {
+                                    applicationBloc.getDistance(
+                                        pickFrom.PlaceId, deliver.PlaceId);
+                                  }
                                   setState(() {});
                                 } catch (ex) {}
                                 setState(() {});
@@ -144,6 +143,11 @@ class _DeliveryState extends State<Delivery> {
                                           builder: (context) =>
                                               const AddressPicker()));
                                 } catch (ex) {}
+                                if (pickFrom.PlaceId != "" &&
+                                    deliver.PlaceId != "") {
+                                  applicationBloc.getDistance(
+                                      pickFrom.PlaceId, deliver.PlaceId);
+                                }
                                 setState(() {});
                               },
                               leading: const Icon(
@@ -364,8 +368,8 @@ class _DeliveryState extends State<Delivery> {
                               thickness: 1.5,
                               height: 15,
                             ),
-                            const ListTile(
-                              title: Text(
+                            ListTile(
+                              title: const Text(
                                 "Total",
                                 style: TextStyle(
                                     color: Colors.black,
@@ -374,8 +378,14 @@ class _DeliveryState extends State<Delivery> {
                                     fontWeight: FontWeight.w500),
                               ),
                               trailing: Text(
-                                "KSH 400",
-                                style: TextStyle(
+                                applicationBloc.totalCost == -1
+                                    ? "KSH " + price
+                                    : applicationBloc.totalCost == -2
+                                        ? "KSH {Error}"
+                                        : "KSH " +
+                                            applicationBloc.totalCost
+                                                .toString(),
+                                style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
                                     fontFamily: "Montserrat",
@@ -397,10 +407,11 @@ class _DeliveryState extends State<Delivery> {
                   onPress: () async {
                     if (await applicationBloc.confirmOrder(
                         pickFrom, deliver, recpDetail)) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Center(
-                        child: Text("Order placed successfully!"),
-                      )));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChoosePayment(
+                                  cost: applicationBloc.totalCost.toString())));
                     }
                   }),
             )
@@ -426,134 +437,98 @@ class _TimePickerState extends State<TimePicker> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+        padding: const EdgeInsets.fromLTRB(40, 30, 40, 10),
         height: Constants.getHeight(context) * 0.4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            const Text(
-              'Schedule a time',
-              style: TextStyle(
-                  fontFamily: "Montserrat",
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(
-              height: 10,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Text(
+                  'Schedule a time',
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700),
+                ),
+                const Text(
+                  'As soon as possible',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500),
+                ),
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context, "");
+                      },
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context, selection);
+                      },
+                      child: Text(
+                        'Confirm',
+                        style: TextStyle(
+                            color: Constants.primaryColor,
+                            fontFamily: "Montserrat",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
             Center(
-              child: Text(
-                'As soon as possible',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Constants.descriptionColor),
+              child: Container(
+                height: Constants.getHeight(context) * 0.2,
+                child: CupertinoPicker(
+                    selectionOverlay: Container(
+                      height: 30,
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              top: BorderSide(
+                                  color: Color(0XFFFeceef0), width: 1),
+                              bottom: BorderSide(
+                                  color: Color(0XFFFeceef0), width: 1))),
+                    ),
+                    itemExtent: 50,
+                    onSelectedItemChanged: (value) {
+                      value == 0
+                          ? selection = "Today | 16:00 - 17:00"
+                          : selection = "Tommorow | 16:00 - 17:00";
+                    },
+                    children: const [
+                      Center(
+                          child: Text('Today | 16:00 - 17:00',
+                              style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500))),
+                      Center(
+                          child: Text('Tommorow | 16:00 - 17:00',
+                              style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500)))
+                    ]),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Divider(
-              color: Color(0XFFFeceef0),
-              thickness: 1,
-              height: 0,
-            ),
-            ListTile(
-              onTap: () {
-                setState(() {
-                  today = true;
-                  tomorrow = false;
-                  selection = "Today | 16:00 - 17:00";
-                });
-              },
-              selectedTileColor: Colors.amberAccent,
-              leading: Text(
-                'Today',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: today ? Colors.black : optionColor),
-              ),
-              trailing: Text(
-                '16:00 - 17:00',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: today ? Colors.black : optionColor),
-              ),
-            ),
-            const Divider(
-              color: Color(0XFFFeceef0),
-              thickness: 1,
-              height: 0,
-            ),
-            ListTile(
-              onTap: () {
-                setState(() {
-                  today = false;
-                  tomorrow = true;
-                  selection = "Tomorrow | 16:00 - 17:00";
-                });
-              },
-              leading: Text(
-                'Tomorrow',
-                style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: tomorrow ? Colors.black : optionColor),
-              ),
-              trailing: Text(
-                '16:00 - 17:00',
-                style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: tomorrow ? Colors.black : optionColor),
-              ),
-            ),
-            const Divider(
-              color: Color(0XFFFeceef0),
-              thickness: 1,
-              height: 0,
-            ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context, "");
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context, selection);
-                  },
-                  child: Text(
-                    'Confirm',
-                    style: TextStyle(
-                        color: Constants.primaryColor,
-                        fontFamily: "Montserrat",
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ],
-            )
           ],
         ),
       ),

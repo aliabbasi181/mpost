@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/mpost/payment/choose_payment.dart';
+import 'package:provider/provider.dart';
 
 class ProcessingPayment extends StatefulWidget {
   const ProcessingPayment({Key? key}) : super(key: key);
@@ -16,6 +18,7 @@ class ProcessingPayment extends StatefulWidget {
 class _ProcessingPaymentState extends State<ProcessingPayment> {
   @override
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -172,6 +175,7 @@ class PaymentError extends StatefulWidget {
 class _PaymentErrorState extends State<PaymentError> {
   @override
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -217,7 +221,9 @@ class _PaymentErrorState extends State<PaymentError> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ChoosePayment()));
+                          builder: (context) => ChoosePayment(
+                                cost: applicationBloc.totalCost.toString(),
+                              )));
                 },
                 child: Container(
                   width: Constants.getWidth(context),

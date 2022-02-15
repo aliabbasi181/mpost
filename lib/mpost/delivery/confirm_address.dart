@@ -202,7 +202,7 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
             child: Container(
               width: Constants.getWidth(context),
               padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+              margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               decoration: BoxDecoration(
                   color: building.isNotEmpty && floor.isNotEmpty
                       ? const Color(0XFFF1482be)

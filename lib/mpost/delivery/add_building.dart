@@ -23,7 +23,7 @@ class _AddBuildingState extends State<AddBuilding> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
             height: Constants.getHeight(context),
             child: Stack(
               alignment: AlignmentDirectional.bottomCenter,

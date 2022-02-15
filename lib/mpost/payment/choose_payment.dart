@@ -9,7 +9,8 @@ import 'package:accordion/accordion.dart';
 import '../../constants.dart';
 
 class ChoosePayment extends StatefulWidget {
-  const ChoosePayment({Key? key}) : super(key: key);
+  String cost;
+  ChoosePayment({Key? key, required this.cost}) : super(key: key);
 
   @override
   _ChoosePaymentState createState() => _ChoosePaymentState();
@@ -263,8 +264,8 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                   thickness: 1.5,
                   height: 15,
                 ),
-                const ListTile(
-                  title: Text(
+                ListTile(
+                  title: const Text(
                     "Total",
                     style: TextStyle(
                         color: Colors.black,
@@ -273,8 +274,8 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                         fontWeight: FontWeight.w500),
                   ),
                   trailing: Text(
-                    "KSH 400",
-                    style: TextStyle(
+                    "KSH " + applicationBloc.totalCost.toString(),
+                    style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,
                         fontFamily: "Montserrat",

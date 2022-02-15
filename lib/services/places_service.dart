@@ -64,4 +64,25 @@ class PlacesService {
     var res = await Geolocator.getCurrentPosition();
     return LatLng(res.latitude, res.longitude);
   }
+
+  Future<String> calculateDistance(String from, String to) async {
+    try {
+      var url =
+          "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:$to&origins=place_id:$from&key=$key";
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        print(jsonDecode(response.body)['rows'][0]['elements'][0]['distance']
+            ['text']);
+        String distance = jsonDecode(response.body)['rows'][0]['elements'][0]
+                ['distance']['text']
+            .toString()
+            .split(' ')[0];
+        return distance;
+      }
+      return "error";
+    } catch (ex) {
+      print(ex);
+      return "error";
+    }
+  }
 }
