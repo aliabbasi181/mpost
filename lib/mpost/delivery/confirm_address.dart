@@ -20,10 +20,9 @@ class ConfirmAddress extends StatefulWidget {
 }
 
 class _ConfirmAddressState extends State<ConfirmAddress> {
-  String building = "", floor = "";
-  final Set<Marker> markers = new Set();
+  String building = " ", floor = " ";
+  final Set<Marker> markers = Set();
 
-  @override
   initState() {
     markers.add(Marker(
       //add first marker
@@ -194,19 +193,15 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
           ),
           InkWell(
             onTap: () {
-              building.isNotEmpty && floor.isNotEmpty
-                  ? Navigator.pop(
-                      context, widget.address + " " + building + " " + floor)
-                  : null;
+              Navigator.pop(
+                  context, widget.address + " " + building + " " + floor);
             },
             child: Container(
               width: Constants.getWidth(context),
               padding: const EdgeInsets.all(16),
               margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               decoration: BoxDecoration(
-                  color: building.isNotEmpty && floor.isNotEmpty
-                      ? const Color(0XFFF1482be)
-                      : Constants.descriptionColor,
+                  color: const Color(0XFFF1482be),
                   borderRadius: BorderRadius.circular(10)),
               child: const Text(
                 "CONFIRM ADDRESS",

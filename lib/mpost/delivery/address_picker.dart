@@ -9,6 +9,7 @@ import 'package:mpost/mpost/delivery/confirm_address.dart';
 import 'package:mpost/services/places_service.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 class AddressPicker extends StatefulWidget {
   const AddressPicker({Key? key}) : super(key: key);
@@ -36,7 +37,13 @@ class _AddressPickerState extends State<AddressPicker> {
                   height: Constants.getHeight(context),
                   width: Constants.getWidth(context),
                   color: Colors.black.withOpacity(0.7),
-                  child: const Center(child: CircularProgressIndicator()),
+                  child: Center(
+                    child: Platform.isIOS
+                        ? const CupertinoActivityIndicator(
+                            radius: 20,
+                          )
+                        : const CircularProgressIndicator(),
+                  ),
                 )
               : Column(
                   children: [
@@ -48,6 +55,13 @@ class _AddressPickerState extends State<AddressPicker> {
                               target: applicationBloc.userLocation, zoom: 13),
                           mapType: MapType.terrain,
                           onTap: (latlng) {},
+                          markers: <Marker>{
+                            Marker(
+                              markerId: const MarkerId("Current Location"),
+                              position: applicationBloc.userLocation,
+                              icon: BitmapDescriptor.defaultMarker,
+                            )
+                          },
                           myLocationButtonEnabled: false,
                         )),
                     Container(
@@ -139,7 +153,19 @@ class _AddressPickerState extends State<AddressPicker> {
                       )),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    applicationBloc.userLocation !=
+                            const LatLng(-1.2888736, 36.7913343)
+                        ? Navigator.pop(
+                            context,
+                            Address(
+                                applicationBloc.userLocation.latitude,
+                                applicationBloc.userLocation.longitude,
+                                "Current Location",
+                                "Current Location",
+                                ""))
+                        : null;
+                  },
                   minLeadingWidth: 0,
                   contentPadding: EdgeInsets.zero,
                   leading: Container(
@@ -149,7 +175,10 @@ class _AddressPickerState extends State<AddressPicker> {
                             "asset/images/use_my_location_icon.png")),
                   ),
                   title: Text(
-                    'Use current location',
+                    applicationBloc.userLocation ==
+                            const LatLng(-1.2888736, 36.7913343)
+                        ? "Please wait..."
+                        : "Use current location",
                     style: TextStyle(
                         color: Constants.primaryColor,
                         fontFamily: "Montserrat",

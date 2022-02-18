@@ -1,14 +1,14 @@
-import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/addPhoneNumber.dart';
 import 'package:mpost/mpost/delivery/address_picker.dart';
-import 'package:mpost/mpost/delivery/confirm_address.dart';
 import 'package:mpost/mpost/delivery/delivery_details.dart';
 import 'package:mpost/mpost/payment/choose_payment.dart';
+import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:mpost/models/address.dart';
@@ -37,6 +37,33 @@ class _DeliveryState extends State<Delivery> {
   late DeliveryDetail recpDetail;
   String itemType = "Delivery details";
   String price = "135";
+  final Set<Polyline> polyline = Set();
+  final Set<Marker> markers = Set();
+
+  createPolyline() async {
+    if (pickFrom.lat != 0 && deliver.lat != 0) {
+      PolylinePoints polylinePoints = PolylinePoints();
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        Constants.googleAPIkey,
+        PointLatLng(
+          pickFrom.lat,
+          pickFrom.lng,
+        ),
+        PointLatLng(deliver.lat, deliver.lng),
+      );
+      print(result);
+      List<LatLng> points = [];
+      for (PointLatLng item in result.points) {
+        points.add(LatLng(item.latitude, item.longitude));
+      }
+      polyline.add(Polyline(
+          polylineId: const PolylineId("value"),
+          points: points,
+          width: 5,
+          color: Constants.primaryColor));
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,11 +127,14 @@ class _DeliveryState extends State<Delivery> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const AddressPicker()));
-                                  if (pickFrom.PlaceId != "" &&
-                                      deliver.PlaceId != "") {
-                                    applicationBloc.getDistance(
-                                        pickFrom.PlaceId, deliver.PlaceId);
-                                  }
+                                  markers.add(Marker(
+                                    //add first marker
+                                    markerId: MarkerId(pickFrom.address),
+                                    position:
+                                        LatLng(pickFrom.lat, pickFrom.lng),
+                                    icon: BitmapDescriptor
+                                        .defaultMarker, //Icon for Marker
+                                  ));
                                   setState(() {});
                                 } catch (ex) {}
                                 setState(() {});
@@ -142,12 +172,16 @@ class _DeliveryState extends State<Delivery> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const AddressPicker()));
+                                  markers.add(Marker(
+                                    //add first marker
+                                    markerId: MarkerId(deliver.address),
+                                    position: LatLng(deliver.lat, deliver.lng),
+                                    icon: BitmapDescriptor
+                                        .defaultMarker, //Icon for Marker
+                                  ));
+                                  createPolyline();
+                                  setState(() {});
                                 } catch (ex) {}
-                                if (pickFrom.PlaceId != "" &&
-                                    deliver.PlaceId != "") {
-                                  applicationBloc.getDistance(
-                                      pickFrom.PlaceId, deliver.PlaceId);
-                                }
                                 setState(() {});
                               },
                               leading: const Icon(
@@ -177,30 +211,8 @@ class _DeliveryState extends State<Delivery> {
                             const SizedBox(
                               height: 5,
                             ),
-                            (pickFrom.lat == 0)
+                            pickFrom.lat != 0
                                 ? Container(
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    width: Constants.getWidth(context),
-                                    child: GoogleMap(
-                                      onMapCreated:
-                                          (GoogleMapController controller) {
-                                        googleMapController = controller;
-                                      },
-                                      initialCameraPosition: CameraPosition(
-                                          target: pickFrom.lat == 0
-                                              ? const LatLng(
-                                                  -1.2888736, 36.7913343)
-                                              : LatLng(
-                                                  pickFrom.lat, pickFrom.lng),
-                                          zoom: 13),
-                                      mapType: MapType.terrain,
-                                      onTap: (latlng) {},
-                                      myLocationButtonEnabled: false,
-                                    ))
-                                : Container(
                                     height: 120,
                                     decoration: BoxDecoration(
                                         borderRadius:
@@ -210,11 +222,24 @@ class _DeliveryState extends State<Delivery> {
                                       initialCameraPosition: CameraPosition(
                                           target: LatLng(
                                               pickFrom.lat, pickFrom.lng),
-                                          zoom: 13),
-                                      mapType: MapType.terrain,
+                                          zoom: 7.5),
+                                      mapType: MapType.normal,
+                                      markers: markers,
                                       onTap: (latlng) {},
+                                      polylines: polyline,
                                       myLocationButtonEnabled: false,
-                                    )),
+                                    ))
+                                : Container(
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                        image: const DecorationImage(
+                                            image: AssetImage(
+                                                "asset/images/map.png"),
+                                            fit: BoxFit.cover),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    width: Constants.getWidth(context),
+                                  ),
                             const SizedBox(
                               height: 5,
                             ),
@@ -368,8 +393,8 @@ class _DeliveryState extends State<Delivery> {
                               thickness: 1.5,
                               height: 15,
                             ),
-                            ListTile(
-                              title: const Text(
+                            const ListTile(
+                              title: Text(
                                 "Total",
                                 style: TextStyle(
                                     color: Colors.black,
@@ -378,14 +403,8 @@ class _DeliveryState extends State<Delivery> {
                                     fontWeight: FontWeight.w500),
                               ),
                               trailing: Text(
-                                applicationBloc.totalCost == -1
-                                    ? "KSH " + price
-                                    : applicationBloc.totalCost == -2
-                                        ? "KSH {Error}"
-                                        : "KSH " +
-                                            applicationBloc.totalCost
-                                                .toString(),
-                                style: const TextStyle(
+                                "KSH 135",
+                                style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
                                     fontFamily: "Montserrat",
@@ -405,13 +424,46 @@ class _DeliveryState extends State<Delivery> {
                       ? "CONFIRM ORDER"
                       : "Please wait...",
                   onPress: () async {
-                    if (await applicationBloc.confirmOrder(
-                        pickFrom, deliver, recpDetail)) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChoosePayment(
-                                  cost: applicationBloc.totalCost.toString())));
+                    // applicationBloc.initializeMobilePayment(
+                    //     "", "phone", "paymentRequestId");
+                    // return;
+                    if (pickFrom.detailedAddress == "") {
+                      showSnackBar("Validation error",
+                          "Pickup address is required.", context);
+                      return;
+                    } else if (deliver.detailedAddress == "") {
+                      showSnackBar("Validation error",
+                          "Delivery address is required.", context);
+                      return;
+                    } else if (pickupTime == "") {
+                      showSnackBar("Validation error",
+                          "Pickup time is required.", context);
+                      return;
+                    } else if (pickFrom.detailedAddress ==
+                        deliver.detailedAddress) {
+                      showSnackBar(
+                          "Validation error",
+                          "Both pickup and deliver address can not be same.",
+                          context);
+                      return;
+                    } else if (itemType == "Delivery details") {
+                      showSnackBar("Validation error",
+                          "Recipient details can not be empty.", context);
+                      return;
+                    } else {
+                      await applicationBloc.checkConnection(context);
+                      if (await applicationBloc.confirmOrder(
+                          pickFrom, deliver, recpDetail)) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChoosePayment(
+                                      cost:
+                                          applicationBloc.totalCost.toString(),
+                                      id: applicationBloc.paymentRequestId
+                                          .toString(),
+                                    )));
+                      }
                     }
                   }),
             )
@@ -432,12 +484,12 @@ class TimePicker extends StatefulWidget {
 class _TimePickerState extends State<TimePicker> {
   Color optionColor = Color(0XFFFbdbfc1);
   bool today = true, tomorrow = false;
-  String selection = "";
+  String selection = "Today | 16:00 - 17:00";
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.fromLTRB(40, 30, 40, 10),
+        padding: const EdgeInsets.fromLTRB(40, 30, 40, 20),
         height: Constants.getHeight(context) * 0.4,
         child: Stack(
           children: [

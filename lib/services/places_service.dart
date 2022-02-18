@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -62,6 +60,13 @@ class PlacesService {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     var res = await Geolocator.getCurrentPosition();
+    // try {
+    //   List<Placemark> placemarks =
+    //       await placemarkFromCoordinates(52.2165157, 6.9437819);
+    //   print(placemarks.first.toString());
+    // } catch (ex) {
+    //   print(ex);
+    // }
     return LatLng(res.latitude, res.longitude);
   }
 

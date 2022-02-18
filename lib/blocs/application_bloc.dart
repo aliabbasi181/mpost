@@ -1,16 +1,21 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mpost/connectivity.dart';
 import 'package:mpost/models/address.dart';
 import 'package:mpost/models/places_search.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/payment/processing.dart';
 import 'package:mpost/services/delivery_services.dart';
 import 'package:mpost/services/login_register.dart';
+import 'package:mpost/services/payment.dart';
 import 'package:mpost/services/places_service.dart';
 
 class ApplicaitonBloc with ChangeNotifier {
   final placesService = PlacesService();
   final loginRegisterService = LoginRegisterService();
   final delivaryService = DeliveryService();
+  final PaymentService paymentService = PaymentService();
 
   ApplicaitonBloc() {
     print("BLOC working");
@@ -24,6 +29,8 @@ class ApplicaitonBloc with ChangeNotifier {
   bool loading = false;
   bool newPhone = true;
   int totalCost = -1;
+  int paymentRequestId = -1;
+  String paymentRequestStatus = "";
 
   // register variables
 
@@ -104,7 +111,12 @@ class ApplicaitonBloc with ChangeNotifier {
       Address from, Address to, DeliveryDetail recpDetail) async {
     loading = true;
     notifyListeners();
-    if (await delivaryService.confirmOrder(from, to, recpDetail)) {
+    String res = await delivaryService.confirmOrder(from, to, recpDetail);
+    var cost = res.split(',');
+    if (cost.first != "-1") {
+      totalCost = int.parse(cost.first);
+      paymentRequestId = int.parse(cost.last);
+      print(paymentRequestId);
       loading = false;
       notifyListeners();
       return true;
@@ -126,5 +138,35 @@ class ApplicaitonBloc with ChangeNotifier {
     totalCost = (135 + (cost * 25)).round();
     loading = false;
     notifyListeners();
+  }
+
+  initializeMobilePayment(String operator, String phone, paymentRequestId,
+      BuildContext context) async {
+    paymentRequestStatus = "loading";
+    notifyListeners();
+    if (operator == "Safaricom") {
+      if (await paymentService.safaricomInitialize(
+          phone, int.parse(paymentRequestId))) {
+        paymentRequestStatus = "pending";
+        notifyListeners();
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const PaymentSuccess()));
+      } else {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const PaymentError()));
+      }
+    }
+    paymentRequestStatus = "error";
+    notifyListeners();
+  }
+
+  checkConnection(BuildContext context) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+    } else if (connectivityResult == ConnectivityResult.none) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const ConnectivityStatus()));
+    }
   }
 }

@@ -2,15 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/mpost/payment/processing.dart';
+import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:accordion/accordion.dart';
 
 import '../../constants.dart';
 
 class ChoosePayment extends StatefulWidget {
-  String cost;
-  ChoosePayment({Key? key, required this.cost}) : super(key: key);
+  String cost, id;
+  ChoosePayment({Key? key, required this.cost, required this.id})
+      : super(key: key);
 
   @override
   _ChoosePaymentState createState() => _ChoosePaymentState();
@@ -24,6 +25,7 @@ class _ChoosePaymentState extends State<ChoosePayment> {
   @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
+    //final paymentBloc = Provider.of<ApplicationPaymentBloc>(conte
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -209,34 +211,34 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                           )
                         : const SizedBox(),
                     !mobile ? const Divider() : const SizedBox(),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          _value = 2;
-                          card = true;
-                          mobile = false;
-                          cash = false;
-                        });
-                      },
-                      child: ListTile(
-                        title: InputLabel(label: "Add new card", isReq: false),
-                        minLeadingWidth: 0,
-                        contentPadding: const EdgeInsets.all(0),
-                        leading: Radio(
-                            value: 2,
-                            groupValue: _value,
-                            onChanged: (value) {
-                              setState(() {
-                                _value = int.parse(value.toString());
-                              });
-                            }),
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     setState(() {
+                    //       _value = 2;
+                    //       card = true;
+                    //       mobile = false;
+                    //       cash = false;
+                    //     });
+                    //   },
+                    //   child: ListTile(
+                    //     title: InputLabel(label: "Add new card", isReq: false),
+                    //     minLeadingWidth: 0,
+                    //     contentPadding: const EdgeInsets.all(0),
+                    //     leading: Radio(
+                    //         value: 2,
+                    //         groupValue: _value,
+                    //         onChanged: (value) {
+                    //           setState(() {
+                    //             _value = int.parse(value.toString());
+                    //           });
+                    //         }),
+                    //   ),
+                    // ),
                     const Divider(),
                     InkWell(
                       onTap: () {
                         setState(() {
-                          _value = 3;
+                          _value = 2;
                           cash = true;
                           mobile = false;
                           card = false;
@@ -247,7 +249,7 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                         minLeadingWidth: 0,
                         contentPadding: const EdgeInsets.all(0),
                         leading: Radio(
-                            value: 3,
+                            value: 2,
                             groupValue: _value,
                             onChanged: (value) {
                               setState(() {
@@ -283,13 +285,39 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                   ),
                 ),
                 InputButton(
-                    label:
-                        !applicationBloc.loading ? "PAY NOW" : "Please wait...",
+                    label: "PAY NOW",
                     onPress: () async {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ProcessingPayment()));
+                      if (mobile) {
+                        if (pickMobilePayment == "") {
+                          showSnackBar(
+                              "Mobile Money", "Please pick operator", context);
+                          return;
+                        } else if (pickMobilePayment == "Safaricom") {
+                          if (account_phonenumber.text.isNotEmpty) {
+                            await applicationBloc.checkConnection(context);
+                            applicationBloc.initializeMobilePayment(
+                                pickMobilePayment,
+                                "254" + account_phonenumber.text,
+                                widget.id,
+                                context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ProcessingPayment()));
+                          } else {
+                            showSnackBar(
+                                "Safaricom",
+                                "Please enter Safaricom account number.",
+                                context);
+                            return;
+                          }
+                        } else {
+                          showSnackBar(
+                              "Airtel", "It is not available now.", context);
+                          return;
+                        }
+                      }
                     })
               ],
             )),
@@ -318,7 +346,7 @@ class _PickMobilePaymentState extends State<PickMobilePayment> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.fromLTRB(40, 30, 40, 10),
+        padding: const EdgeInsets.fromLTRB(40, 30, 40, 20),
         height: Constants.getHeight(context) * 0.4,
         child: Stack(
           children: [

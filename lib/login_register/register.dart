@@ -5,6 +5,7 @@ import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/login.dart';
 import 'package:mpost/login_register/otp_verify.dart';
 import 'package:mpost/mpost/nav.dart';
+import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -127,10 +128,24 @@ class _RegisterState extends State<Register> {
                   label:
                       !applicationBloc.loading ? "CONTINUE" : "Please wait...",
                   onPress: () async {
+                    if (name.text.isEmpty) {
+                      showSnackBar(
+                          "Validation Error", "Name is required", context);
+                      return;
+                    } else if (email.text.isEmpty) {
+                      showSnackBar(
+                          "Validation Error", "Email is required", context);
+                      return;
+                    } else if (phone.text.isEmpty) {
+                      showSnackBar("Validation Error",
+                          "Phone number is required", context);
+                      return;
+                    }
                     Constants.registerName = name.text;
                     Constants.registerEmail = email.text;
                     Constants.registerPassword = "Test@123";
                     Constants.registerMobile = countryCode + phone.text;
+                    await applicationBloc.checkConnection(context);
                     if (await applicationBloc
                         .requestOTP(countryCode + phone.text)) {
                       Navigator.push(
@@ -267,8 +282,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                     onPress: () async {
                       Constants.registerType =
                           _value == 2 ? "Business" : "Personal";
-                      print(
-                          Constants.registerName.trim().split(' ').last.trim());
+                      await applicationBloc.checkConnection(context);
                       if (await applicationBloc.register()) {}
                       Navigator.push(
                           context,

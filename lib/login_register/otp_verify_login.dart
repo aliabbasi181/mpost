@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/nav.dart';
+import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -167,6 +168,12 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                     label:
                         !applicationBloc.loading ? "SUBMIT" : "Please wait...",
                     onPress: () async {
+                      if (otp.text.isEmpty) {
+                        showSnackBar(
+                            "Validation Error", "OTP can not empty", context);
+                        return;
+                      }
+                      await applicationBloc.checkConnection(context);
                       if (await applicationBloc.verifyLoginOTP(
                           otp.text, widget.phone)) {
                         Navigator.pushReplacement(

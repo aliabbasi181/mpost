@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/otp_verify_login.dart';
+import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -101,6 +102,12 @@ class _LoginState extends State<Login> {
                     label:
                         !applicationBloc.loading ? "GET OTP" : "Please wait...",
                     onPress: () async {
+                      if (phone.text.isEmpty) {
+                        showSnackBar("Validation Error",
+                            "Phone number is required.", context);
+                        return;
+                      }
+                      await applicationBloc.checkConnection(context);
                       if (await applicationBloc
                           .login(countryCode + phone.text)) {
                         Navigator.push(

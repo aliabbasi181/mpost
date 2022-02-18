@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/log_and_reg.dart';
@@ -7,7 +10,6 @@ import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/mpost/payment.dart';
 import 'package:mpost/splash.dart';
 import 'package:provider/provider.dart';
-
 import 'mpost/payment/choose_payment.dart';
 
 void main() {
@@ -22,7 +24,8 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (context) => ApplicaitonBloc(),
         child: const MaterialApp(
-          home: Delivery(),
+          debugShowCheckedModeBanner: false,
+          home: Home(),
         ));
   }
 }

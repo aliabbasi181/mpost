@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/home.dart';
+import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 
 class DeliveryDetails extends StatefulWidget {
@@ -329,6 +330,19 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
               child: InputButton(
                   label: "SAVE",
                   onPress: () {
+                    if (name.text.isEmpty) {
+                      showSnackBar("Validation error",
+                          "Recipient name is required", context);
+                      return;
+                    } else if (phone.text.isEmpty) {
+                      showSnackBar("Validation error",
+                          "Recipient phone number is required", context);
+                      return;
+                    } else if (pickCategory == "") {
+                      showSnackBar(
+                          "Validation error", "Item type is required", context);
+                      return;
+                    }
                     deliveryDetail = DeliveryDetail(name.text, phone.text,
                         pickCategory, note.text, instructions.text);
                     Navigator.pop(context, deliveryDetail);

@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
@@ -520,4 +521,23 @@ class _BannerSectionState extends State<BannerSection> {
       ],
     );
   }
+}
+
+showSnackBar(String title, String message, BuildContext context) async {
+  await Flushbar(
+    title: title,
+    message: message,
+    duration: const Duration(seconds: 3),
+    flushbarPosition: FlushbarPosition.TOP,
+    borderRadius: BorderRadius.circular(10),
+    margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+    animationDuration: const Duration(milliseconds: 500),
+    icon: const Icon(
+      Icons.error_rounded,
+      color: Colors.white,
+      size: 40,
+    ),
+    shouldIconPulse: true,
+  ).show(context);
 }

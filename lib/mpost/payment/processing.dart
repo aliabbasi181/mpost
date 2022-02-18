@@ -1,9 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/mpost/payment/choose_payment.dart';
 import 'package:provider/provider.dart';
@@ -54,27 +54,6 @@ class _ProcessingPaymentState extends State<ProcessingPayment> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const PaymentSuccess()));
-                    },
-                    child: const Text("Success")),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const PaymentError()));
-                    },
-                    child: const Text("Attack")),
-              ],
-            )
           ],
         ),
       ),
@@ -133,10 +112,14 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const BottomNav()));
+                      MaterialPageRoute(builder: (context) => const Home()),
+                      (route) => false);
+                  // Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => const BottomNav()));
                 },
                 child: Container(
                   width: Constants.getWidth(context),
@@ -218,11 +201,12 @@ class _PaymentErrorState extends State<PaymentError> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ChoosePayment(
                                 cost: applicationBloc.totalCost.toString(),
+                                id: applicationBloc.paymentRequestId.toString(),
                               )));
                 },
                 child: Container(

@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/payment/processing.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -16,6 +19,7 @@ class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(
@@ -27,13 +31,19 @@ class _HomeState extends State<Home> {
               child: Column(
                 children: [
                   Row(
-                    children: const [
-                      Icon(
-                        Icons.menu_rounded,
-                        size: 35,
-                        color: Colors.white,
+                    children: [
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image: NetworkImage(
+                                    "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo="),
+                                fit: BoxFit.cover),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100)),
                       ),
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           "MPOST",
                           textAlign: TextAlign.center,
@@ -44,7 +54,7 @@ class _HomeState extends State<Home> {
                               fontSize: 22),
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.notifications_none_rounded,
                         size: 35,
                         color: Colors.white,
@@ -94,7 +104,8 @@ class _HomeState extends State<Home> {
                     Container(
                       width: Constants.getWidth(context) * 0.20,
                       child: MenuIcon(
-                          onPress: () {
+                          onPress: () async {
+                            await applicationBloc.checkConnection(context);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

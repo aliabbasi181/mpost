@@ -23,7 +23,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
 
   _runTimer() {
     const oneSec = Duration(seconds: 1);
-    _countDown = 25;
+    _countDown = 90;
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/register.dart';
+import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -163,6 +164,12 @@ class _OTPVerifyState extends State<OTPVerify> {
                         ? "CONTINUE"
                         : "Please wait...",
                     onPress: () async {
+                      if (otp.text.isEmpty) {
+                        showSnackBar(
+                            "Validation Error", "OTP can not empty", context);
+                        return;
+                      }
+                      await applicationBloc.checkConnection(context);
                       if (await applicationBloc.verifyOTP(
                           otp.text, widget.phone)) {
                         Constants.registerMobile = widget.phone;

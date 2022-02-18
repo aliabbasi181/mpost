@@ -13,6 +13,7 @@ class Constants {
   static String registerPassword = '';
   static String registerType = '';
   static String postal_code_id = '1';
+  static String googleAPIkey = 'AIzaSyBDOjOJB4-uVM2YssqKA0KNOwv8WSRxBd4';
   static Map<String, String> requestHeaders = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',

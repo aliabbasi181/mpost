@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/models/address.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -6,7 +7,7 @@ import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 
 class DeliveryService {
-  Future<bool> confirmOrder(
+  Future<String> confirmOrder(
       Address from, Address to, DeliveryDetail recpDetail) async {
     String url = Constants.hostUrl + "delivery-requests";
     if (Constants.token.isNotEmpty) {
@@ -33,14 +34,14 @@ class DeliveryService {
           data: jsonEncode(payload),
           options: Options(headers: Constants.requestHeadersWithToken));
       if (response.statusCode == 200) {
-        print(response.data);
-        return true;
+        print(response.data['delivery_cost']);
+        return "${response.data['delivery_cost'].toString()},${response.data['payment_request_id'].toString()}";
       } else {
-        return false;
+        return "-1";
       }
     } else {
       print("you are not loggedin");
-      return false;
+      return "-1";
     }
   }
 }
