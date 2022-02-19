@@ -62,7 +62,7 @@ class _ConnectivityStatusState extends State<ConnectivityStatus> {
                       height: 5,
                     ),
                     const Text(
-                      'Please check your network connection.',
+                      'Please check your network\nconnection.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: "Montserrat",
