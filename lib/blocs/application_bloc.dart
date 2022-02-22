@@ -8,6 +8,7 @@ import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/payment/processing.dart';
 import 'package:mpost/services/delivery_services.dart';
 import 'package:mpost/services/login_register.dart';
+import 'package:mpost/services/notifications.dart';
 import 'package:mpost/services/payment.dart';
 import 'package:mpost/services/places_service.dart';
 
@@ -151,7 +152,15 @@ class ApplicaitonBloc with ChangeNotifier {
         notifyListeners();
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const PaymentSuccess()));
+        MpostNotification.notify(
+            "Payment has been initialized.",
+            "Dear user your payment has been successfully initialized nad its on pending. Put your security PIN to complete delivery process.",
+            "channel_key");
       } else {
+        MpostNotification.notify(
+            "Payment has been faild.",
+            "Dear user your payment has been failed due to tachnical issue. We are sorry for the inconvinence please try again.",
+            "channel_key");
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const PaymentError()));
       }

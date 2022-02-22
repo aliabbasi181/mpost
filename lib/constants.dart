@@ -31,3 +31,17 @@ class Constants {
     return MediaQuery.of(context).size.height;
   }
 }
+
+class ActivityCategory {
+  String name;
+  bool active;
+  ActivityCategory(this.name, this.active);
+  static List<ActivityCategory> activityTabs = [
+    ActivityCategory("Deliveries", true),
+    ActivityCategory("Shopping", false),
+    ActivityCategory("Events", false),
+    ActivityCategory("Transport", false),
+    ActivityCategory("Movies", false),
+    ActivityCategory("Gift Card", false),
+  ];
+}

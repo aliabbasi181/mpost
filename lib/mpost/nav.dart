@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:mpost/mpost/activity.dart';
+import 'package:mpost/mpost/activity/activity.dart';
 import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/payment.dart';
 import 'package:mpost/mpost/profile.dart';

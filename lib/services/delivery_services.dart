@@ -30,13 +30,18 @@ class DeliveryService {
         "note": recpDetail.note,
         "instructions": recpDetail.instructions,
       };
-      var response = await Dio().post(url,
-          data: jsonEncode(payload),
-          options: Options(headers: Constants.requestHeadersWithToken));
-      if (response.statusCode == 200) {
-        print(response.data['delivery_cost']);
-        return "${response.data['delivery_cost'].toString()},${response.data['payment_request_id'].toString()}";
-      } else {
+      try {
+        var response = await Dio().post(url,
+            data: jsonEncode(payload),
+            options: Options(headers: Constants.requestHeadersWithToken));
+        if (response.statusCode == 200) {
+          print(response.data['delivery_cost']);
+          return "${response.data['delivery_cost'].toString()},${response.data['payment_request_id'].toString()}";
+        } else {
+          return "-1";
+        }
+      } catch (ex) {
+        print(ex);
         return "-1";
       }
     } else {

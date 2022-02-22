@@ -40,6 +40,7 @@ class _AddressPickerState extends State<AddressPicker> {
                   child: Center(
                     child: Platform.isIOS
                         ? const CupertinoActivityIndicator(
+                            color: Colors.white,
                             radius: 20,
                           )
                         : const CircularProgressIndicator(),

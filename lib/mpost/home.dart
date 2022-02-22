@@ -1,10 +1,11 @@
+//import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
-import 'package:mpost/mpost/payment/processing.dart';
 import 'package:mpost/mpost/widgets.dart';
+import 'package:mpost/services/notifications.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
@@ -34,8 +41,8 @@ class _HomeState extends State<Home> {
                       Row(
                         children: [
                           Container(
-                            height: 30,
-                            width: 30,
+                            height: 35,
+                            width: 35,
                             decoration: BoxDecoration(
                                 image: const DecorationImage(
                                     image: NetworkImage(
@@ -55,10 +62,20 @@ class _HomeState extends State<Home> {
                                   fontSize: 22),
                             ),
                           ),
-                          const Icon(
-                            Icons.notifications_none_rounded,
-                            size: 35,
-                            color: Colors.white,
+                          InkWell(
+                            onTap: () {
+                              try {
+                                MpostNotification.notify(
+                                    "title", "body", "basic_channel");
+                              } catch (ex) {
+                                print(ex);
+                              }
+                            },
+                            child: const Icon(
+                              Icons.notifications_none_rounded,
+                              size: 35,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
