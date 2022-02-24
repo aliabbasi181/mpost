@@ -6,6 +6,7 @@ import 'package:mpost/mpost/activity/activity.dart';
 import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/payment.dart';
 import 'package:mpost/mpost/profile.dart';
+import 'package:mpost/services/notifications.dart';
 
 const List<Widget> _screens = <Widget>[
   Home(),
@@ -25,6 +26,12 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   final PageController _pageController = PageController(initialPage: 0);
+  @override
+  void initState() {
+    MpostNotification.initiateOneSignal();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

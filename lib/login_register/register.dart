@@ -33,7 +33,7 @@ class _RegisterState extends State<Register> {
               height: Constants.getHeight(context) * 0.85,
               child: SingleChildScrollView(
                 child: Container(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -49,7 +49,7 @@ class _RegisterState extends State<Register> {
                                   },
                                   child: const Icon(
                                     Icons.arrow_back_rounded,
-                                    size: 35,
+                                    size: 25,
                                   ),
                                 )
                               ],
@@ -62,7 +62,7 @@ class _RegisterState extends State<Register> {
                               style: TextStyle(
                                   fontFamily: "Montserrat",
                                   fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.w700),
                             ),
                             const SizedBox(
                               height: 5,
@@ -99,6 +99,13 @@ class _RegisterState extends State<Register> {
                               initialSelection: "Kenya",
                               showDropDownButton: true,
                               showCountryOnly: true,
+                              textStyle: const TextStyle(
+                                fontFamily: "Montserrat",
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              showOnlyCountryWhenClosed: true,
                               favorite: const ['+254', 'KE'],
                               flagWidth: 30,
                               onChanged: (code) {
@@ -187,19 +194,19 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Icon(
-                            Icons.arrow_back_rounded,
-                            size: 40,
-                          ),
-                        )
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     InkWell(
+                    //       onTap: () {
+                    //         Navigator.pop(context);
+                    //       },
+                    //       child: const Icon(
+                    //         Icons.arrow_back_rounded,
+                    //         size: 40,
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -218,6 +225,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       style: TextStyle(
                           fontFamily: "Montserrat",
                           fontSize: 14,
+                          height: 1.5,
                           fontWeight: FontWeight.w400,
                           color: Constants.descriptionColor),
                     ),
@@ -284,10 +292,17 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                           _value == 2 ? "Business" : "Personal";
                       await applicationBloc.checkConnection(context);
                       if (await applicationBloc.register()) {}
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Login()));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => const BottomNav(),
+                        ),
+                        (route) => false,
+                      );
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => const BottomNav()));
                     })
               ],
             )),

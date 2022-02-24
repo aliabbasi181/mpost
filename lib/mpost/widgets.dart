@@ -36,8 +36,8 @@ class _MenuIconState extends State<MenuIcon> {
             padding: const EdgeInsets.all(10),
             child: Image(
               image: AssetImage(widget.image),
-              height: 45,
-              width: 45,
+              height: 35,
+              width: 35,
             ),
           ),
         ),
@@ -50,7 +50,7 @@ class _MenuIconState extends State<MenuIcon> {
               color: Colors.black,
               fontFamily: "Montserrat",
               fontWeight: FontWeight.w600,
-              fontSize: 12),
+              fontSize: 13),
         )
       ],
     );
@@ -80,7 +80,7 @@ class _FadeTilesState extends State<FadeTiles> {
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: const Color(0XFFFf4f4f4),
-          borderRadius: BorderRadius.circular(15)),
+          borderRadius: BorderRadius.circular(10)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,7 +94,7 @@ class _FadeTilesState extends State<FadeTiles> {
                     color: Constants.descriptionColor,
                     fontFamily: "Montserrat",
                     fontWeight: FontWeight.w600,
-                    fontSize: 10),
+                    fontSize: 12),
               ),
               const SizedBox(
                 height: 5,
@@ -108,14 +108,14 @@ class _FadeTilesState extends State<FadeTiles> {
                     color: Colors.black,
                     fontFamily: "Montserrat",
                     fontWeight: FontWeight.w700,
-                    fontSize: 16),
+                    fontSize: 15),
               ),
             ],
           ),
           Icon(
             widget.icon,
             color: Colors.black,
-            size: 35,
+            size: 30,
           )
         ],
       ),
@@ -158,7 +158,7 @@ class _CinemaSectionState extends State<CinemaSection> {
             style: TextStyle(
                 color: Constants.descriptionColor,
                 fontFamily: "Montserrat",
-                fontSize: 10),
+                fontSize: 13),
           ),
           const SizedBox(
             height: 0,
@@ -169,7 +169,7 @@ class _CinemaSectionState extends State<CinemaSection> {
                 color: Colors.black,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w500,
-                fontSize: 16),
+                fontSize: 15),
           ),
         ],
       ),
@@ -212,7 +212,7 @@ class _OfferSectionState extends State<OfferSection> {
             style: TextStyle(
                 color: Constants.descriptionColor,
                 fontFamily: "Montserrat",
-                fontSize: 10),
+                fontSize: 13),
           ),
           const SizedBox(
             height: 0,
@@ -226,7 +226,7 @@ class _OfferSectionState extends State<OfferSection> {
                 color: Colors.black,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w500,
-                fontSize: 16),
+                fontSize: 15),
           ),
         ],
       ),
@@ -259,7 +259,7 @@ class _SectionLabelState extends State<SectionLabel> {
                 color: Colors.black,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w700,
-                fontSize: 16),
+                fontSize: 18),
           ),
           Icon(
             widget.icon == CupertinoIcons.arrow_right
@@ -309,11 +309,11 @@ class _MoreForYouSectionState extends State<MoreForYouSection> {
             style: const TextStyle(
                 color: Colors.black,
                 fontFamily: "Montserrat",
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 fontSize: 14),
           ),
           const SizedBox(
-            height: 0,
+            height: 3,
           ),
           Text(
             widget.subTitle,
@@ -324,7 +324,7 @@ class _MoreForYouSectionState extends State<MoreForYouSection> {
                 color: Constants.descriptionColor,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w500,
-                fontSize: 10),
+                fontSize: 12),
           ),
           const SizedBox(
             height: 10,
@@ -337,8 +337,8 @@ class _MoreForYouSectionState extends State<MoreForYouSection> {
             children: [
               Image(
                 image: AssetImage(widget.icon),
-                width: 40,
-                height: 40,
+                width: 35,
+                height: 35,
               )
             ],
           )
@@ -392,7 +392,9 @@ class _BestEventsSectionState extends State<BestEventsSection> {
                 child: Text(
                   widget.category,
                   style: TextStyle(
-                    fontWeight: FontWeight.w600,
+                    fontFamily: "Montserrat",
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
                     color: widget.category != "Best events"
                         ? Colors.white
                         : Colors.black,
@@ -413,7 +415,7 @@ class _BestEventsSectionState extends State<BestEventsSection> {
                 color: Colors.black,
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w500,
-                fontSize: 14),
+                fontSize: 15),
           ),
         ],
       ),
@@ -487,7 +489,7 @@ class _BannerSectionState extends State<BannerSection> {
                   style: TextStyle(
                       color: widget.subTitleColor,
                       fontFamily: "Montserrat",
-                      fontSize: 12),
+                      fontSize: 14),
                 ),
               ),
               const SizedBox(
@@ -504,6 +506,7 @@ class _BannerSectionState extends State<BannerSection> {
                   child: Text(
                     widget.buttonText,
                     style: const TextStyle(
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),

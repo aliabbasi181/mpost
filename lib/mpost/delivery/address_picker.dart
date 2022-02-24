@@ -127,7 +127,7 @@ class _AddressPickerState extends State<AddressPicker> {
                   },
                   child: Container(
                       width: Constants.getWidth(context),
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                           border: Border.all(
                               width: 1, color: const Color(0XFFFefefef)),
@@ -135,7 +135,7 @@ class _AddressPickerState extends State<AddressPicker> {
                           borderRadius: BorderRadius.circular(10)),
                       child: Row(
                         children: const [
-                          Icon(CupertinoIcons.search),
+                          Icon(CupertinoIcons.search, size: 20),
                           SizedBox(
                             width: 10,
                           ),
@@ -184,7 +184,7 @@ class _AddressPickerState extends State<AddressPicker> {
                         color: Constants.primaryColor,
                         fontFamily: "Montserrat",
                         fontSize: 14,
-                        fontWeight: FontWeight.w600),
+                        fontWeight: FontWeight.w700),
                   ),
                 )
               ],
@@ -207,6 +207,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
   TextEditingController searchController = TextEditingController();
   late Address address;
   String detailAddress = "";
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
@@ -238,7 +239,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                       'Search Location',
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 18,
+                          fontSize: 17,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -248,13 +249,15 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                 height: 10,
               ),
               Container(
-                padding: const EdgeInsets.fromLTRB(5, 0, 30, 0),
+                padding: const EdgeInsets.fromLTRB(5, 5, 30, 0),
                 decoration: BoxDecoration(
                     color: const Color(0XFFFfcfcfc),
                     border:
                         Border.all(color: const Color(0XFFFefefef), width: 1.5),
                     borderRadius: BorderRadius.circular(10)),
                 child: TextField(
+                  autofocus: true,
+                  autocorrect: false,
                   controller: searchController,
                   style: const TextStyle(
                       fontSize: 16,
@@ -288,11 +291,9 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                       } catch (ex) {
                         country = "";
                       }
-
                       return Column(children: [
                         ListTile(
                           onTap: () async {
-                            print("PLACE ID:" + place.placeID);
                             try {
                               LatLng latlng =
                                   await applicationBloc.getPlace(place.placeID);
@@ -314,10 +315,11 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                               Navigator.pop(context, address);
                             } catch (ex) {}
                           },
+                          horizontalTitleGap: 0,
                           contentPadding: EdgeInsets.zero,
                           leading: Container(
                             child: const Icon(Icons.location_on_rounded,
-                                color: Color(0XFFF80868a)),
+                                size: 18, color: Color(0XFFF80868a)),
                             padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                                 color: const Color(0XFFFefefef),
@@ -332,7 +334,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                 fontWeight: FontWeight.w500),
                           ),
                           subtitle: Padding(
-                            padding: const EdgeInsets.only(top: 1),
+                            padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               country,
                               style: const TextStyle(

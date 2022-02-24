@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
-import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 
@@ -25,13 +24,13 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0XFFFf8f9ff),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              height: Constants.getHeight(context) * 0.83,
-              child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                height: Constants.getHeight(context) * 0.83,
                 child: Column(
                   children: [
                     Container(
@@ -322,33 +321,39 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                   ],
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 10, 5, 10),
-              width: Constants.getWidth(context),
-              decoration: const BoxDecoration(),
-              child: InputButton(
-                  label: "SAVE",
-                  onPress: () {
-                    if (name.text.isEmpty) {
-                      showSnackBar("Validation error",
-                          "Recipient name is required", context);
-                      return;
-                    } else if (phone.text.isEmpty) {
-                      showSnackBar("Validation error",
-                          "Recipient phone number is required", context);
-                      return;
-                    } else if (pickCategory == "") {
-                      showSnackBar(
-                          "Validation error", "Item type is required", context);
-                      return;
-                    }
-                    deliveryDetail = DeliveryDetail(name.text, phone.text,
-                        pickCategory, note.text, instructions.text);
-                    Navigator.pop(context, deliveryDetail);
-                  }),
-            )
-          ],
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 10, 5, 10),
+                width: Constants.getWidth(context),
+                decoration: const BoxDecoration(),
+                child: InputButton(
+                    label: "SAVE",
+                    onPress: () {
+                      if (name.text.isEmpty) {
+                        showSnackBar("Validation error",
+                            "Recipient name is required", context);
+                        return;
+                      } else if (phone.text.isEmpty) {
+                        showSnackBar("Validation error",
+                            "Recipient phone number is required", context);
+                        return;
+                      } else if (phone.text.length < 9) {
+                        showSnackBar(
+                            "Validation error",
+                            "Phone number can not be less then 9 digits",
+                            context);
+                        return;
+                      } else if (pickCategory == "") {
+                        showSnackBar("Validation error",
+                            "Item type is required", context);
+                        return;
+                      }
+                      deliveryDetail = DeliveryDetail(name.text, phone.text,
+                          pickCategory, note.text, instructions.text);
+                      Navigator.pop(context, deliveryDetail);
+                    }),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -391,7 +396,7 @@ class _PickCategoryState extends State<PickCategory> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Time of item',
+              'Type of item',
               style: TextStyle(
                   fontFamily: "Montserrat",
                   fontSize: 18,

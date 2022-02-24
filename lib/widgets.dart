@@ -18,14 +18,14 @@ class _InputFieldState extends State<InputField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       decoration: BoxDecoration(
           border: Border.all(color: const Color(0XFFFd9d9d9), width: 1.5),
           borderRadius: BorderRadius.circular(10)),
       child: TextField(
         controller: widget.controller,
         style: const TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
             fontFamily: "Montserrat"),
         decoration: InputDecoration(
@@ -33,7 +33,7 @@ class _InputFieldState extends State<InputField> {
             hintText: widget.hint,
             hintStyle: const TextStyle(
                 color: Color(0XFFFbdbfc1),
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
                 fontFamily: "Montserrat")),
       ),
@@ -51,11 +51,12 @@ class InputLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(bottom: 2),
+      margin: const EdgeInsets.only(left: 2),
       child: RichText(
         text: TextSpan(
             text: label,
             style: const TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
                 fontFamily: "Montserrat",
                 color: Colors.black),
@@ -92,20 +93,19 @@ class InputPhoneNumber extends StatelessWidget {
             countryCode + "  ",
             style: const TextStyle(
                 color: Colors.black,
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.w500,
                 fontFamily: "Montserrat"),
           ),
           Expanded(
             child: TextField(
               controller: controller,
-              keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: hint,
                   hintStyle: const TextStyle(
-                      color: Color(0XFFFbdbfc1),
-                      fontSize: 16,
+                      color: Color(0XFFFBDBFC0),
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                       fontFamily: "Montserrat")),
             ),
@@ -128,7 +128,7 @@ class InputButton extends StatelessWidget {
       onTap: onPress,
       child: Container(
         width: Constants.getWidth(context),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(17),
         decoration: BoxDecoration(
             color: const Color(0XFFF1482be),
             borderRadius: BorderRadius.circular(10)),
@@ -139,7 +139,7 @@ class InputButton extends StatelessWidget {
               color: Colors.white,
               fontFamily: "Montserrat",
               fontSize: 16,
-              fontWeight: FontWeight.w500),
+              fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -176,7 +176,7 @@ class _InputEmailFieldState extends State<InputEmailField> {
       child: TextField(
         controller: widget.controller,
         style: const TextStyle(
-            fontSize: 18,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
             fontFamily: "Montserrat"),
         onChanged: (input) {
@@ -195,7 +195,7 @@ class _InputEmailFieldState extends State<InputEmailField> {
             hintText: widget.hint,
             hintStyle: const TextStyle(
                 color: Color(0XFFFbdbfc1),
-                fontSize: 18,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
                 fontFamily: "Montserrat")),
       ),

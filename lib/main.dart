@@ -1,11 +1,11 @@
-import 'dart:async';
-//import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/log_and_reg.dart';
+import 'package:mpost/login_register/otp_verify.dart';
+import 'package:mpost/login_register/register.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/nav.dart';
@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
         create: (context) => ApplicaitonBloc(),
         child: const MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: BottomNav(),
+          home: Splash(),
         ));
   }
 }

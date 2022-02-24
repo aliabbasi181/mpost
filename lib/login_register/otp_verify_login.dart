@@ -70,7 +70,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                       },
                       child: const Icon(
                         Icons.arrow_back_rounded,
-                        size: 40,
+                        size: 25,
                       ),
                     )
                   ],
@@ -85,8 +85,8 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                       "Verify OTP",
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
                     ),
                     const SizedBox(
                       height: 5,
@@ -107,7 +107,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                             style: TextStyle(
                                 fontFamily: "Montserrat",
                                 fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: Constants.primaryColor),
                           )
                         ])),
@@ -126,7 +126,7 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                             "Resend code in $_countDown seconds",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w500,
                                 color: Constants.descriptionColor),
                           )
@@ -149,8 +149,10 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                                     ? "Resend OTP"
                                     : "Please wait...",
                                 style: const TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 14,
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w600),
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
@@ -176,10 +178,18 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                       await applicationBloc.checkConnection(context);
                       if (await applicationBloc.verifyLoginOTP(
                           otp.text, widget.phone)) {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const BottomNav()));
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const BottomNav(),
+                          ),
+                          (route) => false,
+                        );
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const BottomNav()));
                       }
                     })
               ],

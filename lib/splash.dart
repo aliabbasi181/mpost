@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/log_and_reg.dart';
+import 'package:mpost/mpost/nav.dart';
+import 'package:mpost/services/database.dart';
 import 'login_register/register.dart';
 
 class Splash extends StatefulWidget {
@@ -13,16 +15,30 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  late bool isLoggedIn;
+
   @override
-  initState() {
+  void initState() {
     super.initState();
+    _checkUser();
     _navigateToHome();
   }
 
-  _navigateToHome() async {
+  void _checkUser() async {
+    if (await DatabaseHandler.instance.getUser() == 1) {
+      isLoggedIn = true;
+    } else {
+      isLoggedIn = false;
+    }
+  }
+
+  void _navigateToHome() async {
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => const LoginAndRegister()));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                isLoggedIn ? const BottomNav() : const LoginAndRegister()));
   }
 
   Widget build(BuildContext context) {
@@ -31,8 +47,8 @@ class _SplashState extends State<Splash> {
         color: Constants.primaryColor,
         child: const Center(
           child: Image(
-            width: 200,
-            height: 200,
+            width: 111,
+            height: 111,
             image: AssetImage("asset/images/mpost_logo.png"),
           ),
         ),

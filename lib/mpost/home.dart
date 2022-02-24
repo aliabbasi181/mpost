@@ -5,6 +5,8 @@ import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/widgets.dart';
+import 'package:mpost/services/database.dart';
+import 'package:mpost/services/login_register.dart';
 import 'package:mpost/services/notifications.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
@@ -18,10 +20,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
+  LoginRegisterService service = LoginRegisterService();
 
   @override
   void initState() {
     super.initState();
+    print(Constants.user.bearerToken);
   }
 
   @override
@@ -33,25 +37,33 @@ class _HomeState extends State<Home> {
           child: Column(
             children: [
               Container(
-                decoration: BoxDecoration(color: Constants.primaryColor),
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color(0XFFF00C0C4),
+                    Color(0XFFF1582BE),
+                  ],
+                )),
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: SafeArea(
                   child: Column(
                     children: [
                       Row(
-                        children: [
-                          Container(
-                            height: 35,
-                            width: 35,
-                            decoration: BoxDecoration(
-                                image: const DecorationImage(
-                                    image: NetworkImage(
-                                        "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo="),
-                                    fit: BoxFit.cover),
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(100)),
-                          ),
-                          const Expanded(
+                        children: const [
+                          // Container(
+                          //   height: 35,
+                          //   width: 35,
+                          //   decoration: BoxDecoration(
+                          //       image: const DecorationImage(
+                          //           image: NetworkImage(
+                          //               "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo="),
+                          //           fit: BoxFit.cover),
+                          //       color: Colors.white,
+                          //       borderRadius: BorderRadius.circular(100)),
+                          // ),
+                          Expanded(
                             child: Text(
                               "MPOST",
                               textAlign: TextAlign.center,
@@ -59,62 +71,80 @@ class _HomeState extends State<Home> {
                                   color: Colors.white,
                                   fontFamily: "Montserrat",
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 22),
+                                  fontSize: 15),
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              try {
-                                MpostNotification.notify(
-                                    "title", "body", "basic_channel");
-                              } catch (ex) {
-                                print(ex);
-                              }
-                            },
-                            child: const Icon(
-                              Icons.notifications_none_rounded,
-                              size: 35,
-                              color: Colors.white,
-                            ),
-                          ),
+                          // InkWell(
+                          //   onTap: () {
+                          //     try {
+                          //       MpostNotification.notify(
+                          //           "title", "body", "basic_channel");
+                          //     } catch (ex) {
+                          //       print(ex);
+                          //     }
+                          //   },
+                          //   child: const Icon(
+                          //     Icons.notifications_none_rounded,
+                          //     size: 35,
+                          //     color: Colors.white,
+                          //   ),
+                          // ),
                         ],
                       ),
                       const SizedBox(
                         height: 5,
                       ),
-                      SearchInputField(
-                        hint: "Search the MPost App",
-                        controller: searchController,
-                      )
+                      // SearchInputField(
+                      //   hint: "Search the MPost App",
+                      //   controller: searchController,
+                      // )
                     ],
                   ),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(12),
-                color: const Color(0XFFFf2f8fa),
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                color: const Color.fromRGBO(252, 246, 248, 10),
                 width: Constants.getWidth(context),
-                child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                        text: "Your mpost digital address ",
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontFamily: "Montserrat",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                        children: [
-                          TextSpan(
-                              text: "0711305097",
-                              style: TextStyle(
-                                  color: Constants.primaryColor,
-                                  fontFamily: "Montserrat",
-                                  fontWeight: FontWeight.w500))
-                        ])),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                        textAlign: TextAlign.left,
+                        text: const TextSpan(
+                            text: "Mpost virtual address\n",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: "Montserrat",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600),
+                            children: [
+                              TextSpan(
+                                  text: "Use you number 0711305097 ",
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      color: Colors.black,
+                                      fontFamily: "Montserrat",
+                                      fontWeight: FontWeight.w400))
+                            ])),
+                    Container(
+                        padding: const EdgeInsets.fromLTRB(9, 6, 9, 6),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                                color: Color(0XFFFBC4788), width: 1)),
+                        child: const Text("Get one",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0XFFFBC4788),
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w700))),
+                  ],
+                ),
               ),
               Container(
                 decoration: const BoxDecoration(color: Colors.white),
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: Column(
                   children: [
                     Row(
@@ -137,14 +167,19 @@ class _HomeState extends State<Home> {
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
-                              onPress: () {},
+                              onPress: () async {
+                                await DatabaseHandler.instance.removeUser();
+                              },
                               title: "Pay",
                               image: "asset/images/pay_icon.png"),
                         ),
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
-                              onPress: () {},
+                              onPress: () {
+                                MpostNotification.notify(
+                                    "title", "body", "basic_channel");
+                              },
                               title: "Shopping",
                               image: "asset/images/shopping_icon.png"),
                         ),
@@ -181,7 +216,7 @@ class _HomeState extends State<Home> {
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
                               onPress: () {},
-                              title: "Gift Card",
+                              title: "NFT Stamps",
                               image: "asset/images/gift_icon.png"),
                         ),
                         Container(
@@ -200,7 +235,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FadeTiles(
-                            title: "SentiPay",
+                            title: "MPesa",
                             subTitle: "Active",
                             icon: Icons.account_balance_wallet_outlined),
                         FadeTiles(

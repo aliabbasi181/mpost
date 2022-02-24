@@ -200,7 +200,7 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                                     ),
                                     Image(
                                       image: NetworkImage(
-                                          "https://gadgets.ndtv.com/static/v1/images/og_airtel.png"),
+                                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYD8uTde3x2BLRoQ_CT4ky4_vOtsCHBZN2DDocPYnJxfmo3IUhIUGzgsSBtMW6kkKNP2w&usqp=CAU"),
                                       height: 50,
                                       width: 50,
                                     )
@@ -276,7 +276,7 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                         fontWeight: FontWeight.w500),
                   ),
                   trailing: Text(
-                    "KSH " + applicationBloc.totalCost.toString(),
+                    "KSH " + widget.cost,
                     style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,

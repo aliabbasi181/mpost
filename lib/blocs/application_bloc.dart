@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mpost/connectivity.dart';
 import 'package:mpost/models/address.dart';
+import 'package:mpost/models/delivery.dart';
 import 'package:mpost/models/places_search.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/payment/processing.dart';
@@ -20,6 +21,7 @@ class ApplicaitonBloc with ChangeNotifier {
 
   ApplicaitonBloc() {
     print("BLOC working");
+    //getMyDeliveries();
   }
 
   // variables
@@ -32,6 +34,7 @@ class ApplicaitonBloc with ChangeNotifier {
   int totalCost = -1;
   int paymentRequestId = -1;
   String paymentRequestStatus = "";
+  List<DeliveryModel> deliveries = [];
 
   // register variables
 
@@ -109,10 +112,33 @@ class ApplicaitonBloc with ChangeNotifier {
   }
 
   Future<bool> confirmOrder(
-      Address from, Address to, DeliveryDetail recpDetail) async {
+      Address from, Address to, DeliveryDetail recpDetail, String time) async {
+    String final_time;
+    if (time == "Today | 16:00 - 17:00") {
+      DateTime getTime = DateTime.now();
+      String timeString = getTime.year.toString() +
+          "-" +
+          getTime.month.toString() +
+          "-" +
+          (getTime.day - 1).toString() +
+          " 16:00:00";
+      print(timeString);
+      final_time = timeString;
+    } else {
+      DateTime now = DateTime.now();
+      final tomorrow = DateTime(now.year, now.month, now.day + 1);
+      String timeString = tomorrow.year.toString() +
+          "-" +
+          tomorrow.month.toString() +
+          "-" +
+          tomorrow.day.toString() +
+          " 16:00:00";
+      print(tomorrow);
+      final_time = timeString;
+    }
     loading = true;
     notifyListeners();
-    String res = await delivaryService.confirmOrder(from, to, recpDetail);
+    String res = await delivaryService.confirmOrder(from, to, recpDetail, time);
     var cost = res.split(',');
     if (cost.first != "-1") {
       totalCost = int.parse(cost.first);
@@ -150,19 +176,29 @@ class ApplicaitonBloc with ChangeNotifier {
           phone, int.parse(paymentRequestId))) {
         paymentRequestStatus = "pending";
         notifyListeners();
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const PaymentSuccess()));
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const PaymentSuccess(),
+          ),
+          (route) => false,
+        );
         MpostNotification.notify(
             "Payment has been initialized.",
             "Dear user your payment has been successfully initialized nad its on pending. Put your security PIN to complete delivery process.",
-            "channel_key");
+            "basic_channel");
       } else {
         MpostNotification.notify(
             "Payment has been faild.",
             "Dear user your payment has been failed due to tachnical issue. We are sorry for the inconvinence please try again.",
-            "channel_key");
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const PaymentError()));
+            "basic_channel");
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const PaymentError(),
+          ),
+          (route) => false,
+        );
       }
     }
     paymentRequestStatus = "error";
@@ -177,5 +213,15 @@ class ApplicaitonBloc with ChangeNotifier {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const ConnectivityStatus()));
     }
+  }
+
+  getMyDeliveries() async {
+    print("Getting deliveries");
+    try {
+      deliveries = await delivaryService.getAllDeliveries();
+    } catch (ex) {
+      print(ex);
+    }
+    notifyListeners();
   }
 }

@@ -2,6 +2,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class MpostNotification {
   static late BuildContext context;
@@ -33,5 +34,10 @@ class MpostNotification {
             color: Constants.primaryColor,
             backgroundColor: Colors.black,
             body: body));
+  }
+
+  static initiateOneSignal() {
+    print("initiation one Signal");
+    OneSignal.shared.setAppId(Constants.oneSignalAppId);
   }
 }

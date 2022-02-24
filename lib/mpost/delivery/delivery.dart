@@ -105,7 +105,7 @@ class _DeliveryState extends State<Delivery> {
                                     'Delivery',
                                     style: TextStyle(
                                         fontFamily: "Montserrat",
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ),
@@ -139,10 +139,11 @@ class _DeliveryState extends State<Delivery> {
                                 } catch (ex) {}
                                 setState(() {});
                               },
+                              contentPadding: EdgeInsets.zero,
                               leading: const Icon(
                                 CupertinoIcons.smallcircle_fill_circle_fill,
                                 color: Color(0XFFF39bacd),
-                                size: 30,
+                                size: 25,
                               ),
                               title: Text(
                                 pickFrom.address.isEmpty
@@ -153,14 +154,14 @@ class _DeliveryState extends State<Delivery> {
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: Color(0XFFF80868a),
-                                    fontSize: 16,
+                                    fontSize: 17,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w500),
                               ),
                               trailing: const Icon(
                                 Icons.keyboard_arrow_down_rounded,
                                 color: Color(0XFFFc1c1c1),
-                                size: 30,
+                                size: 25,
                               ),
                             ),
                             ListTile(
@@ -187,8 +188,9 @@ class _DeliveryState extends State<Delivery> {
                               leading: const Icon(
                                 Icons.location_on_rounded,
                                 color: Color(0XFFFbf157a),
-                                size: 30,
+                                size: 25,
                               ),
+                              contentPadding: EdgeInsets.zero,
                               title: Text(
                                 deliver.address.isEmpty
                                     ? "Deliver to?"
@@ -198,14 +200,14 @@ class _DeliveryState extends State<Delivery> {
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: Color(0XFFF80868a),
-                                    fontSize: 16,
+                                    fontSize: 17,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w500),
                               ),
                               trailing: const Icon(
                                 Icons.keyboard_arrow_down_rounded,
                                 color: Color(0XFFFc1c1c1),
-                                size: 30,
+                                size: 25,
                               ),
                             ),
                             const SizedBox(
@@ -236,8 +238,7 @@ class _DeliveryState extends State<Delivery> {
                                             image: AssetImage(
                                                 "asset/images/map.png"),
                                             fit: BoxFit.cover),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
+                                        borderRadius: BorderRadius.circular(5)),
                                     width: Constants.getWidth(context),
                                   ),
                             const SizedBox(
@@ -255,6 +256,7 @@ class _DeliveryState extends State<Delivery> {
                                   setState(() {});
                                 } catch (ex) {}
                               },
+                              contentPadding: EdgeInsets.zero,
                               title: const Text(
                                 "Your order",
                                 style: TextStyle(
@@ -277,7 +279,7 @@ class _DeliveryState extends State<Delivery> {
                               trailing: const Icon(
                                 Icons.keyboard_arrow_right_rounded,
                                 color: Color(0XFFFc1c1c1),
-                                size: 30,
+                                size: 25,
                               ),
                             ),
                             const Divider(
@@ -318,6 +320,7 @@ class _DeliveryState extends State<Delivery> {
                                   setState(() {});
                                 } catch (ex) {}
                               },
+                              contentPadding: EdgeInsets.zero,
                               title: const Text(
                                 "Pickup time",
                                 style: TextStyle(
@@ -342,7 +345,7 @@ class _DeliveryState extends State<Delivery> {
                               trailing: const Icon(
                                 Icons.keyboard_arrow_right_rounded,
                                 color: Color(0XFFFc1c1c1),
-                                size: 30,
+                                size: 25,
                               ),
                             ),
                             const Divider(
@@ -361,6 +364,7 @@ class _DeliveryState extends State<Delivery> {
                                   setState(() {});
                                 } catch (ex) {}
                               },
+                              contentPadding: EdgeInsets.zero,
                               title: const Text(
                                 "Add your phone number",
                                 style: TextStyle(
@@ -385,7 +389,7 @@ class _DeliveryState extends State<Delivery> {
                               trailing: const Icon(
                                 Icons.keyboard_arrow_right_rounded,
                                 color: Color(0XFFFc1c1c1),
-                                size: 30,
+                                size: 25,
                               ),
                             ),
                             const Divider(
@@ -398,15 +402,16 @@ class _DeliveryState extends State<Delivery> {
                                 "Total",
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w500),
                               ),
+                              contentPadding: EdgeInsets.zero,
                               trailing: Text(
                                 "KSH 135",
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 18,
+                                    fontSize: 17,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w700),
                               ),
@@ -453,7 +458,7 @@ class _DeliveryState extends State<Delivery> {
                     } else {
                       await applicationBloc.checkConnection(context);
                       if (await applicationBloc.confirmOrder(
-                          pickFrom, deliver, recpDetail)) {
+                          pickFrom, deliver, recpDetail, pickupTime)) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(

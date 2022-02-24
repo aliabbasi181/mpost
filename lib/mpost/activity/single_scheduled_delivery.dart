@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/models/delivery.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/payment/choose_payment.dart';
 import 'package:provider/provider.dart';
 
 class SingleScheduledDelivery extends StatefulWidget {
-  const SingleScheduledDelivery({Key? key}) : super(key: key);
+  DeliveryModel deliveryDetail;
+  SingleScheduledDelivery({Key? key, required this.deliveryDetail})
+      : super(key: key);
 
   @override
   _SingleScheduledDeliveryState createState() =>
@@ -61,7 +65,7 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
             ),
           ),
           Container(
-            height: Constants.getHeight(context) * 0.85,
+            height: Constants.getHeight(context) * 0.84,
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: ListView(
               shrinkWrap: true,
@@ -97,9 +101,9 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
                               fontFamily: "Montserrat",
                               fontWeight: FontWeight.w500),
                         ),
-                        subtitle: const Text(
-                          "Electronics",
-                          style: TextStyle(
+                        subtitle: Text(
+                          widget.deliveryDetail.itemType.toString(),
+                          style: const TextStyle(
                               fontSize: 14,
                               color: Colors.black,
                               fontFamily: "Montserrat",
@@ -111,15 +115,14 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
                           try {
                             showModalBottomSheet(
                                 context: context,
-                                isScrollControlled: true,
                                 backgroundColor: Colors.transparent,
                                 builder: (context) {
                                   return SafeArea(
                                     bottom: false,
                                     child: Container(
-                                      margin: EdgeInsets.only(
-                                          top: Constants.getHeight(context) *
-                                              0.5),
+                                      // margin: EdgeInsets.only(
+                                      //     top: Constants.getHeight(context) *
+                                      //         0.6),
                                       width: Constants.getWidth(context),
                                       height: Constants.getHeight(context),
                                       decoration: const BoxDecoration(
@@ -127,7 +130,9 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(15),
                                               topRight: Radius.circular(15))),
-                                      child: const DeliveryViewDetails(),
+                                      child: DeliveryViewDetails(
+                                        deliveryDetails: widget.deliveryDetail,
+                                      ),
                                     ),
                                   );
                                 });
@@ -166,115 +171,9 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
                 const SizedBox(
                   height: 8,
                 ),
-                Container(
-                  width: Constants.getWidth(context),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: Colors.white,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(18),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text("Status",
-                                style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 12,
-                                    color: Color(0XFFF8D8D92),
-                                    fontWeight: FontWeight.w500)),
-                            Row(
-                              children: [
-                                Container(
-                                  height: 8,
-                                  width: 8,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      color: const Color(0XFFFBE6615)),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                const Text("Pending payment",
-                                    style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 14,
-                                        color: Color(0XFFF1C282F),
-                                        fontWeight: FontWeight.w600)),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 17,
-                            ),
-                            const Text("Payment method",
-                                style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 12,
-                                    color: Color(0XFFF8D8D92),
-                                    fontWeight: FontWeight.w500)),
-                            const Text("Mpesa",
-                                style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 14,
-                                    color: Color(0XFFF1C282F),
-                                    fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: Constants.getWidth(context),
-                        padding: const EdgeInsets.all(18),
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                top: BorderSide(
-                          color: Color(0XFFFE2E2E2),
-                        ))),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
-                                Text("View details",
-                                    style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600)),
-                                Text("Ksh 200.00",
-                                    style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700)),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              width: Constants.getWidth(context),
-                              padding:
-                                  const EdgeInsets.only(top: 15, bottom: 15),
-                              child: const Text("Initiate payment",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: "Montserrat",
-                                      fontSize: 14,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Constants.primaryColor),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                widget.deliveryDetail.paymentRequest!.balance != "0"
+                    ? pendingPayment(context, widget.deliveryDetail)
+                    : sucessPayment(context, widget.deliveryDetail),
                 const SizedBox(
                   height: 8,
                 ),
@@ -309,11 +208,13 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
                                 color: Color(0XFFF70C6F4),
                                 size: 20,
                               ),
-                              title: const Text(
-                                "Caltext Building, Kilimani Road",
+                              title: Text(
+                                widget.deliveryDetail.pickupAddress!
+                                    .detailedAddress
+                                    .toString(),
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Color(0XFFF1C282F),
                                     fontSize: 13,
                                     fontFamily: "Montserrat",
@@ -341,11 +242,13 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
                                 color: Color(0XFFFBE157A),
                                 size: 20,
                               ),
-                              title: const Text(
-                                "Enden Square, Westlands",
+                              title: Text(
+                                widget.deliveryDetail.deliveryAddress!
+                                    .detailedAddress
+                                    .toString(),
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Color(0XFFF1C282F),
                                     fontSize: 13,
                                     fontFamily: "Montserrat",
@@ -378,32 +281,329 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
 }
 
 class DeliveryViewDetails extends StatefulWidget {
-  const DeliveryViewDetails({Key? key}) : super(key: key);
+  DeliveryModel deliveryDetails;
+  DeliveryViewDetails({Key? key, required this.deliveryDetails})
+      : super(key: key);
 
   @override
   _DeliveryViewDetailsState createState() => _DeliveryViewDetailsState();
 }
 
 class _DeliveryViewDetailsState extends State<DeliveryViewDetails> {
+  String time = "";
+  @override
+  initState() {
+    var d = widget.deliveryDetails.createdAt.toString().split('T');
+    var t = d[1].split('.')[0];
+    time = d[0] + " | " + t;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
-        height: Constants.getHeight(context) * 0.4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
+          children: [
+            const Text(
               'Details',
               style: TextStyle(
                   fontFamily: "Montserrat",
                   fontSize: 18,
                   fontWeight: FontWeight.w700),
             ),
+            const SizedBox(
+              height: 27,
+            ),
+            const Text(
+              "Package type",
+              style: TextStyle(
+                  fontFamily: "Montserrat",
+                  fontSize: 12,
+                  color: Color(0XFFF808689),
+                  fontWeight: FontWeight.w500),
+            ),
+            Text(
+              widget.deliveryDetails.itemType.toString(),
+              style: const TextStyle(
+                  fontFamily: "Montserrat",
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 17,
+            ),
+            const Text(
+              "Booked time",
+              style: TextStyle(
+                  fontFamily: "Montserrat",
+                  fontSize: 12,
+                  color: Color(0XFFF808689),
+                  fontWeight: FontWeight.w500),
+            ),
+            Text(
+              time,
+              style: const TextStyle(
+                  fontFamily: "Montserrat",
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 17,
+            ),
+            const Text(
+              "Add a note to driver",
+              style: TextStyle(
+                  fontFamily: "Montserrat",
+                  fontSize: 12,
+                  color: Color(0XFFF808689),
+                  fontWeight: FontWeight.w500),
+            ),
+            Text(
+              widget.deliveryDetails.note.toString(),
+              style: const TextStyle(
+                  fontFamily: "Montserrat",
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+pendingPayment(BuildContext context, DeliveryModel delivery) {
+  final applicationBloc = Provider.of<ApplicaitonBloc>(context);
+  return Container(
+    width: Constants.getWidth(context),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6),
+      color: Colors.white,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("Status",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 12,
+                      color: Color(0XFFF8D8D92),
+                      fontWeight: FontWeight.w500)),
+              Row(
+                children: [
+                  Container(
+                    height: 8,
+                    width: 8,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: const Color(0XFFFBE6615)),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  const Text("Pending payment",
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 14,
+                          color: Color(0XFFF1C282F),
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
+              const SizedBox(
+                height: 17,
+              ),
+              const Text("Payment method",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 12,
+                      color: Color(0XFFF8D8D92),
+                      fontWeight: FontWeight.w500)),
+              const Text("Mpesa",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 14,
+                      color: Color(0XFFF1C282F),
+                      fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+        Container(
+          width: Constants.getWidth(context),
+          padding: const EdgeInsets.all(18),
+          decoration: const BoxDecoration(
+              border: Border(
+                  top: BorderSide(
+            color: Color(0XFFFE2E2E2),
+          ))),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("View details",
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600)),
+                  Text("Ksh ${delivery.paymentRequest?.balance.toString()}",
+                      style: const TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700)),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              InkWell(
+                onTap: () async {
+                  await applicationBloc.checkConnection(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChoosePayment(
+                              cost: "345",
+                              id: delivery.paymentRequestId.toString())));
+                },
+                child: Container(
+                  width: Constants.getWidth(context),
+                  padding: const EdgeInsets.only(top: 15, bottom: 15),
+                  child: const Text("Initiate payment",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600)),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: Constants.primaryColor),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+sucessPayment(BuildContext context, DeliveryModel delivery) {
+  return Container(
+    width: Constants.getWidth(context),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6),
+      color: Colors.white,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("Status",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 12,
+                      color: Color(0XFFF8D8D92),
+                      fontWeight: FontWeight.w500)),
+              Row(
+                children: [
+                  Container(
+                    height: 8,
+                    width: 8,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: const Color(0XFFF18B284)),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  const Text("Paid",
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 14,
+                          color: Color(0XFFF1C282F),
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
+              const SizedBox(
+                height: 17,
+              ),
+              const Text("Payment method",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 12,
+                      color: Color(0XFFF8D8D92),
+                      fontWeight: FontWeight.w500)),
+              const Text("Mpesa",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 14,
+                      color: Color(0XFFF1C282F),
+                      fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+        Container(
+          width: Constants.getWidth(context),
+          padding: const EdgeInsets.all(18),
+          decoration: const BoxDecoration(
+              border: Border(
+                  top: BorderSide(
+            color: Color(0XFFFE2E2E2),
+          ))),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("View details",
+                      style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600)),
+                  Text("Ksh ${delivery.paymentRequest!.balance.toString()}",
+                      style: const TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700)),
+                ],
+              ),
+              // Container(
+              //   width: Constants.getWidth(context),
+              //   padding: const EdgeInsets.only(top: 15, bottom: 15),
+              //   child: const Text("Initiate payment",
+              //       textAlign: TextAlign.center,
+              //       style: TextStyle(
+              //           fontFamily: "Montserrat",
+              //           fontSize: 14,
+              //           color: Colors.white,
+              //           fontWeight: FontWeight.w600)),
+              //   decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(6),
+              //       color: Constants.primaryColor),
+              // )
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }

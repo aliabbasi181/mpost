@@ -40,7 +40,7 @@ class _AddPhoneNumberState extends State<AddPhoneNumber> {
                           },
                           child: const Icon(
                             Icons.arrow_back_rounded,
-                            size: 30,
+                            size: 25,
                           ),
                         ),
                         const SizedBox(
@@ -63,6 +63,13 @@ class _AddPhoneNumberState extends State<AddPhoneNumber> {
                     CountryCodePicker(
                       initialSelection: "Kenya",
                       showDropDownButton: true,
+                      showOnlyCountryWhenClosed: true,
+                      textStyle: const TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
                       showCountryOnly: true,
                       favorite: const ['+254', 'KE'],
                       flagWidth: 30,
@@ -84,7 +91,7 @@ class _AddPhoneNumberState extends State<AddPhoneNumber> {
                       'You’ll receice an SMS with a code to verify you number',
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w400,
                           color: Constants.descriptionColor),
                     ),

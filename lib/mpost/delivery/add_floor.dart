@@ -22,7 +22,7 @@ class _AddFloorState extends State<AddFloor> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
             height: Constants.getHeight(context),
             child: Stack(
               alignment: AlignmentDirectional.bottomCenter,

@@ -114,7 +114,8 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => const Home()),
+                      MaterialPageRoute(
+                          builder: (context) => const BottomNav()),
                       (route) => false);
                   // Navigator.pushReplacement(
                   //     context,

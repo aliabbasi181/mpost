@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:mpost/constants.dart';
+import 'package:mpost/models/user.dart';
+import 'package:mpost/services/database.dart';
 
 class LoginRegisterService {
   // login
@@ -41,6 +44,7 @@ class LoginRegisterService {
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
         Constants.token = json['access_token'];
+        await getUser();
         return true;
       } else {
         return false;
@@ -123,6 +127,7 @@ class LoginRegisterService {
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
         Constants.token = json['access_token'];
+        await getUser();
         return true;
       } else {
         return false;
@@ -130,6 +135,20 @@ class LoginRegisterService {
     } catch (ex) {
       print(ex);
       return false;
+    }
+  }
+
+  getUser() async {
+    String url = Constants.hostUrl + "users/me?with[]=addresses.status";
+    var response = await Dio()
+        .get(url, options: Options(headers: Constants.requestHeadersWithToken));
+    UserModel user;
+    if (response.statusCode == 200) {
+      dynamic data = response.data;
+      user = UserModel.fromJson(data);
+      DatabaseHandler.instance.addUser(user);
+    } else {
+      print("error getting user");
     }
   }
 }

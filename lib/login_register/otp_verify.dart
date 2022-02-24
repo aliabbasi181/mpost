@@ -69,7 +69,7 @@ class _OTPVerifyState extends State<OTPVerify> {
                       },
                       child: const Icon(
                         Icons.arrow_back_rounded,
-                        size: 40,
+                        size: 25,
                       ),
                     )
                   ],
@@ -94,8 +94,8 @@ class _OTPVerifyState extends State<OTPVerify> {
                       "You only have to enteron OTP code we sent via SMS to your registered phone number",
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
                           color: Constants.descriptionColor),
                     ),
                     Text(

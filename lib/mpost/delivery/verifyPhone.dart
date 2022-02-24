@@ -69,7 +69,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                       },
                       child: const Icon(
                         Icons.arrow_back_rounded,
-                        size: 30,
+                        size: 25,
                       ),
                     ),
                     const SizedBox(
@@ -126,7 +126,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                       height: Constants.getWidth(context) * 0.08,
                     ),
                     InputField(
-                      hint: "Enter 6 digit code",
+                      hint: "Enter OTP",
                       controller: otp,
                     ),
                     SizedBox(

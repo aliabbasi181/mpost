@@ -42,7 +42,7 @@ class _LoginState extends State<Login> {
                           },
                           child: const Icon(
                             Icons.arrow_back_rounded,
-                            size: 40,
+                            size: 25,
                           ),
                         )
                       ],
@@ -54,8 +54,8 @@ class _LoginState extends State<Login> {
                       'Login',
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
                     ),
                     const SizedBox(
                       height: 5,
@@ -75,6 +75,13 @@ class _LoginState extends State<Login> {
                       initialSelection: "Kenya",
                       showDropDownButton: true,
                       showCountryOnly: true,
+                      textStyle: const TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      showOnlyCountryWhenClosed: true,
                       favorite: const ['+254', 'KE'],
                       flagWidth: 30,
                       onChanged: (code) {

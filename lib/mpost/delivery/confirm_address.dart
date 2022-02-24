@@ -20,7 +20,7 @@ class ConfirmAddress extends StatefulWidget {
 }
 
 class _ConfirmAddressState extends State<ConfirmAddress> {
-  String building = " ", floor = " ";
+  String building = "", floor = "";
   final Set<Marker> markers = Set();
 
   initState() {
@@ -90,7 +90,7 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     trailing: const Icon(
                       Icons.keyboard_arrow_right_rounded,
                       color: Color(0XFFFc1c1c1),
-                      size: 30,
+                      size: 25,
                     ),
                   ),
                   const Divider(
@@ -100,13 +100,15 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                   ),
                   ListTile(
                     onTap: () async {
-                      building = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddBuilding(
-                                    text: building,
-                                  )));
-                      setState(() {});
+                      try {
+                        building = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddBuilding(
+                                      text: building,
+                                    )));
+                        setState(() {});
+                      } catch (ex) {}
                     },
                     horizontalTitleGap: 0,
                     minVerticalPadding: 0,
@@ -133,7 +135,7 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     trailing: const Icon(
                       Icons.keyboard_arrow_right_rounded,
                       color: Color(0XFFFc1c1c1),
-                      size: 30,
+                      size: 25,
                     ),
                   ),
                   const Divider(
@@ -143,13 +145,15 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                   ),
                   ListTile(
                     onTap: () async {
-                      floor = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddFloor(
-                                    text: floor,
-                                  )));
-                      setState(() {});
+                      try {
+                        floor = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddFloor(
+                                      text: floor,
+                                    )));
+                        setState(() {});
+                      } catch (ex) {}
                     },
                     horizontalTitleGap: 0,
                     minVerticalPadding: 0,
@@ -176,7 +180,7 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     trailing: const Icon(
                       Icons.keyboard_arrow_right_rounded,
                       color: Color(0XFFFc1c1c1),
-                      size: 30,
+                      size: 25,
                     ),
                   ),
                   const Divider(
