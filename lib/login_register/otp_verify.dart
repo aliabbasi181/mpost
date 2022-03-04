@@ -81,7 +81,7 @@ class _OTPVerifyState extends State<OTPVerify> {
                       height: 20,
                     ),
                     const Text(
-                      "You'r almost there!",
+                      "You are almost there!",
                       style: TextStyle(
                           fontFamily: "Montserrat",
                           fontSize: 20,
@@ -91,7 +91,7 @@ class _OTPVerifyState extends State<OTPVerify> {
                       height: 5,
                     ),
                     Text(
-                      "You only have to enteron OTP code we sent via SMS to your registered phone number",
+                      "You only have to enter OTP code we sent via SMS to your registered phone number",
                       style: TextStyle(
                           fontFamily: "Montserrat",
                           fontSize: 13,
@@ -133,7 +133,8 @@ class _OTPVerifyState extends State<OTPVerify> {
                                 borderRadius: BorderRadius.circular(5)),
                             child: InkWell(
                               onTap: () async {
-                                if (await applicationBloc.login(widget.phone)) {
+                                if (await applicationBloc.login(
+                                    widget.phone, context)) {
                                   setState(() {
                                     _runTimer();
                                   });

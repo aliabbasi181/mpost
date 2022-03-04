@@ -20,7 +20,7 @@ class ChoosePayment extends StatefulWidget {
 class _ChoosePaymentState extends State<ChoosePayment> {
   int _value = 1;
   bool mobile = true, card = false, cash = false;
-  String pickMobilePayment = "";
+  String pickMobilePayment = "Safaricom";
   TextEditingController account_phonenumber = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -101,48 +101,48 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                                   child: ListTile(
                                     onTap: () async {
                                       try {
-                                        pickMobilePayment =
-                                            await showModalBottomSheet(
-                                                context: context,
-                                                isScrollControlled: true,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                builder: (context) {
-                                                  return SafeArea(
-                                                    bottom: false,
-                                                    child: Container(
-                                                      margin: EdgeInsets.only(
-                                                          top: Constants
-                                                                  .getHeight(
-                                                                      context) *
-                                                              0.6),
-                                                      width: Constants.getWidth(
-                                                          context),
-                                                      height:
-                                                          Constants.getHeight(
-                                                              context),
-                                                      decoration: const BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius.only(
-                                                                  topLeft: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          20))),
-                                                      child:
-                                                          const PickMobilePayment(),
-                                                    ),
-                                                  );
-                                                });
-                                        setState(() {});
+                                        // pickMobilePayment =
+                                        //     await showModalBottomSheet(
+                                        //         context: context,
+                                        //         isScrollControlled: true,
+                                        //         backgroundColor:
+                                        //             Colors.transparent,
+                                        //         builder: (context) {
+                                        //           return SafeArea(
+                                        //             bottom: false,
+                                        //             child: Container(
+                                        //               margin: EdgeInsets.only(
+                                        //                   top: Constants
+                                        //                           .getHeight(
+                                        //                               context) *
+                                        //                       0.6),
+                                        //               width: Constants.getWidth(
+                                        //                   context),
+                                        //               height:
+                                        //                   Constants.getHeight(
+                                        //                       context),
+                                        //               decoration: const BoxDecoration(
+                                        //                   color: Colors.white,
+                                        //                   borderRadius:
+                                        //                       BorderRadius.only(
+                                        //                           topLeft: Radius
+                                        //                               .circular(
+                                        //                                   20),
+                                        //                           topRight: Radius
+                                        //                               .circular(
+                                        //                                   20))),
+                                        //               child:
+                                        //                   const PickMobilePayment(),
+                                        //             ),
+                                        //           );
+                                        //         });
+                                        // setState(() {});
                                       } catch (ex) {}
                                     },
                                     minLeadingWidth: 0,
                                     title: Text(
                                       pickMobilePayment.isEmpty
-                                          ? "Select your operator"
+                                          ? "Safaricom"
                                           : pickMobilePayment,
                                       style: TextStyle(
                                           color: pickMobilePayment.isEmpty
@@ -195,15 +195,15 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                                       height: 50,
                                       width: 50,
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Image(
-                                      image: NetworkImage(
-                                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYD8uTde3x2BLRoQ_CT4ky4_vOtsCHBZN2DDocPYnJxfmo3IUhIUGzgsSBtMW6kkKNP2w&usqp=CAU"),
-                                      height: 50,
-                                      width: 50,
-                                    )
+                                    // SizedBox(
+                                    //   width: 10,
+                                    // ),
+                                    // Image(
+                                    //   image: NetworkImage(
+                                    //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYD8uTde3x2BLRoQ_CT4ky4_vOtsCHBZN2DDocPYnJxfmo3IUhIUGzgsSBtMW6kkKNP2w&usqp=CAU"),
+                                    //   height: 50,
+                                    //   width: 50,
+                                    // )
                                   ],
                                 )
                               ],

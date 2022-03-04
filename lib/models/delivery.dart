@@ -5,6 +5,7 @@ class DeliveryModel {
   String? statusId;
   String? pickupAddressId;
   String? deliveryAddressId;
+  String? pickupTime;
   String? estimatedDistance;
   String? actualDistance;
   String? estimatedDuration;
@@ -20,6 +21,7 @@ class DeliveryModel {
   PaymentRequest? paymentRequest;
   PickupAddress? pickupAddress;
   DeliveryAddress? deliveryAddress;
+  Status? status;
 
   DeliveryModel(
       {this.id,
@@ -28,6 +30,7 @@ class DeliveryModel {
       this.statusId,
       this.pickupAddressId,
       this.deliveryAddressId,
+      this.pickupTime,
       this.estimatedDistance,
       this.actualDistance,
       this.estimatedDuration,
@@ -42,7 +45,8 @@ class DeliveryModel {
       this.deletedAt,
       this.paymentRequest,
       this.pickupAddress,
-      this.deliveryAddress});
+      this.deliveryAddress,
+      this.status});
 
   DeliveryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
@@ -51,6 +55,7 @@ class DeliveryModel {
     statusId = json['status_id'].toString();
     pickupAddressId = json['pickup_address_id'].toString();
     deliveryAddressId = json['delivery_address_id'].toString();
+    pickupTime = json['pickup_time'].toString();
     estimatedDistance = json['estimated_distance'].toString();
     actualDistance = json['actual_distance'].toString();
     estimatedDuration = json['estimated_duration'].toString();
@@ -72,6 +77,8 @@ class DeliveryModel {
     deliveryAddress = json['delivery_address'] != null
         ? new DeliveryAddress.fromJson(json['delivery_address'])
         : null;
+    status =
+        json['status'] != null ? new Status.fromJson(json['status']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +89,7 @@ class DeliveryModel {
     data['status_id'] = this.statusId;
     data['pickup_address_id'] = this.pickupAddressId;
     data['delivery_address_id'] = this.deliveryAddressId;
+    data['pickup_time'] = this.pickupTime;
     data['estimated_distance'] = this.estimatedDistance;
     data['actual_distance'] = this.actualDistance;
     data['estimated_duration'] = this.estimatedDuration;
@@ -103,6 +111,9 @@ class DeliveryModel {
     if (this.deliveryAddress != null) {
       data['delivery_address'] = this.deliveryAddress!.toJson();
     }
+    if (this.status != null) {
+      data['status'] = this.status!.toJson();
+    }
     return data;
   }
 }
@@ -112,6 +123,7 @@ class PaymentRequest {
   String? userId;
   String? statusId;
   String? clientId;
+  String? paymentMethodId;
   String? account;
   String? amount;
   String? totalPaid;
@@ -129,12 +141,14 @@ class PaymentRequest {
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
+  PaymentMethod? paymentMethod;
 
   PaymentRequest(
       {this.id,
       this.userId,
       this.statusId,
       this.clientId,
+      this.paymentMethodId,
       this.account,
       this.amount,
       this.totalPaid,
@@ -151,13 +165,15 @@ class PaymentRequest {
       this.description,
       this.createdAt,
       this.updatedAt,
-      this.deletedAt});
+      this.deletedAt,
+      this.paymentMethod});
 
   PaymentRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
     userId = json['user_id'].toString();
     statusId = json['status_id'].toString();
     clientId = json['client_id'].toString();
+    paymentMethodId = json['payment_method_id'].toString();
     account = json['account'].toString();
     amount = json['amount'].toString();
     totalPaid = json['total_paid'].toString();
@@ -175,6 +191,9 @@ class PaymentRequest {
     createdAt = json['created_at'].toString();
     updatedAt = json['updated_at'].toString();
     deletedAt = json['deleted_at'].toString();
+    paymentMethod = json['payment_method'] != null
+        ? new PaymentMethod.fromJson(json['payment_method'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -183,6 +202,7 @@ class PaymentRequest {
     data['user_id'] = this.userId;
     data['status_id'] = this.statusId;
     data['client_id'] = this.clientId;
+    data['payment_method_id'] = this.paymentMethodId;
     data['account'] = this.account;
     data['amount'] = this.amount;
     data['total_paid'] = this.totalPaid;
@@ -196,6 +216,46 @@ class PaymentRequest {
     data['LastName'] = this.lastName;
     data['TransTime'] = this.transTime;
     data['CheckoutRequestID'] = this.checkoutRequestID;
+    data['description'] = this.description;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['deleted_at'] = this.deletedAt;
+    if (this.paymentMethod != null) {
+      data['payment_method'] = this.paymentMethod!.toJson();
+    }
+    return data;
+  }
+}
+
+class PaymentMethod {
+  String? id;
+  String? name;
+  String? description;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
+
+  PaymentMethod(
+      {this.id,
+      this.name,
+      this.description,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
+
+  PaymentMethod.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
+    name = json['name'].toString();
+    description = json['description'].toString();
+    createdAt = json['created_at'].toString();
+    updatedAt = json['updated_at'].toString();
+    deletedAt = json['deleted_at'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
     data['description'] = this.description;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
@@ -303,6 +363,47 @@ class DeliveryAddress {
     data['detailed_address'] = this.detailedAddress;
     data['recipient_name'] = this.recipientName;
     data['recipient_mobile'] = this.recipientMobile;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['deleted_at'] = this.deletedAt;
+    return data;
+  }
+}
+
+class Status {
+  String? id;
+  String? name;
+  String? colorCode;
+  String? description;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
+
+  Status(
+      {this.id,
+      this.name,
+      this.colorCode,
+      this.description,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
+
+  Status.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
+    name = json['name'].toString();
+    colorCode = json['color_code'].toString();
+    description = json['description'].toString();
+    createdAt = json['created_at'].toString();
+    updatedAt = json['updated_at'].toString();
+    deletedAt = json['deleted_at'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['color_code'] = this.colorCode;
+    data['description'] = this.description;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;

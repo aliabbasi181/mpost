@@ -6,6 +6,7 @@ import 'package:mpost/constants.dart';
 import 'package:mpost/models/address.dart';
 import 'package:mpost/models/places_search.dart';
 import 'package:mpost/mpost/delivery/confirm_address.dart';
+import 'package:mpost/mpost/delivery/location_from_map.dart';
 import 'package:mpost/services/places_service.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
@@ -22,12 +23,14 @@ class _AddressPickerState extends State<AddressPicker> {
   late Address address;
   @override
   initState() {
+    final applicationBloc =
+        Provider.of<ApplicaitonBloc>(context, listen: false);
+    applicationBloc.getUserLocation();
     super.initState();
   }
 
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
-    applicationBloc.getUserLocation();
     return Scaffold(
       body: Stack(
         alignment: Alignment.bottomCenter,
@@ -154,18 +157,14 @@ class _AddressPickerState extends State<AddressPicker> {
                       )),
                 ),
                 ListTile(
-                  onTap: () {
-                    applicationBloc.userLocation !=
-                            const LatLng(-1.2888736, 36.7913343)
-                        ? Navigator.pop(
-                            context,
-                            Address(
-                                applicationBloc.userLocation.latitude,
-                                applicationBloc.userLocation.longitude,
-                                "Current Location",
-                                "Current Location",
-                                ""))
-                        : null;
+                  onTap: () async {
+                    if (applicationBloc.userLocation !=
+                        const LatLng(-1.2888736, 36.7913343)) {
+                      address = await applicationBloc.getAddress(
+                          applicationBloc.userLocation.latitude,
+                          applicationBloc.userLocation.longitude);
+                      Navigator.pop(context, address);
+                    }
                   },
                   minLeadingWidth: 0,
                   contentPadding: EdgeInsets.zero,
@@ -186,9 +185,51 @@ class _AddressPickerState extends State<AddressPicker> {
                         fontSize: 14,
                         fontWeight: FontWeight.w700),
                   ),
-                )
+                ),
               ],
             ),
+          ),
+          SafeArea(
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: InkWell(
+                  onTap: () async {
+                    address = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) =>
+                                const ChoseLocationFromMap())));
+                    Navigator.pop(context, address);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    width: Constants.getWidth(context),
+                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(0.3), blurRadius: 5)
+                    ]),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.location_on_rounded,
+                            color: Color(0XFFFBE157A),
+                            size: 20,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            applicationBloc.userLocation ==
+                                    const LatLng(-1.2888736, 36.7913343)
+                                ? "Please wait..."
+                                : "Choose from map",
+                            style: const TextStyle(
+                                fontFamily: "Montserrat",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ]),
+                  ),
+                )),
           )
         ],
       ),
@@ -291,6 +332,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                       } catch (ex) {
                         country = "";
                       }
+                      Color backGroundColor = Colors.white;
                       return Column(children: [
                         ListTile(
                           onTap: () async {

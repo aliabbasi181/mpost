@@ -39,8 +39,55 @@ class UserModel {
 
   UserModel.fromJson(Map<String, dynamic> json) {
     id = Utilities.generateKey();
+    userId = json['user_id'].toString();
+    bearerToken = Constants.token;
+    firstName = json['first_name'].toString();
+    middleName = json['middle_name'].toString();
+    lastName = json['last_name'].toString();
+    mobile = json['mobile'].toString();
+    email = json['email'].toString();
+    isSuperuser = json['is_superuser'].toString();
+    roleId = json['role_id'].toString();
+    mobileVerifiedAt = json['mobile_verified_at'].toString();
+    emailVerifiedAt = json['email_verified_at'].toString();
+    createdAt = json['created_at'].toString();
+    updatedAt = json['updated_at'].toString();
+    fullName = json['full_name'].toString();
+    if (json['addresses'] != null) {
+      addresses = <Addresses>[];
+      json['addresses'].forEach((v) {
+        addresses!.add(new Addresses.fromJson(v));
+      });
+    }
+  }
+  UserModel.fromJsonLogingIn(Map<String, dynamic> json) {
+    id = Utilities.generateKey();
     userId = json['id'].toString();
     bearerToken = Constants.token;
+    firstName = json['first_name'].toString();
+    middleName = json['middle_name'].toString();
+    lastName = json['last_name'].toString();
+    mobile = json['mobile'].toString();
+    email = json['email'].toString();
+    isSuperuser = json['is_superuser'].toString();
+    roleId = json['role_id'].toString();
+    mobileVerifiedAt = json['mobile_verified_at'].toString();
+    emailVerifiedAt = json['email_verified_at'].toString();
+    createdAt = json['created_at'].toString();
+    updatedAt = json['updated_at'].toString();
+    fullName = json['full_name'].toString();
+    if (json['addresses'] != null) {
+      addresses = <Addresses>[];
+      json['addresses'].forEach((v) {
+        addresses!.add(new Addresses.fromJson(v));
+      });
+    }
+  }
+
+  UserModel.fromJsonLoggedin(Map<String, dynamic> json) {
+    id = Utilities.generateKey();
+    userId = json['user_id'].toString();
+    bearerToken = json['bearer_token'].toString();
     firstName = json['first_name'].toString();
     middleName = json['middle_name'].toString();
     lastName = json['last_name'].toString();

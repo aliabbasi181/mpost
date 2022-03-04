@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'mpost/payment/choose_payment.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   try {
     AwesomeNotifications().initialize(null, [
@@ -60,5 +62,14 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           home: Splash(),
         ));
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

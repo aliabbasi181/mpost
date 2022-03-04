@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mpost/constants.dart';
-import 'package:mpost/models/user.dart';
-import 'package:mpost/services/database.dart';
+import 'package:mpost/login_register/register.dart';
+import 'package:mpost/mpost/widgets.dart';
+import 'package:mpost/services/user_service.dart';
 
 class LoginRegisterService {
   // login
-  Future<bool> loginService(String phone) async {
+  Future<bool> loginService(String phone, BuildContext context) async {
     try {
       String url = Constants.hostUrl + "auth/login";
+      print(url);
       var response = await http.post(
         Uri.parse(url),
         headers: Constants.requestHeaders,
@@ -17,18 +20,30 @@ class LoginRegisterService {
           'username': phone,
         }),
       );
-      print(jsonDecode(response.body));
+      Constants.error =
+          "status code: ${response.statusCode}\n message: ${response.body}";
       if (response.statusCode == 200) {
         return true;
         //var json = jsonDecode(response.body.toString());
       } else {
+        var json = jsonDecode(response.body);
+        if (json['message'] ==
+            "User with mobile 254704145555 is not registered.") {
+          await showSnackBar("Login failed.",
+              "User with mobile 254704145555 is not registered.", context);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const Register()));
+        }
         return false;
       }
     } catch (ex) {
       print(ex);
+      Constants.error = ex.toString();
       return false;
     }
   }
+
+  UserService userService = UserService();
 
   Future<bool> verifyOtpLogin(String code, String phone) async {
     try {
@@ -39,12 +54,12 @@ class LoginRegisterService {
         body: jsonEncode(
             <String, dynamic>{"mobile": phone, "login": true, "otp": code}),
       );
-      print(response.body);
       var json = jsonDecode(response.body);
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
         Constants.token = json['access_token'];
-        await getUser();
+        Constants.setToken();
+        await userService.getUser(false);
         return true;
       } else {
         return false;
@@ -79,7 +94,7 @@ class LoginRegisterService {
 
   Future<bool> requestOtp(String phone) async {
     try {
-      String url = "http://13.36.21.26/api/auth/request-otp";
+      String url = Constants.hostUrl + "auth/request-otp";
       print(url);
       print(phone);
       var response = await http.post(
@@ -101,35 +116,52 @@ class LoginRegisterService {
   }
 
   // register
-  Future<bool> register() async {
+  Future<bool> register(BuildContext context) async {
     try {
       String url = Constants.hostUrl + "auth/register";
       String firstName = Constants.registerName.split(' ').first.trim();
       String lastName = Constants.registerName.trim().split(' ').last.trim();
-      print(firstName);
-      print(lastName);
-      print(Constants.registerEmail);
-      print(Constants.registerMobile);
-      print(Constants.postal_code_id);
-      var response = await http.post(
-        Uri.parse(url),
-        headers: Constants.requestHeaders,
-        body: jsonEncode(<String, dynamic>{
+      Map<String, dynamic> payload = {};
+      if (Constants.isNational) {
+        payload = {
           "first_name": firstName,
           "last_name": lastName,
           "mobile": Constants.registerMobile,
           "email": Constants.registerEmail,
           "postal_code_id": Constants.postal_code_id,
           "request_otp": true,
-          "type": Constants.registerType
-        }),
-      );
+          "type": Constants.registerType,
+          "national_id_number": Constants.identityNumber
+        };
+      } else {
+        payload = {
+          "first_name": firstName,
+          "last_name": lastName,
+          "mobile": Constants.registerMobile,
+          "email": Constants.registerEmail,
+          "postal_code_id": Constants.postal_code_id,
+          "request_otp": true,
+          "type": Constants.registerType,
+          "passport_number": Constants.identityNumber
+        };
+      }
+      var response = await http.post(Uri.parse(url),
+          headers: Constants.requestHeaders, body: jsonEncode(payload));
+      print(response.body);
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
         Constants.token = json['access_token'];
-        await getUser();
+        Constants.setToken();
+        print(Constants.requestHeadersWithToken);
+        await userService.getUser(false);
         return true;
       } else {
+        var json = jsonDecode(response.body);
+        if (json['errors']['mobile'].toString() ==
+            "[The mobile has already been taken.]") {
+          showSnackBar("Registration failed.",
+              "This number has already an account", context);
+        }
         return false;
       }
     } catch (ex) {
@@ -138,17 +170,18 @@ class LoginRegisterService {
     }
   }
 
-  getUser() async {
-    String url = Constants.hostUrl + "users/me?with[]=addresses.status";
-    var response = await Dio()
-        .get(url, options: Options(headers: Constants.requestHeadersWithToken));
-    UserModel user;
-    if (response.statusCode == 200) {
-      dynamic data = response.data;
-      user = UserModel.fromJson(data);
-      DatabaseHandler.instance.addUser(user);
-    } else {
-      print("error getting user");
-    }
-  }
+  // getUser() async {
+  //   String url = Constants.hostUrl + "users/me?with[]=addresses.status";
+  //   var response = await Dio()
+  //       .get(url, options: Options(headers: Constants.requestHeadersWithToken));
+  //   UserModel user;
+  //   if (response.statusCode == 200) {
+  //     dynamic data = response.data;
+  //     user = UserModel.fromJson(data);
+  //     print(user.bearerToken);
+  //     await DatabaseHandler.instance.addUser(user);
+  //   } else {
+  //     print("error getting user");
+  //   }
+  // }
 }

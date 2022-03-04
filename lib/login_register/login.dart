@@ -101,7 +101,15 @@ class _LoginState extends State<Login> {
                             style: TextStyle(
                                 color: Colors.red, fontWeight: FontWeight.bold),
                           )
-                        : const Text("")
+                        : const Text(""),
+                    // Text(
+                    //   Constants.error,
+                    //   style: TextStyle(
+                    //       fontFamily: "Montserrat",
+                    //       fontSize: 12,
+                    //       fontWeight: FontWeight.w500,
+                    //       color: Constants.descriptionColor),
+                    // ),
                   ],
                 ),
                 const Spacer(),
@@ -115,14 +123,15 @@ class _LoginState extends State<Login> {
                         return;
                       }
                       await applicationBloc.checkConnection(context);
-                      if (await applicationBloc
-                          .login(countryCode + phone.text)) {
+                      if (await applicationBloc.login(
+                          countryCode + phone.text, context)) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => OTPVerifyLogin(
                                     phone: "$countryCode${phone.text}")));
                       }
+                      setState(() {});
                     })
               ],
             )),

@@ -16,8 +16,6 @@ class Activity extends StatefulWidget {
 
 class _ActivityState extends State<Activity> {
   @override
-  initState() {}
-  @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
@@ -54,44 +52,47 @@ class _ActivityState extends State<Activity> {
                           scrollDirection: Axis.horizontal,
                           itemCount: ActivityCategory.activityTabs.length,
                           itemBuilder: ((context, index) {
-                            return InkWell(
-                              onTap: () {
-                                for (int i = 0;
-                                    i < ActivityCategory.activityTabs.length;
-                                    i++) {
-                                  if (ActivityCategory.activityTabs[i].name ==
+                            return ElevatedButton(
+                                onPressed: () {
+                                  for (int i = 0;
+                                      i < ActivityCategory.activityTabs.length;
+                                      i++) {
+                                    if (ActivityCategory.activityTabs[i].name ==
+                                        ActivityCategory
+                                            .activityTabs[index].name) {
                                       ActivityCategory
-                                          .activityTabs[index].name) {
-                                    ActivityCategory
-                                        .activityTabs[index].active = true;
-                                  } else {
-                                    ActivityCategory.activityTabs[i].active =
-                                        false;
+                                          .activityTabs[index].active = true;
+                                    } else {
+                                      ActivityCategory.activityTabs[i].active =
+                                          false;
+                                    }
                                   }
-                                }
-                                setState(() {});
-                              },
-                              child: Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 7, 15, 0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
+                                  setState(() {});
+                                },
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(100))),
+                                    shadowColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                    backgroundColor: ActivityCategory
+                                            .activityTabs[index].active
+                                        ? MaterialStateProperty.all(
+                                            Constants.primaryColor)
+                                        : MaterialStateProperty.all(
+                                            Colors.transparent)),
+                                child: Text(
+                                  ActivityCategory.activityTabs[index].name,
+                                  style: TextStyle(
+                                      fontSize: 12,
                                       color: ActivityCategory
                                               .activityTabs[index].active
-                                          ? Constants.primaryColor
-                                          : null),
-                                  child: Text(
-                                    ActivityCategory.activityTabs[index].name,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: ActivityCategory
-                                                .activityTabs[index].active
-                                            ? Colors.white
-                                            : const Color(0XFFF808689),
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w600),
-                                  )),
-                            );
+                                          ? Colors.white
+                                          : const Color(0XFFF808689),
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w600),
+                                ));
                           }))),
                   const SizedBox(
                     height: 20,
@@ -124,6 +125,10 @@ Widget setActivity() {
       case "Events":
         return const ActivityEvents();
       case "Transport":
+        return const ActivityTransport();
+      case "Movies":
+        return const ActivityTransport();
+      case "Gift Card":
         return const ActivityTransport();
       default:
         return const SizedBox();

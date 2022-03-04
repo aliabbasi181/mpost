@@ -21,149 +21,244 @@ class _RegisterState extends State<Register> {
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
+  TextEditingController identity = TextEditingController();
+  TextEditingController passport = TextEditingController();
+  int _value = 2;
   @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              height: Constants.getHeight(context) * 0.85,
-              child: SingleChildScrollView(
-                child: Container(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Icon(
-                                    Icons.arrow_back_rounded,
-                                    size: 25,
-                                  ),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text(
-                              'Register',
-                              style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              'Please fill in a few details below',
-                              style: TextStyle(
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                height: Constants.getHeight(context) * 0.85,
+                child: SingleChildScrollView(
+                  child: Container(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Icon(
+                                      Icons.arrow_back_rounded,
+                                      size: 25,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text(
+                                'Register',
+                                style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                'Please fill in a few details below',
+                                style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Constants.descriptionColor),
+                              ),
+                              SizedBox(
+                                height: Constants.getWidth(context) * 0.05,
+                              ),
+                              InputLabel(label: "Name", isReq: true),
+                              InputField(
+                                hint: "e.g John Deo",
+                                controller: name,
+                              ),
+                              SizedBox(
+                                height: Constants.getWidth(context) * 0.04,
+                              ),
+                              InputLabel(label: "Email", isReq: true),
+                              InputEmailField(
+                                hint: "e.g name@email.com",
+                                controller: email,
+                              ),
+                              SizedBox(
+                                height: Constants.getWidth(context) * 0.05,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  _value = 0;
+                                  passport.text = "";
+                                  setState(() {});
+                                },
+                                child: ListTile(
+                                  title: InputLabel(
+                                      label: "National Identity", isReq: false),
+                                  minLeadingWidth: 0,
+                                  contentPadding: const EdgeInsets.all(0),
+                                  leading: Radio(
+                                      value: 0,
+                                      groupValue: _value,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _value = int.parse(value.toString());
+                                        });
+                                      }),
+                                ),
+                              ),
+                              Visibility(
+                                  visible: _value == 0,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      InputLabel(
+                                          label: "ID Number", isReq: true),
+                                      InputField(
+                                        hint: "e.g, 012345678",
+                                        controller: identity,
+                                      ),
+                                    ],
+                                  )),
+                              InkWell(
+                                onTap: () {
+                                  _value = 1;
+                                  identity.text = "";
+                                  setState(() {});
+                                },
+                                child: ListTile(
+                                  title: InputLabel(
+                                      label: "Passport", isReq: false),
+                                  minLeadingWidth: 0,
+                                  contentPadding: const EdgeInsets.all(0),
+                                  leading: Radio(
+                                      value: 1,
+                                      groupValue: _value,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _value = int.parse(value.toString());
+                                        });
+                                      }),
+                                ),
+                              ),
+                              Visibility(
+                                  visible: _value == 1,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      InputLabel(
+                                          label: "Passport Number",
+                                          isReq: true),
+                                      InputField(
+                                        hint: "e.g, A-Z45678",
+                                        controller: passport,
+                                      ),
+                                    ],
+                                  )),
+                              SizedBox(
+                                height: Constants.getWidth(context) * 0.05,
+                              ),
+                              InputLabel(label: "Phone Number", isReq: true),
+                              CountryCodePicker(
+                                initialSelection: "Kenya",
+                                showDropDownButton: true,
+                                showCountryOnly: true,
+                                textStyle: const TextStyle(
                                   fontFamily: "Montserrat",
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Constants.descriptionColor),
-                            ),
-                            SizedBox(
-                              height: Constants.getWidth(context) * 0.05,
-                            ),
-                            InputLabel(label: "Name", isReq: true),
-                            InputField(
-                              hint: "e.g John Deo",
-                              controller: name,
-                            ),
-                            SizedBox(
-                              height: Constants.getWidth(context) * 0.04,
-                            ),
-                            InputLabel(label: "Email", isReq: true),
-                            InputEmailField(
-                              hint: "e.g name@email.com",
-                              controller: email,
-                            ),
-                            SizedBox(
-                              height: Constants.getWidth(context) * 0.05,
-                            ),
-                            InputLabel(label: "Phone Number", isReq: true),
-                            CountryCodePicker(
-                              initialSelection: "Kenya",
-                              showDropDownButton: true,
-                              showCountryOnly: true,
-                              textStyle: const TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                showOnlyCountryWhenClosed: true,
+                                favorite: const ['+254', 'KE'],
+                                flagWidth: 30,
+                                onChanged: (code) {
+                                  setState(() {
+                                    countryCode = code.toString();
+                                  });
+                                },
                               ),
-                              showOnlyCountryWhenClosed: true,
-                              favorite: const ['+254', 'KE'],
-                              flagWidth: 30,
-                              onChanged: (code) {
-                                setState(() {
-                                  countryCode = code.toString();
-                                });
-                              },
-                            ),
-                            InputLabel(label: "Mobile Number", isReq: true),
-                            InputPhoneNumber(
-                              hint: "Mobile Number",
-                              countryCode: countryCode,
-                              controller: phone,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ],
-                    )),
+                              InputLabel(label: "Mobile Number", isReq: true),
+                              InputPhoneNumber(
+                                hint: "Mobile Number",
+                                countryCode: countryCode,
+                                controller: phone,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      )),
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: InputButton(
-                  label:
-                      !applicationBloc.loading ? "CONTINUE" : "Please wait...",
-                  onPress: () async {
-                    if (name.text.isEmpty) {
-                      showSnackBar(
-                          "Validation Error", "Name is required", context);
-                      return;
-                    } else if (email.text.isEmpty) {
-                      showSnackBar(
-                          "Validation Error", "Email is required", context);
-                      return;
-                    } else if (phone.text.isEmpty) {
-                      showSnackBar("Validation Error",
-                          "Phone number is required", context);
-                      return;
-                    }
-                    Constants.registerName = name.text;
-                    Constants.registerEmail = email.text;
-                    Constants.registerPassword = "Test@123";
-                    Constants.registerMobile = countryCode + phone.text;
-                    await applicationBloc.checkConnection(context);
-                    if (await applicationBloc
-                        .requestOTP(countryCode + phone.text)) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OTPVerify(
-                                  phone: "$countryCode${phone.text}")));
-                    }
-                  }),
-            )
-          ],
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: InputButton(
+                    label: !applicationBloc.loading
+                        ? "CONTINUE"
+                        : "Please wait...",
+                    onPress: () async {
+                      if (name.text.isEmpty) {
+                        showSnackBar(
+                            "Validation Error", "Name is required", context);
+                        return;
+                      } else if (email.text.isEmpty) {
+                        showSnackBar(
+                            "Validation Error", "Email is required", context);
+                        return;
+                      } else if (identity.text.isEmpty &&
+                          passport.text.isEmpty) {
+                        showSnackBar(
+                            "Validation Error",
+                            "National identity or passport number is required",
+                            context);
+                        return;
+                      } else if (phone.text.isEmpty) {
+                        showSnackBar("Validation Error",
+                            "Phone number is required", context);
+                        return;
+                      }
+                      Constants.registerName = name.text;
+                      Constants.registerEmail = email.text;
+                      Constants.registerPassword = "Test@123";
+                      Constants.registerMobile = countryCode + phone.text;
+                      if (identity.text.isNotEmpty) {
+                        Constants.identityNumber = identity.text;
+                        Constants.isNational = true;
+                      }
+                      if (passport.text.isNotEmpty) {
+                        Constants.identityNumber = passport.text;
+                        Constants.isNational = false;
+                      }
+                      await applicationBloc.checkConnection(context);
+                      if (await applicationBloc
+                          .requestOTP(countryCode + phone.text)) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OTPVerify(
+                                    phone: "$countryCode${phone.text}")));
+                      }
+                    }),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -265,7 +360,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       },
                       child: ListTile(
                         title: InputLabel(label: "Business", isReq: false),
-                        subtitle: Text("Shoping and paying for services",
+                        subtitle: Text("To sell products to customers",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
                                 fontSize: 12,
@@ -291,14 +386,17 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       Constants.registerType =
                           _value == 2 ? "Business" : "Personal";
                       await applicationBloc.checkConnection(context);
-                      if (await applicationBloc.register()) {}
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => const BottomNav(),
-                        ),
-                        (route) => false,
-                      );
+                      if (await applicationBloc.register(context)) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => BottomNav(
+                              loadDeliveries: false,
+                            ),
+                          ),
+                          (route) => false,
+                        );
+                      }
                       // Navigator.push(
                       //     context,
                       //     MaterialPageRoute(

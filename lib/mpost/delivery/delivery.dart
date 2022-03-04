@@ -36,7 +36,7 @@ class _DeliveryState extends State<Delivery> {
   String phone = "";
   late DeliveryDetail recpDetail;
   String itemType = "Delivery details";
-  String price = "135";
+  int price = 135;
   final Set<Polyline> polyline = Set();
   final Set<Marker> markers = Set();
 
@@ -62,6 +62,38 @@ class _DeliveryState extends State<Delivery> {
           width: 5,
           color: Constants.primaryColor));
       setState(() {});
+    }
+  }
+
+  setMarkers() {
+    if (pickFrom.lat != 0 && deliver.lat != 0) {
+      if (pickFrom.lat != 0 && deliver.lat == 0) {
+        markers.clear();
+        markers.add(Marker(
+          markerId: MarkerId(pickFrom.address),
+          position: LatLng(pickFrom.lat, pickFrom.lng),
+          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+        ));
+      } else if (pickFrom.lat == 0 && deliver.lat != 0) {
+        markers.clear();
+        markers.add(Marker(
+          markerId: MarkerId(deliver.address),
+          position: LatLng(deliver.lat, deliver.lng),
+          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+        ));
+      } else {
+        markers.clear();
+        markers.add(Marker(
+          markerId: MarkerId(pickFrom.address),
+          position: LatLng(pickFrom.lat, pickFrom.lng),
+          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+        ));
+        markers.add(Marker(
+          markerId: MarkerId(deliver.address),
+          position: LatLng(deliver.lat, deliver.lng),
+          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+        ));
+      }
     }
   }
 
@@ -127,14 +159,13 @@ class _DeliveryState extends State<Delivery> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const AddressPicker()));
-                                  markers.add(Marker(
-                                    //add first marker
-                                    markerId: MarkerId(pickFrom.address),
-                                    position:
+                                  setMarkers();
+                                  if (pickFrom.lat != 0 && deliver.lat != 0) {
+                                    createPolyline();
+                                    price = await applicationBloc.getDistance(
                                         LatLng(pickFrom.lat, pickFrom.lng),
-                                    icon: BitmapDescriptor
-                                        .defaultMarker, //Icon for Marker
-                                  ));
+                                        LatLng(deliver.lat, deliver.lng));
+                                  }
                                   setState(() {});
                                 } catch (ex) {}
                                 setState(() {});
@@ -173,14 +204,13 @@ class _DeliveryState extends State<Delivery> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const AddressPicker()));
-                                  markers.add(Marker(
-                                    //add first marker
-                                    markerId: MarkerId(deliver.address),
-                                    position: LatLng(deliver.lat, deliver.lng),
-                                    icon: BitmapDescriptor
-                                        .defaultMarker, //Icon for Marker
-                                  ));
-                                  createPolyline();
+                                  setMarkers();
+                                  if (pickFrom.lat != 0 && deliver.lat != 0) {
+                                    createPolyline();
+                                    price = await applicationBloc.getDistance(
+                                        LatLng(pickFrom.lat, pickFrom.lng),
+                                        LatLng(deliver.lat, deliver.lng));
+                                  }
                                   setState(() {});
                                 } catch (ex) {}
                                 setState(() {});
@@ -366,7 +396,10 @@ class _DeliveryState extends State<Delivery> {
                               },
                               contentPadding: EdgeInsets.zero,
                               title: const Text(
-                                "Add your phone number",
+                                "Add your phone number (optional)",
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
@@ -397,8 +430,8 @@ class _DeliveryState extends State<Delivery> {
                               thickness: 1.5,
                               height: 15,
                             ),
-                            const ListTile(
-                              title: Text(
+                            ListTile(
+                              title: const Text(
                                 "Total",
                                 style: TextStyle(
                                     color: Colors.black,
@@ -408,8 +441,8 @@ class _DeliveryState extends State<Delivery> {
                               ),
                               contentPadding: EdgeInsets.zero,
                               trailing: Text(
-                                "KSH 135",
-                                style: TextStyle(
+                                "KSH ${price.toString()}",
+                                style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 17,
                                     fontFamily: "Montserrat",
@@ -508,14 +541,6 @@ class _TimePickerState extends State<TimePicker> {
                       fontFamily: "Montserrat",
                       fontSize: 18,
                       fontWeight: FontWeight.w700),
-                ),
-                const Text(
-                  'As soon as possible',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
                 ),
                 const Spacer(),
                 Row(

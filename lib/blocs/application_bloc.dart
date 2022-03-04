@@ -5,6 +5,7 @@ import 'package:mpost/connectivity.dart';
 import 'package:mpost/models/address.dart';
 import 'package:mpost/models/delivery.dart';
 import 'package:mpost/models/places_search.dart';
+import 'package:mpost/models/postal_code_model.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/payment/processing.dart';
 import 'package:mpost/services/delivery_services.dart';
@@ -12,12 +13,16 @@ import 'package:mpost/services/login_register.dart';
 import 'package:mpost/services/notifications.dart';
 import 'package:mpost/services/payment.dart';
 import 'package:mpost/services/places_service.dart';
+import 'package:mpost/services/user_service.dart';
+import 'package:mpost/services/virtual_address.dart';
 
 class ApplicaitonBloc with ChangeNotifier {
   final placesService = PlacesService();
   final loginRegisterService = LoginRegisterService();
   final delivaryService = DeliveryService();
   final PaymentService paymentService = PaymentService();
+  final UserService userService = UserService();
+  final VirtualAddressService virtualAddressService = VirtualAddressService();
 
   ApplicaitonBloc() {
     print("BLOC working");
@@ -35,6 +40,8 @@ class ApplicaitonBloc with ChangeNotifier {
   int paymentRequestId = -1;
   String paymentRequestStatus = "";
   List<DeliveryModel> deliveries = [];
+  int pendingPayments = 0;
+  List<PostalCodeModel> postalCodes = [];
 
   // register variables
 
@@ -53,10 +60,10 @@ class ApplicaitonBloc with ChangeNotifier {
     return await placesService.getLocation(place_id);
   }
 
-  Future<bool> login(String phone) async {
+  Future<bool> login(String phone, BuildContext context) async {
     loading = true;
     notifyListeners();
-    loginOTPSent = await loginRegisterService.loginService(phone);
+    loginOTPSent = await loginRegisterService.loginService(phone, context);
     loading = false;
     notifyListeners();
     return loginOTPSent;
@@ -98,10 +105,10 @@ class ApplicaitonBloc with ChangeNotifier {
     return false;
   }
 
-  Future<bool> register() async {
+  Future<bool> register(BuildContext context) async {
     loading = true;
     notifyListeners();
-    if (await loginRegisterService.register()) {
+    if (await loginRegisterService.register(context)) {
       loading = false;
       notifyListeners();
       return true;
@@ -143,7 +150,6 @@ class ApplicaitonBloc with ChangeNotifier {
     if (cost.first != "-1") {
       totalCost = int.parse(cost.first);
       paymentRequestId = int.parse(cost.last);
-      print(paymentRequestId);
       loading = false;
       notifyListeners();
       return true;
@@ -153,18 +159,14 @@ class ApplicaitonBloc with ChangeNotifier {
     return false;
   }
 
-  getDistance(String from, String to) async {
-    loading = true;
-    notifyListeners();
-    String distance = await placesService.calculateDistance(from, to);
-    if (distance == "error") {
-      totalCost = -2;
+  Future<int> getDistance(LatLng from, LatLng to) async {
+    int cost = 0;
+    cost = await placesService.calculateDistance(from, to);
+    if (cost == -1) {
+      return -1;
     }
-    print(distance);
-    double cost = double.parse(distance);
-    totalCost = (135 + (cost * 25)).round();
-    loading = false;
-    notifyListeners();
+    print(cost);
+    return cost;
   }
 
   initializeMobilePayment(String operator, String phone, paymentRequestId,
@@ -185,7 +187,7 @@ class ApplicaitonBloc with ChangeNotifier {
         );
         MpostNotification.notify(
             "Payment has been initialized.",
-            "Dear user your payment has been successfully initialized nad its on pending. Put your security PIN to complete delivery process.",
+            "Dear user your payment has been successfully initialized and its on pending. Put your security PIN to complete delivery process.",
             "basic_channel");
       } else {
         MpostNotification.notify(
@@ -205,23 +207,70 @@ class ApplicaitonBloc with ChangeNotifier {
     notifyListeners();
   }
 
-  checkConnection(BuildContext context) async {
+  Future<bool> checkConnection(BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
+      return true;
     } else if (connectivityResult == ConnectivityResult.none) {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const ConnectivityStatus()));
     }
+    return false;
   }
 
   getMyDeliveries() async {
-    print("Getting deliveries");
+    pendingPayments = 0;
     try {
       deliveries = await delivaryService.getAllDeliveries();
+      for (var item in deliveries) {
+        if (item.paymentRequest != null) {
+          if (int.parse(item.paymentRequest!.balance.toString()) > 0) {
+            pendingPayments++;
+          }
+        }
+      }
     } catch (ex) {
       print(ex);
     }
     notifyListeners();
+  }
+
+  Future<Address> getAddress(double lat, lng) async {
+    loading = true;
+    notifyListeners();
+    Address address = await placesService.getAddress(lat, lng);
+    loading = false;
+    notifyListeners();
+    return address;
+  }
+
+  Future<bool> updateUser(String firstName, String lastName, String email,
+      String phoneNumber, String mpostVirtualCode, String city) async {
+    loading = true;
+    notifyListeners();
+    if (await userService.updateUser(
+        firstName, lastName, email, phoneNumber, mpostVirtualCode, city)) {
+      loading = false;
+      notifyListeners();
+      return true;
+    }
+    loading = false;
+    notifyListeners();
+    return false;
+  }
+
+  getPostalCodes() async {
+    postalCodes = await virtualAddressService.getPostalCode();
+  }
+
+  Future<String> createVirtualAddress(PostalCodeModel postalCode) async {
+    loading = true;
+    notifyListeners();
+    String result =
+        await virtualAddressService.createVirtualAddress(postalCode);
+    loading = false;
+    notifyListeners();
+    return result;
   }
 }

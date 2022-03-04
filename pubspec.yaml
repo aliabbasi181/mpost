@@ -47,7 +47,8 @@ dependencies:
   pull_to_refresh: ^2.0.0
   sqflite: ^2.0.2
   path_provider: ^2.0.9
-  onesignal_flutter: ^3.2.8
+  badges: ^2.0.2
+  url_launcher: ^6.0.20
 
 
 dev_dependencies:
@@ -77,15 +78,6 @@ flutter:
     - asset/icons/arrow_left.png
     - asset/images/mpost_logo.png
     - asset/images/slider_01.png
-    - asset/images/cinemas_icon.png
-    - asset/images/delievery_icon.png
-    - asset/images/events_icon.png
-    - asset/images/gift_icon.png
-    - asset/images/pay_icon.png
-    - asset/images/seemore_icon.png
-    - asset/images/shopping_icon.png
-    - asset/images/grabgifts_icon.png
-    - asset/images/transport_icon.png
     - asset/images/shopping_offers_icon.png
     - asset/images/hotel_icon.png
     - asset/images/bus_icon.png
@@ -99,6 +91,21 @@ flutter:
     - asset/images/fragile_icon.png
     - asset/images/map.png
     - asset/images/mpost_logo_transparent.png
+    - asset/images/delivery-icon.png
+    - asset/images/events-icon.png
+    - asset/images/more-icon.png
+    - asset/images/movies-icon.png
+    - asset/images/nft-icon.png
+    - asset/images/shopping-icon.png
+    - asset/images/transport-icon.png
+    - asset/images/welcome-icon.png
+    - asset/images/directory-icon.png
+    - asset/images/grabgifts_icon.png
+    - asset/images/banner-bg-image.png
+    - asset/images/mpost_home_logo.png
+    - asset/images/logout-icon.png
+    - asset/images/mpost_blue_icon.png
+    - asset/images/mpost_white_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

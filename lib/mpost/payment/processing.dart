@@ -81,16 +81,22 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.check_circle_rounded,
-                size: 100,
-                color: Color(0xff15BE8B),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: const Color(0xff15BE8B),
+                    borderRadius: BorderRadius.circular(100)),
+                child: const Icon(
+                  Icons.loop_rounded,
+                  size: 70,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(
                 height: 20,
               ),
               const Text(
-                'Payment successful',
+                'Payment pending',
                 style: TextStyle(
                     fontFamily: "Montserrat",
                     fontSize: 16,
@@ -100,7 +106,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                 height: 5,
               ),
               const Text(
-                'You payment was successful! You can now continue using MPOST',
+                'Please pay now and you will get notified shortly! \nYou can now continue using MPOST',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: "Montserrat",
@@ -115,7 +121,9 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const BottomNav()),
+                          builder: (context) => BottomNav(
+                                loadDeliveries: false,
+                              )),
                       (route) => false);
                   // Navigator.pushReplacement(
                   //     context,

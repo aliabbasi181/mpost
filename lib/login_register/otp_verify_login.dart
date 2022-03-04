@@ -137,7 +137,8 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                                 borderRadius: BorderRadius.circular(5)),
                             child: InkWell(
                               onTap: () async {
-                                if (await applicationBloc.login(widget.phone)) {
+                                if (await applicationBloc.login(
+                                    widget.phone, context)) {
                                   print("data");
                                   setState(() {
                                     _runTimer();
@@ -181,8 +182,9 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const BottomNav(),
+                            builder: (BuildContext context) => BottomNav(
+                              loadDeliveries: true,
+                            ),
                           ),
                           (route) => false,
                         );

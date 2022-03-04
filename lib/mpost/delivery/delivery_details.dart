@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
+import 'package:provider/provider.dart';
 
 class DeliveryDetails extends StatefulWidget {
   const DeliveryDetails({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
   late DeliveryDetail deliveryDetail;
   @override
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
       backgroundColor: const Color(0XFFFf8f9ff),
       body: SingleChildScrollView(
@@ -88,27 +91,27 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                                   fontWeight: FontWeight.w600),
                             ),
                           ),
-                          const Text(
-                            "Joel Mwangi",
-                            style: TextStyle(
+                          Text(
+                            Constants.user.fullName.toString(),
+                            style: const TextStyle(
                                 fontSize: 14,
                                 fontFamily: "Montserrat",
                                 fontWeight: FontWeight.w500),
                           ),
-                          const Text(
-                            "0711305097",
-                            style: TextStyle(
+                          Text(
+                            Constants.user.mobile.toString(),
+                            style: const TextStyle(
                                 fontSize: 14,
                                 fontFamily: "Montserrat",
                                 fontWeight: FontWeight.w500),
                           ),
-                          const Text(
-                            "Caltext Building, Nairobi, Kenya",
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: "Montserrat",
-                                fontWeight: FontWeight.w500),
-                          ),
+                          // Text(
+                          //   Constants.user.addresses.toString(),
+                          //   style: const TextStyle(
+                          //       fontSize: 14,
+                          //       fontFamily: "Montserrat",
+                          //       fontWeight: FontWeight.w500),
+                          // ),
                         ],
                       ),
                     ),
@@ -269,6 +272,7 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                           ),
                           TextField(
                             controller: note,
+                            autocorrect: false,
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -293,6 +297,7 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                           ),
                           TextField(
                             controller: instructions,
+                            autocorrect: false,
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -342,6 +347,10 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                             "Phone number can not be less then 9 digits",
                             context);
                         return;
+                      } else if (phone.text.length > 9) {
+                        showSnackBar("Validation error",
+                            "Phone number can not be up to 9 digits", context);
+                        return;
                       } else if (pickCategory == "") {
                         showSnackBar("Validation error",
                             "Item type is required", context);
@@ -385,6 +394,7 @@ class _PickCategoryState extends State<PickCategory> {
     categories
         .add(Category("asset/images/electronics_icon.png", "Electronics"));
     categories.add(Category("asset/images/fragile_icon.png", "Fragile"));
+    categories.add(Category("asset/images/more-icon.png", "Other"));
   }
 
   Widget build(BuildContext context) {

@@ -34,17 +34,26 @@ class DatabaseHandler {
         "CREATE TABLE address(id INTEGER PRIMARY KEY, address_id TEXT, user_id TEXT, is_personal TEXT, address TEXT, postal_code_id TEXT, status_id TEXT, payment_request_id TEXT, expires_at TEXT, created_at TEXT, updated_at TEXT, deleted_at TEXT)");
   }
 
-  Future<int> getUser() async {
+  Future<int> getUser(bool loggedin) async {
     print("calling get user");
     Database db = await instance.database;
     var getUser = await db.query('user', orderBy: 'first_name');
-    List<UserModel> user = getUser.isNotEmpty
-        ? List<UserModel>.from(getUser.map((e) => UserModel.fromJson(e)))
-        : [];
+
+    List<UserModel> user;
+    if (loggedin) {
+      user = getUser.isNotEmpty
+          ? List<UserModel>.from(
+              getUser.map((e) => UserModel.fromJsonLoggedin(e)))
+          : [];
+    } else {
+      user = getUser.isNotEmpty
+          ? List<UserModel>.from(getUser.map((e) => UserModel.fromJson(e)))
+          : [];
+    }
     if (user.isNotEmpty) {
-      print(user.length);
       Constants.user = user.first;
       Constants.token = user.first.bearerToken.toString();
+      Constants.setToken();
       return 1;
     } else {
       return 0;
@@ -53,8 +62,10 @@ class DatabaseHandler {
 
   addUser(UserModel user) async {
     print("calling add user");
+    await removeUser();
     Database db = await instance.database;
-    print(await db.insert('user', user.toMap()));
+    await db.insert('user', user.toMap());
+    await getUser(false);
   }
 
   removeUser() async {
@@ -71,4 +82,6 @@ class DatabaseHandler {
   //       : [];
   //   user.isNotEmpty ? print(user.first.email) : null;
   // }
+
+  //87|x8fTKMtSouljqSKzap6sczu6qGKOPRwE7XcRIGC2
 }

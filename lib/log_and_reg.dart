@@ -7,6 +7,8 @@ import 'package:intro_slider/slide_object.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/login.dart';
 import 'package:mpost/login_register/register.dart';
+import 'package:mpost/mpost/privacy_policy.dart';
+import 'package:mpost/mpost/terms_of_service.dart';
 import 'package:mpost/widgets.dart';
 
 class LoginAndRegister extends StatefulWidget {
@@ -108,15 +110,14 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                padding: const EdgeInsets.fromLTRB(20, 05, 20, 05),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Image(
-                      image:
-                          AssetImage("asset/images/mpost_logo_transparent.png"),
-                      height: 50,
-                      width: 50,
+                      image: AssetImage("asset/images/mpost_blue_icon.png"),
+                      height: 30,
+                      width: 30,
                     ),
                     Container(
                       padding: const EdgeInsets.all(8),
@@ -198,7 +199,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                       RichText(
                           text: TextSpan(
                               text:
-                                  "By logging in or registring, you agre to our ",
+                                  "By logging in or registering, you agree to our ",
                               style: TextStyle(
                                   height: 1.5,
                                   fontFamily: "Montserrat",
@@ -209,7 +210,13 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                             TextSpan(
                               text: "Terms of Service",
                               recognizer: TapGestureRecognizer()
-                                ..onTap = () => Navigator.pop(context),
+                                ..onTap = () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const TermsOfService()));
+                                },
                               style: TextStyle(
                                   fontFamily: "Montserrat",
                                   fontSize: 11,
@@ -220,7 +227,13 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                             TextSpan(
                               text: "Privacy Policy",
                               recognizer: TapGestureRecognizer()
-                                ..onTap = () => Navigator.pop(context),
+                                ..onTap = () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PrivacyPolicy()));
+                                },
                               style: TextStyle(
                                   fontFamily: "Montserrat",
                                   fontSize: 11,

@@ -171,9 +171,7 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
                 const SizedBox(
                   height: 8,
                 ),
-                widget.deliveryDetail.paymentRequest!.balance != "0"
-                    ? pendingPayment(context, widget.deliveryDetail)
-                    : sucessPayment(context, widget.deliveryDetail),
+                paymentStatus(context, widget.deliveryDetail),
                 const SizedBox(
                   height: 8,
                 ),
@@ -411,8 +409,8 @@ pendingPayment(BuildContext context, DeliveryModel delivery) {
                   const SizedBox(
                     width: 5,
                   ),
-                  const Text("Pending payment",
-                      style: TextStyle(
+                  Text(delivery.status!.name.toString(),
+                      style: const TextStyle(
                           fontFamily: "Montserrat",
                           fontSize: 14,
                           color: Color(0XFFF1C282F),
@@ -450,7 +448,7 @@ pendingPayment(BuildContext context, DeliveryModel delivery) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("View details",
+                  const Text("Total",
                       style: TextStyle(
                           fontFamily: "Montserrat",
                           fontSize: 18,
@@ -474,7 +472,7 @@ pendingPayment(BuildContext context, DeliveryModel delivery) {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ChoosePayment(
-                              cost: "345",
+                              cost: delivery.paymentRequest!.balance.toString(),
                               id: delivery.paymentRequestId.toString())));
                 },
                 child: Container(
@@ -533,8 +531,116 @@ sucessPayment(BuildContext context, DeliveryModel delivery) {
                   const SizedBox(
                     width: 5,
                   ),
-                  const Text("Paid",
+                  Text(delivery.status!.name.toString(),
+                      style: const TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 14,
+                          color: Color(0XFFF1C282F),
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
+              const SizedBox(
+                height: 17,
+              ),
+              const Text("Payment method",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 12,
+                      color: Color(0XFFF8D8D92),
+                      fontWeight: FontWeight.w500)),
+              Text(delivery.paymentRequest!.paymentMethod!.name.toString(),
+                  style: const TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 14,
+                      color: Color(0XFFF1C282F),
+                      fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+        Container(
+          width: Constants.getWidth(context),
+          padding: const EdgeInsets.all(18),
+          decoration: const BoxDecoration(
+              border: Border(
+                  top: BorderSide(
+            color: Color(0XFFFE2E2E2),
+          ))),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Total",
                       style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600)),
+                  Text("Ksh ${delivery.paymentRequest!.balance.toString()}",
+                      style: const TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700)),
+                ],
+              ),
+              // Container(
+              //   width: Constants.getWidth(context),
+              //   padding: const EdgeInsets.only(top: 15, bottom: 15),
+              //   child: const Text("Initiate payment",
+              //       textAlign: TextAlign.center,
+              //       style: TextStyle(
+              //           fontFamily: "Montserrat",
+              //           fontSize: 14,
+              //           color: Colors.white,
+              //           fontWeight: FontWeight.w600)),
+              //   decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(6),
+              //       color: Constants.primaryColor),
+              // )
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+failedPayment(BuildContext context, DeliveryModel delivery) {
+  return Container(
+    width: Constants.getWidth(context),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6),
+      color: Colors.white,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("Status",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 12,
+                      color: Color(0XFFF8D8D92),
+                      fontWeight: FontWeight.w500)),
+              Row(
+                children: [
+                  Container(
+                    height: 8,
+                    width: 8,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: const Color(0XFFF18B284)),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(delivery.status!.name.toString(),
+                      style: const TextStyle(
                           fontFamily: "Montserrat",
                           fontSize: 14,
                           color: Color(0XFFF1C282F),
@@ -572,7 +678,7 @@ sucessPayment(BuildContext context, DeliveryModel delivery) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("View details",
+                  const Text("Total",
                       style: TextStyle(
                           fontFamily: "Montserrat",
                           fontSize: 18,
@@ -606,4 +712,17 @@ sucessPayment(BuildContext context, DeliveryModel delivery) {
       ],
     ),
   );
+}
+
+Widget paymentStatus(BuildContext context, DeliveryModel delivery) {
+  switch (delivery.status!.id) {
+    case "3":
+      return sucessPayment(context, delivery);
+    case "5":
+      return pendingPayment(context, delivery);
+    case "13":
+      return failedPayment(context, delivery);
+    default:
+      return const SizedBox();
+  }
 }

@@ -3,12 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/log_and_reg.dart';
+import 'package:mpost/mpost/activity/activity.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/payment/choose_payment.dart';
+import 'package:mpost/mpost/virtual_address.dart/create_virtual_address.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/services/database.dart';
 import 'package:mpost/services/login_register.dart';
-import 'package:mpost/services/notifications.dart';
-import 'package:mpost/widgets.dart';
+import 'package:mpost/services/utilities.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -21,12 +24,24 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
   LoginRegisterService service = LoginRegisterService();
+  String userName = "";
+  LinkingService Linking = LinkingService();
 
   @override
   void initState() {
+    //_getDeliveries();
+    userName = Constants.user.firstName![0].toString() +
+        Constants.user.lastName![0].toString();
     super.initState();
-    print(Constants.user.bearerToken);
   }
+
+  // _getDeliveries() async {
+  //   final applicationBloc =
+  //       Provider.of<ApplicaitonBloc>(context, listen: false);
+  //   if (await applicationBloc.checkConnection(context)) {
+  //     applicationBloc.getMyDeliveries();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -46,49 +61,68 @@ class _HomeState extends State<Home> {
                     Color(0XFFF1582BE),
                   ],
                 )),
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                 child: SafeArea(
                   child: Column(
                     children: [
                       Row(
-                        children: const [
-                          // Container(
-                          //   height: 35,
-                          //   width: 35,
-                          //   decoration: BoxDecoration(
-                          //       image: const DecorationImage(
-                          //           image: NetworkImage(
-                          //               "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo="),
-                          //           fit: BoxFit.cover),
-                          //       color: Colors.white,
-                          //       borderRadius: BorderRadius.circular(100)),
-                          // ),
-                          Expanded(
-                            child: Text(
-                              "MPOST",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Montserrat",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
+                        children: [
+                          Container(
+                            height: 35,
+                            width: 35,
+                            //padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.white, width: 1),
+                                borderRadius: BorderRadius.circular(100),
+                                color: Colors.white.withOpacity(0.7)),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(userName,
+                                  style: TextStyle(
+                                      color: Constants.primaryColor,
+                                      fontFamily: "Montserrat",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14)),
                             ),
                           ),
-                          // InkWell(
-                          //   onTap: () {
-                          //     try {
-                          //       MpostNotification.notify(
-                          //           "title", "body", "basic_channel");
-                          //     } catch (ex) {
-                          //       print(ex);
-                          //     }
-                          //   },
-                          //   child: const Icon(
-                          //     Icons.notifications_none_rounded,
-                          //     size: 35,
-                          //     color: Colors.white,
-                          //   ),
-                          // ),
+                          const Expanded(
+                              child: Image(
+                                  width: 76,
+                                  height: 22,
+                                  image: AssetImage(
+                                      "asset/images/mpost_white_logo.png"))),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Activity()));
+                            },
+                            child: Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                const Icon(
+                                  Icons.notifications_none_rounded,
+                                  size: 35,
+                                  color: Colors.white,
+                                ),
+                                Visibility(
+                                  visible: applicationBloc.pendingPayments > 0,
+                                  child: Container(
+                                    height: 15,
+                                    width: 15,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white, width: 1),
+                                        color: const Color(0XFFFBE1515),
+                                        borderRadius:
+                                            BorderRadius.circular(100)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(
@@ -103,50 +137,312 @@ class _HomeState extends State<Home> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                color: const Color.fromRGBO(252, 246, 248, 10),
-                width: Constants.getWidth(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                        textAlign: TextAlign.left,
-                        text: const TextSpan(
-                            text: "Mpost virtual address\n",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: "Montserrat",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600),
-                            children: [
-                              TextSpan(
-                                  text: "Use you number 0711305097 ",
-                                  style: TextStyle(
-                                      fontSize: 9,
-                                      color: Colors.black,
-                                      fontFamily: "Montserrat",
-                                      fontWeight: FontWeight.w400))
-                            ])),
-                    Container(
-                        padding: const EdgeInsets.fromLTRB(9, 6, 9, 6),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                                color: Color(0XFFFBC4788), width: 1)),
-                        child: const Text("Get one",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Color(0XFFFBC4788),
-                                fontFamily: "Montserrat",
-                                fontWeight: FontWeight.w700))),
-                  ],
-                ),
-              ),
-              Container(
                 decoration: const BoxDecoration(color: Colors.white),
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: Column(
                   children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      height: 111,
+                      width: Constants.getWidth(context),
+                      decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                              colors: [Color(0XFFF0DB48B), Color(0XFFF08C890)]),
+                          borderRadius: BorderRadius.circular(6)),
+                      child: Stack(
+                        children: [
+                          const Align(
+                            alignment: Alignment.bottomRight,
+                            child: Image(
+                              image: AssetImage(
+                                  "asset/images/banner-bg-image.png"),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 20, 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      color: const Color(0XFFFCAC20C)),
+                                  child: const Center(
+                                    child: Image(
+                                        height: 25,
+                                        width: 25,
+                                        image: AssetImage(
+                                            "asset/images/welcome-icon.png")),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Welcome to our new fresh look",
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 15),
+                                    ),
+                                    const Text(
+                                      "Your new one stop shop",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                wellcomeDialog(context));
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        padding: const EdgeInsets.fromLTRB(
+                                            13, 7, 13, 7),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            color: Colors.white),
+                                        child: const Text(
+                                          "Learn more",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: Constants.virtualAddress.id == -1,
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                        decoration: BoxDecoration(
+                            color: const Color.fromRGBO(252, 246, 248, 10),
+                            borderRadius: BorderRadius.circular(6)),
+                        width: Constants.getWidth(context),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            RichText(
+                                textAlign: TextAlign.left,
+                                text: TextSpan(
+                                    text: "Mpost virtual address\n",
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: "Montserrat",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
+                                    children: [
+                                      TextSpan(
+                                          text:
+                                              "Use your number ${Constants.user.mobile.toString()} ",
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w400))
+                                    ])),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CreateVirtualAddress()));
+                              },
+                              child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(13, 10, 13, 10),
+                                  decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                          colors: [
+                                            Color(0XFFFF673BC),
+                                            Color(0XFFFBC4788),
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter),
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                          color: Color(0XFFFBC4788), width: 1)),
+                                  child: const Text("Register now",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w700))),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Constants.virtualAddress.id != -1
+                        ? Constants.virtualAddress.status!.name ==
+                                "Pending Payment"
+                            ? Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(14, 14, 14, 14),
+                                margin:
+                                    const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                                decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromRGBO(252, 246, 248, 10),
+                                    borderRadius: BorderRadius.circular(6)),
+                                width: Constants.getWidth(context),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    RichText(
+                                        textAlign: TextAlign.left,
+                                        text: TextSpan(
+                                            text: "Mpost virtual address\n",
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: "Montserrat",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600),
+                                            children: [
+                                              TextSpan(
+                                                  text:
+                                                      "You created your virtual address \n\"${Constants.virtualAddress.address} - ${Constants.virtualAddress.postalCode!.postalCode}\n(${Constants.virtualAddress.postalCode!.name})\".\nBut you have not payed yet.",
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight:
+                                                          FontWeight.w400))
+                                            ])),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ChoosePayment(
+                                                      cost: "300",
+                                                      id: Constants
+                                                          .virtualAddress
+                                                          .paymentRequestId
+                                                          .toString(),
+                                                    )));
+                                      },
+                                      child: Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              13, 10, 13, 10),
+                                          decoration: BoxDecoration(
+                                              gradient: const LinearGradient(
+                                                  colors: [
+                                                    Color(0XFFFF673BC),
+                                                    Color(0XFFFBC4788),
+                                                  ],
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              border: Border.all(
+                                                  color: Color(0XFFFBC4788),
+                                                  width: 1)),
+                                          child: const Text("Pay now",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                  fontFamily: "Montserrat",
+                                                  fontWeight:
+                                                      FontWeight.w700))),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(14, 14, 14, 14),
+                                margin:
+                                    const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                                decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromRGBO(252, 246, 248, 10),
+                                    borderRadius: BorderRadius.circular(6)),
+                                width: Constants.getWidth(context),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    RichText(
+                                        textAlign: TextAlign.left,
+                                        text: TextSpan(
+                                            text: "Mpost virtual address\n",
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: "Montserrat",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600),
+                                            children: [
+                                              TextSpan(
+                                                  text:
+                                                      "${Constants.virtualAddress.address} - ${Constants.virtualAddress.postalCode!.postalCode}(${Constants.virtualAddress.postalCode!.name})",
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight:
+                                                          FontWeight.w400))
+                                            ])),
+                                    // InkWell(
+                                    //   onTap: () {
+                                    //     Navigator.push(
+                                    //         context,
+                                    //         MaterialPageRoute(
+                                    //             builder: (context) =>
+                                    //                 const CreateVirtualAddress()));
+                                    //   },
+                                    //   child: Container(
+                                    //       padding: const EdgeInsets.fromLTRB(
+                                    //           13, 10, 13, 10),
+                                    //       decoration: BoxDecoration(
+                                    //           gradient: const LinearGradient(
+                                    //               colors: [
+                                    //                 Color(0XFFFF673BC),
+                                    //                 Color(0XFFFBC4788),
+                                    //               ],
+                                    //               begin: Alignment.topCenter,
+                                    //               end: Alignment.bottomCenter),
+                                    //           borderRadius: BorderRadius.circular(4),
+                                    //           border: Border.all(
+                                    //               color: Color(0XFFFBC4788),
+                                    //               width: 1)),
+                                    //       child: const Text("Register one",
+                                    //           style: TextStyle(
+                                    //               fontSize: 12,
+                                    //               color: Colors.white,
+                                    //               fontFamily: "Montserrat",
+                                    //               fontWeight: FontWeight.w700))),
+                                    // ),
+                                  ],
+                                ),
+                              )
+                        : const SizedBox(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -162,33 +458,58 @@ class _HomeState extends State<Home> {
                                             const Delivery()));
                               },
                               title: "Delivery",
-                              image: "asset/images/delievery_icon.png"),
+                              image: "asset/images/delivery-icon.png"),
                         ),
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
                               onPress: () async {
-                                await DatabaseHandler.instance.removeUser();
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) => messageDialog(
+                                //       context,
+                                //       "Coming soon!",
+                                //       "Stay tuned to this. We are launching soon",
+                                //       "OK"),
+                                // );
+                                String URL =
+                                    "https://directory.mpostfintech.co.ke/";
+                                Linking.openMyLink(URL, context);
                               },
-                              title: "Pay",
-                              image: "asset/images/pay_icon.png"),
+                              title: "Directory",
+                              image: "asset/images/directory-icon.png"),
                         ),
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
                               onPress: () {
-                                MpostNotification.notify(
-                                    "title", "body", "basic_channel");
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => messageDialog(
+                                      context,
+                                      "Coming soon!",
+                                      "Stay tuned to this. We are launching soon",
+                                      "OK"),
+                                );
                               },
                               title: "Shopping",
-                              image: "asset/images/shopping_icon.png"),
+                              image: "asset/images/shopping-icon.png"),
                         ),
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
-                              onPress: () {},
+                              onPress: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => messageDialog(
+                                      context,
+                                      "Coming soon!",
+                                      "Stay tuned to this. We are launching soon",
+                                      "OK"),
+                                );
+                              },
                               title: "Events",
-                              image: "asset/images/events_icon.png"),
+                              image: "asset/images/events-icon.png"),
                         )
                       ],
                     ),
@@ -201,30 +522,66 @@ class _HomeState extends State<Home> {
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
-                              onPress: () {},
+                              onPress: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => messageDialog(
+                                      context,
+                                      "Coming soon!",
+                                      "Stay tuned to this. We are launching soon",
+                                      "OK"),
+                                );
+                              },
                               title: "Transport",
-                              image: "asset/images/transport_icon.png"),
+                              image: "asset/images/transport-icon.png"),
                         ),
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
-                              onPress: () {},
+                              onPress: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => messageDialog(
+                                      context,
+                                      "Coming soon!",
+                                      "Stay tuned to this. We are launching soon",
+                                      "OK"),
+                                );
+                              },
                               title: "Movies",
-                              image: "asset/images/cinemas_icon.png"),
+                              image: "asset/images/movies-icon.png"),
                         ),
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
-                              onPress: () {},
+                              onPress: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => messageDialog(
+                                      context,
+                                      "Coming soon!",
+                                      "Stay tuned to this. We are launching soon",
+                                      "OK"),
+                                );
+                              },
                               title: "NFT Stamps",
-                              image: "asset/images/gift_icon.png"),
+                              image: "asset/images/nft-icon.png"),
                         ),
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
-                              onPress: () {},
+                              onPress: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => messageDialog(
+                                      context,
+                                      "Coming soon!",
+                                      "Stay tuned to this. We are launching soon",
+                                      "OK"),
+                                );
+                              },
                               title: "More",
-                              image: "asset/images/seemore_icon.png"),
+                              image: "asset/images/more-icon.png"),
                         )
                       ],
                     ),
@@ -235,7 +592,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FadeTiles(
-                            title: "MPesa",
+                            title: "Wallets",
                             subTitle: "Active",
                             icon: Icons.account_balance_wallet_outlined),
                         FadeTiles(

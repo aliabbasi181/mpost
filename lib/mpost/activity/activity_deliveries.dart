@@ -15,6 +15,10 @@ class ActivityDeliveries extends StatefulWidget {
 class _ActivityDeliveriesState extends State<ActivityDeliveries> {
   @override
   void initState() {
+    final applicationBloc =
+        Provider.of<ApplicaitonBloc>(context, listen: false);
+    applicationBloc.getMyDeliveries();
+    print(Constants.token);
     super.initState();
   }
 
@@ -90,16 +94,20 @@ class _ActivityDeliveriesState extends State<ActivityDeliveries> {
                             fontWeight: FontWeight.w600)),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(3),
+                    height: 20,
+                    width: 20,
+                    //padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
                         color: const Color(0XFFFBE157A)),
-                    child: Text(applicationBloc.deliveries.length.toString(),
-                        style: const TextStyle(
-                            fontFamily: "Montserrat",
-                            fontSize: 12,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600)),
+                    child: Center(
+                      child: Text(applicationBloc.deliveries.length.toString(),
+                          style: const TextStyle(
+                              fontFamily: "Montserrat",
+                              fontSize: 12,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600)),
+                    ),
                   ),
                   const SizedBox(width: 5),
                   const Icon(

@@ -148,7 +148,8 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                                 borderRadius: BorderRadius.circular(5)),
                             child: InkWell(
                               onTap: () async {
-                                if (await applicationBloc.login(widget.phone)) {
+                                if (await applicationBloc.login(
+                                    widget.phone, context)) {
                                   setState(() {
                                     _runTimer();
                                   });

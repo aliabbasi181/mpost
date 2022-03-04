@@ -104,8 +104,8 @@ class _AddPhoneNumberState extends State<AddPhoneNumber> {
                         : "Please wait...",
                     onPress: () async {
                       try {
-                        if (await applicationBloc
-                            .login(countryCode + phone.text)) {
+                        if (await applicationBloc.login(
+                            countryCode + phone.text, context)) {
                           String res = await Navigator.push(
                               context,
                               MaterialPageRoute(

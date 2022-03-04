@@ -68,6 +68,9 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                     horizontalTitleGap: 0,
                     minVerticalPadding: 0,
                     contentPadding: EdgeInsets.zero,

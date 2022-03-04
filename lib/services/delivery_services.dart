@@ -10,7 +10,6 @@ class DeliveryService {
   Future<String> confirmOrder(
       Address from, Address to, DeliveryDetail recpDetail, String time) async {
     String url = Constants.hostUrl + "delivery-requests";
-    print(url);
     Map<String, dynamic> payload = {
       "pickup_address": {
         "latitude": from.lat,
@@ -35,14 +34,8 @@ class DeliveryService {
       var response = await http.post(Uri.parse(url),
           headers: Constants.requestHeadersWithToken,
           body: jsonEncode(payload));
-      // var response = await Dio().post(url,
-      //     data: payload,
-      //     options: Options(headers: Constants.requestHeadersWithToken));
-      print(response.body);
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
-        //print(response.data['delivery_cost']);
-        //return "${response.data['delivery_cost'].toString()},${response.data['payment_request_id'].toString()}";
         return "${json['delivery_cost'].toString()},${json['payment_request_id'].toString()}";
       } else {
         return "-1";
@@ -55,7 +48,7 @@ class DeliveryService {
 
   Future<List<DeliveryModel>> getAllDeliveries() async {
     String url = Constants.hostUrl +
-        "delivery-requests?with[]=payment_request&with[]=pickup_address&with[]=delivery_address";
+        "delivery-requests?with[]=payment_request.payment_method&with[]=pickup_address&with[]=delivery_address&with[]=status&self=true";
     List<DeliveryModel> deliveries = [];
     try {
       var response = await Dio().get(url,

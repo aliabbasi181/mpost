@@ -2,6 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/terms_of_service.dart';
 
 class MenuIcon extends StatefulWidget {
   String title, image;
@@ -149,7 +150,7 @@ class _CinemaSectionState extends State<CinemaSection> {
             height: 150,
             width: Constants.getWidth(context) * 0.85,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
                     fit: BoxFit.fill, image: NetworkImage(widget.poster))),
           ),
@@ -203,7 +204,7 @@ class _OfferSectionState extends State<OfferSection> {
             height: 150,
             width: Constants.getWidth(context) * 0.41,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
                     fit: BoxFit.fill, image: NetworkImage(widget.poster))),
           ),
@@ -296,7 +297,7 @@ class _MoreForYouSectionState extends State<MoreForYouSection> {
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
           color: const Color(0XFFFf4f4f4),
-          borderRadius: BorderRadius.circular(15)),
+          borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -376,7 +377,7 @@ class _BestEventsSectionState extends State<BestEventsSection> {
                 height: 200,
                 width: Constants.getWidth(context) * 0.5,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
                         fit: BoxFit.fill, image: NetworkImage(widget.poster))),
               ),
@@ -459,7 +460,7 @@ class _BannerSectionState extends State<BannerSection> {
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             color: widget.backgroundColor,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -543,4 +544,105 @@ showSnackBar(String title, String message, BuildContext context) async {
     ),
     shouldIconPulse: true,
   ).show(context);
+}
+
+Widget messageDialog(
+    BuildContext context, String title, String msg, buttonText) {
+  return AlertDialog(
+    title: Text(
+      title,
+      style: const TextStyle(
+          fontFamily: "Montserrat", fontWeight: FontWeight.w700, fontSize: 16),
+    ),
+    contentPadding: const EdgeInsets.fromLTRB(20, 5, 60, 20),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          msg,
+          style: TextStyle(
+              height: 1.5,
+              color: Constants.descriptionColor,
+              fontFamily: "Montserrat",
+              fontWeight: FontWeight.w500,
+              fontSize: 14),
+        ),
+      ],
+    ),
+    actionsPadding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+    actions: [
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(15, 6, 15, 6),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3), border: Border.all()),
+          child: Text(
+            buttonText,
+            style: const TextStyle(
+                color: Colors.black,
+                fontFamily: "Montserrat",
+                fontWeight: FontWeight.w600,
+                fontSize: 14),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget wellcomeDialog(BuildContext context) {
+  return AlertDialog(
+    title: const Text(
+      "Mpost is a technological platform that  allows every Kenyan with a mobile phone to have a personal virtual postal address with ease. It does this by converting the client's phone number to their P.O. BOX.",
+      style: TextStyle(
+          fontFamily: "Montserrat", fontWeight: FontWeight.w500, fontSize: 14),
+    ),
+    contentPadding: const EdgeInsets.fromLTRB(20, 5, 60, 20),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TitleWithDesc(
+            title: "Beneficial features of MPost\n\nChoose: ",
+            description:
+                "Choose the most convenient post office where you can receive your letters, documents or parcels.",
+            italicTitle: false),
+        TitleWithDesc(
+            title: "Notify: ",
+            description:
+                "Get SMS alerts notifying you when you have received a mail or a package at the Post Office.",
+            italicTitle: false),
+        TitleWithDesc(
+            title: "Deliver: ",
+            description:
+                "Grab your own mail or get it delivered to you. You control how you get your mail.",
+            italicTitle: false),
+      ],
+    ),
+    actionsPadding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+    actions: [
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(15, 6, 15, 6),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3), border: Border.all()),
+          child: const Text(
+            "OK",
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: "Montserrat",
+                fontWeight: FontWeight.w600,
+                fontSize: 14),
+          ),
+        ),
+      ),
+    ],
+  );
 }
