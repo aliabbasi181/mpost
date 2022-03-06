@@ -12,10 +12,11 @@ class UserService {
     UserModel user;
     if (response.statusCode == 200) {
       dynamic data = response.data;
+      print(data);
       user = UserModel.fromJsonLogingIn(data);
+      Constants.identityNumber = user.nationalIdNumber.toString();
       VirtualAddressModel virtualAddressModel;
       if (user.addresses!.isNotEmpty) {
-        print(data['addresses']);
         virtualAddressModel =
             VirtualAddressModel.fromJson(data['addresses'][0]);
         Constants.virtualAddress = virtualAddressModel;

@@ -54,6 +54,7 @@ class DatabaseHandler {
       Constants.user = user.first;
       Constants.token = user.first.bearerToken.toString();
       Constants.setToken();
+      Constants.user.nationalIdNumber = Constants.identityNumber.toString();
       return 1;
     } else {
       return 0;

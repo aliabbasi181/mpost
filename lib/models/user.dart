@@ -10,6 +10,8 @@ class UserModel {
   String? lastName;
   String? mobile;
   String? email;
+  String? nationalIdNumber;
+  String? passportNumber;
   String? isSuperuser;
   String? roleId;
   String? mobileVerifiedAt;
@@ -25,6 +27,8 @@ class UserModel {
       this.bearerToken,
       this.firstName,
       this.middleName,
+      this.nationalIdNumber,
+      this.passportNumber,
       this.lastName,
       this.mobile,
       this.email,
@@ -41,6 +45,8 @@ class UserModel {
     id = Utilities.generateKey();
     userId = json['user_id'].toString();
     bearerToken = Constants.token;
+    nationalIdNumber = json['national_id_number'].toString();
+    passportNumber = json['passport_number'].toString();
     firstName = json['first_name'].toString();
     middleName = json['middle_name'].toString();
     lastName = json['last_name'].toString();
@@ -66,6 +72,8 @@ class UserModel {
     bearerToken = Constants.token;
     firstName = json['first_name'].toString();
     middleName = json['middle_name'].toString();
+    nationalIdNumber = json['national_id_number'].toString();
+    passportNumber = json['passport_number'].toString();
     lastName = json['last_name'].toString();
     mobile = json['mobile'].toString();
     email = json['email'].toString();
@@ -89,6 +97,8 @@ class UserModel {
     userId = json['user_id'].toString();
     bearerToken = json['bearer_token'].toString();
     firstName = json['first_name'].toString();
+    nationalIdNumber = json['national_id_number'].toString();
+    passportNumber = json['passport_number'].toString();
     middleName = json['middle_name'].toString();
     lastName = json['last_name'].toString();
     mobile = json['mobile'].toString();
@@ -134,6 +144,8 @@ class UserModel {
     data['user_id'] = this.userId;
     data['bearer_token'] = Constants.token;
     data['first_name'] = this.firstName;
+    data['passport_number'] = this.passportNumber;
+    data['national_id_number'] = this.nationalIdNumber;
     data['middle_name'] = this.middleName;
     data['last_name'] = this.lastName;
     data['mobile'] = this.mobile;

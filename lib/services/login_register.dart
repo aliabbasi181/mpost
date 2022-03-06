@@ -145,6 +145,7 @@ class LoginRegisterService {
           "passport_number": Constants.identityNumber
         };
       }
+      print(payload);
       var response = await http.post(Uri.parse(url),
           headers: Constants.requestHeaders, body: jsonEncode(payload));
       print(response.body);

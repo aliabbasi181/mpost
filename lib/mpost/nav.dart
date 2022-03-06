@@ -28,6 +28,8 @@ class _BottomNavState extends State<BottomNav> {
   @override
   void initState() {
     widget.loadDeliveries ? _getDeliveries() : null;
+    _selectedIndex = 0;
+    print(_selectedIndex);
     super.initState();
   }
 

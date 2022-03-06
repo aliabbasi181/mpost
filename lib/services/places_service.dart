@@ -108,6 +108,7 @@ class PlacesService {
           "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=${Constants.googleAPIkey}";
       var response = await Dio().get(url);
       if (response.statusCode == 200) {
+        //print(response);
         result = response.data['results'][0]['formatted_address'].toString();
         String res2 = '';
         for (var item in result.split(' ')) {

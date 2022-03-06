@@ -29,7 +29,9 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   void initState() {
-    print("init state");
+    print(Constants.identityNumber);
+    print(Constants.user.passportNumber);
+    print(Constants.user.bearerToken);
     _setUserDetails();
     super.initState();
   }

@@ -194,12 +194,15 @@ class _AddressPickerState extends State<AddressPicker> {
                 alignment: Alignment.bottomCenter,
                 child: InkWell(
                   onTap: () async {
-                    address = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) =>
-                                const ChoseLocationFromMap())));
-                    Navigator.pop(context, address);
+                    try {
+                      address = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) =>
+                                  const ChoseLocationFromMap())));
+                      print(address.address);
+                      Navigator.pop(context, address);
+                    } catch (ex) {}
                   },
                   child: Container(
                     padding: const EdgeInsets.all(15),

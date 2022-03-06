@@ -28,12 +28,13 @@ class VirtualAddressService {
 
   Future<String> createVirtualAddress(PostalCodeModel postalCode) async {
     String url = Constants.hostUrl + "virtual-addresses";
-    print(url);
-    Map<String, dynamic> payload = {
+    Map<String, dynamic> payload = {};
+    payload = {
       "address": Constants.user.mobile.toString(),
       "postal_code_id": postalCode.id,
       "is_personal": true,
-      "user_id": Constants.user.userId
+      "user_id": Constants.user.userId,
+      "user": {"national_id_number": Constants.identityNumber}
     };
     String result = "";
     try {

@@ -12,7 +12,7 @@ class LinkingService {
   var connectivityResult;
   void openMyLink(String url, BuildContext context) async {
     try {
-      if (checkMyConnectivity(connectivityResult)) {
+      if (await checkMyConnectivity(connectivityResult)) {
         await launch(url,
             forceSafariVC: true, forceWebView: true, enableJavaScript: true);
         if (await canLaunch(url)) {}
@@ -25,16 +25,12 @@ class LinkingService {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           backgroundColor: Colors.red,
-          content: Text("Your are not connected with internet")));
+          content: Text("Can't open at this moment.")));
     }
   }
 
-  Future<void> chechConnectivity() async {
+  Future<bool> checkMyConnectivity(var connectivityResult) async {
     connectivityResult = await (Connectivity().checkConnectivity());
-  }
-
-  bool checkMyConnectivity(var connectivityResult) {
-    chechConnectivity();
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
       return true;
