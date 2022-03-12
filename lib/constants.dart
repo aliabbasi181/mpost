@@ -18,6 +18,9 @@ class Constants {
   static String identityNumber = '';
   static String postal_code_id = '1';
   static bool isNational = true;
+  static String flutterwaveEncryptionKey = "FLWSECK_TEST9c989b7790e8";
+  static String flutterwavePublicKey =
+      "FLWPUBK_TEST-2966ad8684f3219de6c2594b113461b2-X";
   static VirtualAddressModel virtualAddress = VirtualAddressModel();
   static String googleAPIkey = 'AIzaSyBDOjOJB4-uVM2YssqKA0KNOwv8WSRxBd4';
   static const String oneSignalAppId = "9793f58f-6acb-4a6d-ba2b-40fd882f345e";

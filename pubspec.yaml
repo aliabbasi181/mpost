@@ -49,6 +49,8 @@ dependencies:
   path_provider: ^2.0.9
   badges: ^2.0.2
   url_launcher: ^6.0.20
+  rename: ^2.0.1
+  flutterwave: ^1.0.1
 
 
 dev_dependencies:

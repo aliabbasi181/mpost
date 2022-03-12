@@ -470,6 +470,17 @@ class _UserProfileState extends State<UserProfile> {
                                   actions: [
                                     CupertinoDialogAction(
                                         child: const Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                              fontFamily: "Montserrat",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop("No");
+                                        }),
+                                    CupertinoDialogAction(
+                                        child: const Text(
                                           "LOGOUT",
                                           style: TextStyle(
                                               color: Colors.red,
@@ -480,17 +491,6 @@ class _UserProfileState extends State<UserProfile> {
                                         onPressed: () {
                                           Navigator.of(context).pop("Logout");
                                         }),
-                                    CupertinoDialogAction(
-                                        child: const Text(
-                                          "Cancel",
-                                          style: TextStyle(
-                                              fontFamily: "Montserrat",
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop("No");
-                                        })
                                   ],
                                 ))) {
                           case "Logout":

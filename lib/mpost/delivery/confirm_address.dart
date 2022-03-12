@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/models/address.dart';
 import 'package:mpost/mpost/delivery/add_building.dart';
 import 'package:mpost/mpost/delivery/add_floor.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mpost/mpost/delivery/location_from_map.dart';
 
 class ConfirmAddress extends StatefulWidget {
   String address, subAddress;
@@ -22,7 +26,17 @@ class ConfirmAddress extends StatefulWidget {
 class _ConfirmAddressState extends State<ConfirmAddress> {
   String building = "", floor = "";
   final Set<Marker> markers = Set();
+  Completer<GoogleMapController> _controller = Completer();
 
+  Future<void> moveCamera() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: widget.latLng,
+      zoom: 13,
+    )));
+  }
+
+  @override
   initState() {
     markers.add(Marker(
       //add first marker
@@ -33,6 +47,7 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -48,8 +63,55 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                     zoom: 13),
                 mapType: MapType.normal,
                 markers: markers,
+                zoomControlsEnabled: false,
                 onTap: (latlng) {},
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
               )),
+          SafeArea(
+            child: Container(
+              margin: const EdgeInsets.only(right: 20, top: 20),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Constants.primaryColor)),
+                    onPressed: () async {
+                      try {
+                        Address address = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => ChoseLocationFromMap(
+                                      latLng: widget.latLng,
+                                    ))));
+                        setState(() {
+                          widget.address = address.address;
+                          widget.latLng = LatLng(address.lat, address.lng);
+                          markers.clear();
+                          markers.add(Marker(
+                            //add first marker
+                            markerId: MarkerId(widget.address),
+                            position: widget.latLng,
+                            icon: BitmapDescriptor
+                                .defaultMarker, //Icon for Marker
+                          ));
+                          moveCamera();
+                        });
+                      } catch (ex) {}
+                    },
+                    child: const Text(
+                      "Pick from map",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: "Montserrat",
+                          fontWeight: FontWeight.w500),
+                    )),
+              ),
+            ),
+          ),
           Container(
             width: Constants.getWidth(context),
             height: Constants.getHeight(context) * 0.40,

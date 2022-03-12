@@ -11,7 +11,8 @@ import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 
 class ChoseLocationFromMap extends StatefulWidget {
-  const ChoseLocationFromMap({Key? key}) : super(key: key);
+  LatLng latLng;
+  ChoseLocationFromMap({Key? key, required this.latLng}) : super(key: key);
 
   @override
   _ChoseLocationFromMapState createState() => _ChoseLocationFromMapState();
@@ -23,10 +24,10 @@ class _ChoseLocationFromMapState extends State<ChoseLocationFromMap> {
   late Address address;
   @override
   void initState() {
-    final applicationBloc =
-        Provider.of<ApplicaitonBloc>(context, listen: false);
-    applicationBloc.getUserLocation();
-    _latLng = applicationBloc.userLocation;
+    // final applicationBloc =
+    //     Provider.of<ApplicaitonBloc>(context, listen: false);
+    // applicationBloc.getUserLocation();
+    _latLng = widget.latLng;
     markers.add(Marker(
         draggable: true,
         onDragEnd: (latlng) {
@@ -67,8 +68,8 @@ class _ChoseLocationFromMapState extends State<ChoseLocationFromMap> {
                       width: Constants.getWidth(context),
                       height: Constants.getHeight(context),
                       child: GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                            target: applicationBloc.userLocation, zoom: 13),
+                        initialCameraPosition:
+                            CameraPosition(target: _latLng, zoom: 13),
                         mapType: MapType.terrain,
                         onTap: (latlng) {
                           print(latlng);
@@ -108,9 +109,42 @@ class _ChoseLocationFromMapState extends State<ChoseLocationFromMap> {
                     child: SafeArea(
                       child: InkWell(
                         onTap: () async {
-                          address = await applicationBloc.getAddress(
-                              _latLng.latitude, _latLng.longitude);
-                          Navigator.pop(context, address);
+                          try {
+                            List<Address> addresses =
+                                await applicationBloc.getAddress(
+                                    _latLng.latitude, _latLng.longitude);
+                            print(addresses.length);
+                            for (var item in addresses) {
+                              if (item.address.isNotEmpty) {
+                                print(item.address);
+                              }
+                            }
+                            address = await showModalBottomSheet(
+                                context: context,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) {
+                                  return SafeArea(
+                                    bottom: false,
+                                    child: Container(
+                                      // margin: EdgeInsets.only(
+                                      //     top: Constants.getHeight(context) *
+                                      //         0.7),
+                                      width: Constants.getWidth(context),
+                                      height: Constants.getHeight(context),
+                                      decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20),
+                                              topRight: Radius.circular(20))),
+                                      child: AddressSuggestions(
+                                        addresses: addresses,
+                                      ),
+                                    ),
+                                  );
+                                });
+                            setState(() {});
+                            Navigator.pop(context, address);
+                          } catch (ex) {}
                         },
                         child: Container(
                           margin: const EdgeInsets.all(20),
@@ -136,6 +170,66 @@ class _ChoseLocationFromMapState extends State<ChoseLocationFromMap> {
                   )
                 ],
               ),
+      ),
+    );
+  }
+}
+
+class AddressSuggestions extends StatelessWidget {
+  List<Address> addresses;
+  AddressSuggestions({Key? key, required this.addresses}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
+        height: Constants.getHeight(context) * 0.4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Select one address',
+              style: TextStyle(
+                  fontFamily: "Montserrat",
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700),
+            ),
+            Container(
+              height: Constants.getHeight(context) * 0.4,
+              child: ListView.builder(
+                  itemCount: addresses.length,
+                  itemBuilder: (context, index) {
+                    if (addresses[index].address.isEmpty) {
+                      return const SizedBox();
+                    } else {
+                      return Column(
+                        children: [
+                          ListTile(
+                            minLeadingWidth: 0,
+                            onTap: () {
+                              Navigator.pop(context, addresses[index]);
+                            },
+                            title: Text(
+                              addresses[index].address,
+                              style: const TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          const Divider(
+                            color: Color(0XFFFeceef0),
+                            thickness: 1,
+                            height: 0,
+                          ),
+                        ],
+                      );
+                    }
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }

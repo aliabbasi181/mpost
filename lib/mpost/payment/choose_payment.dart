@@ -295,16 +295,19 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                         } else if (pickMobilePayment == "Safaricom") {
                           if (account_phonenumber.text.isNotEmpty) {
                             await applicationBloc.checkConnection(context);
-                            applicationBloc.initializeMobilePayment(
+                            applicationBloc.initializeDeliveryPayment(
                                 pickMobilePayment,
-                                "254" + account_phonenumber.text,
                                 widget.id,
-                                context);
-                            Navigator.push(
+                                "254" + account_phonenumber.text,
+                                widget.cost,
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ProcessingPayment()));
+                                Constants.user.email.toString(),
+                                "KES");
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             const ProcessingPayment()));
                           } else {
                             showSnackBar(
                                 "Safaricom",

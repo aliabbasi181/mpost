@@ -55,6 +55,7 @@ class _AddressPickerState extends State<AddressPicker> {
                         width: Constants.getWidth(context),
                         height: Constants.getHeight(context) * 0.7,
                         child: GoogleMap(
+                          zoomControlsEnabled: false,
                           initialCameraPosition: CameraPosition(
                               target: applicationBloc.userLocation, zoom: 13),
                           mapType: MapType.terrain,
@@ -160,10 +161,43 @@ class _AddressPickerState extends State<AddressPicker> {
                   onTap: () async {
                     if (applicationBloc.userLocation !=
                         const LatLng(-1.2888736, 36.7913343)) {
-                      address = await applicationBloc.getAddress(
-                          applicationBloc.userLocation.latitude,
-                          applicationBloc.userLocation.longitude);
-                      Navigator.pop(context, address);
+                      try {
+                        List<Address> addresses =
+                            await applicationBloc.getAddress(
+                                applicationBloc.userLocation.latitude,
+                                applicationBloc.userLocation.longitude);
+                        print(addresses.length);
+                        for (var item in addresses) {
+                          if (item.address.isNotEmpty) {
+                            print(item.address);
+                          }
+                        }
+                        address = await showModalBottomSheet(
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) {
+                              return SafeArea(
+                                bottom: false,
+                                child: Container(
+                                  // margin: EdgeInsets.only(
+                                  //     top: Constants.getHeight(context) *
+                                  //         0.7),
+                                  width: Constants.getWidth(context),
+                                  height: Constants.getHeight(context),
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20))),
+                                  child: AddressSuggestions(
+                                    addresses: addresses,
+                                  ),
+                                ),
+                              );
+                            });
+                        setState(() {});
+                        Navigator.pop(context, address);
+                      } catch (ex) {}
                     }
                   },
                   minLeadingWidth: 0,
@@ -198,8 +232,9 @@ class _AddressPickerState extends State<AddressPicker> {
                       address = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) =>
-                                  const ChoseLocationFromMap())));
+                              builder: ((context) => ChoseLocationFromMap(
+                                    latLng: applicationBloc.userLocation,
+                                  ))));
                       print(address.address);
                       Navigator.pop(context, address);
                     } catch (ex) {}

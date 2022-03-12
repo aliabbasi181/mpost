@@ -522,98 +522,189 @@ class TimePicker extends StatefulWidget {
 class _TimePickerState extends State<TimePicker> {
   Color optionColor = Color(0XFFFbdbfc1);
   bool today = true, tomorrow = false;
-  String selection = "Today | 16:00 - 17:00";
+  String selection = " | 16:00 - 17:00";
+  int _value = 1;
+  String day = "Today";
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(40, 30, 40, 20),
         height: Constants.getHeight(context) * 0.4,
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Text(
-                  'Schedule a time',
-                  style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700),
-                ),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context, "");
-                      },
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                            fontFamily: "Montserrat",
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context, selection);
-                      },
-                      child: Text(
-                        'Confirm',
-                        style: TextStyle(
-                            color: Constants.primaryColor,
-                            fontFamily: "Montserrat",
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                )
-              ],
+            const Text(
+              'Schedule a time',
+              style: TextStyle(
+                  fontFamily: "Montserrat",
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700),
             ),
-            Center(
-              child: Container(
-                height: Constants.getHeight(context) * 0.2,
-                child: CupertinoPicker(
-                    selectionOverlay: Container(
-                      height: 30,
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              top: BorderSide(
-                                  color: Color(0XFFFeceef0), width: 1),
-                              bottom: BorderSide(
-                                  color: Color(0XFFFeceef0), width: 1))),
-                    ),
-                    itemExtent: 50,
-                    onSelectedItemChanged: (value) {
-                      value == 0
-                          ? selection = "Today | 16:00 - 17:00"
-                          : selection = "Tommorow | 16:00 - 17:00";
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _value = 1;
+                        day = "Today";
+                      });
+                      print(day);
                     },
-                    children: const [
-                      Center(
-                          child: Text('Today | 16:00 - 17:00',
-                              style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500))),
-                      Center(
-                          child: Text('Tommorow | 16:00 - 17:00',
-                              style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500)))
-                    ]),
+                    child: Container(
+                        child: Row(
+                      children: [
+                        Radio(
+                            value: 1,
+                            groupValue: _value,
+                            onChanged: (value) {
+                              setState(() {
+                                _value = int.parse(value.toString());
+                                day = "Today";
+                              });
+                            }),
+                        Text("Today",
+                            style: TextStyle(
+                                fontFamily: "Montserrat",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    )),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _value = 2;
+                        day = "Tommorow";
+                      });
+                      print(day);
+                    },
+                    child: Container(
+                        child: Row(
+                      children: [
+                        Radio(
+                            value: 2,
+                            groupValue: _value,
+                            onChanged: (value) {
+                              setState(() {
+                                _value = int.parse(value.toString());
+                                day = "Tommorow";
+                              });
+                            }),
+                        Text("Tommorow",
+                            style: TextStyle(
+                                fontFamily: "Montserrat",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    )),
+                  ),
+                ],
               ),
             ),
+            Container(
+              height: Constants.getHeight(context) * 0.2,
+              child: CupertinoPicker(
+                  selectionOverlay: Container(
+                    height: 30,
+                    decoration: const BoxDecoration(
+                        border: Border(
+                            top:
+                                BorderSide(color: Color(0XFFFeceef0), width: 1),
+                            bottom: BorderSide(
+                                color: Color(0XFFFeceef0), width: 1))),
+                  ),
+                  itemExtent: 50,
+                  onSelectedItemChanged: (value) {
+                    print(day);
+                    setState(() {
+                      switch (value) {
+                        case 0:
+                          selection = " | 09:00am to 10:00am";
+                          break;
+                        case 1:
+                          selection = " | 10:00am to 11:00am";
+                          break;
+                        case 2:
+                          selection = "| 11:00am to 12:00pm";
+                          break;
+                        case 3:
+                          selection = "| 12:00pm to 13:00pm";
+                          break;
+                        case 4:
+                          selection = " | 13:00pm to 14:00pm";
+                          break;
+                        case 5:
+                          selection = " | 14:00pm to 15:00pm";
+                          break;
+                        case 6:
+                          selection = " | 15.00pm to 16.00pm";
+                          break;
+                        case 7:
+                          selection = " | 16.00pm to 17.00pm";
+                          break;
+                      }
+                    });
+                  },
+                  children: [
+                    _timeStamp("09:00am to 10:00am"),
+                    _timeStamp("10:00am to 11:00am"),
+                    _timeStamp("11:00am to 12:00pm"),
+                    _timeStamp("12:00pm to 13:00pm"),
+                    _timeStamp("13:00pm to 14:00pm"),
+                    _timeStamp("14:00pm to 15:00pm"),
+                    _timeStamp("15.00pm to 16.00pm"),
+                    _timeStamp("16.00pm to 17.00pm"),
+                  ]),
+            ),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context, "");
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 16,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    selection = day + selection;
+                    Navigator.pop(context, selection);
+                  },
+                  child: Text(
+                    'Confirm',
+                    style: TextStyle(
+                        color: Constants.primaryColor,
+                        fontFamily: "Montserrat",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
     );
   }
+}
+
+_timeStamp(String time) {
+  return Center(
+      child: Text(time,
+          style: TextStyle(
+              fontFamily: "Montserrat",
+              fontSize: 16,
+              fontWeight: FontWeight.w500)));
 }

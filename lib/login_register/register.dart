@@ -316,7 +316,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       height: 5,
                     ),
                     Text(
-                      'Chose from one of the options below to help us personalise your experience',
+                      'Choose from one of the options below to help us personalise your experience',
                       style: TextStyle(
                           fontFamily: "Montserrat",
                           fontSize: 14,
@@ -335,7 +335,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       },
                       child: ListTile(
                         title: InputLabel(label: "Personal", isReq: false),
-                        subtitle: Text("Shoping and paying for services",
+                        subtitle: Text("Shopping and paying for services",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
                                 fontSize: 12,
@@ -354,9 +354,14 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                     const Divider(),
                     InkWell(
                       onTap: () {
-                        setState(() {
-                          _value = 2;
-                        });
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => messageDialog(
+                              context,
+                              "Coming soon!",
+                              "Stay tuned to this. We are launching soon",
+                              "OK"),
+                        );
                       },
                       child: ListTile(
                         title: InputLabel(label: "Business", isReq: false),

@@ -8,6 +8,7 @@ import 'package:mpost/log_and_reg.dart';
 import 'package:mpost/login_register/otp_verify.dart';
 import 'package:mpost/login_register/register.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/flutter_wave/wave_main.dart';
 import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/mpost/payment.dart';

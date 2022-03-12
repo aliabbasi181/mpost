@@ -121,15 +121,16 @@ class ApplicaitonBloc with ChangeNotifier {
   Future<bool> confirmOrder(
       Address from, Address to, DeliveryDetail recpDetail, String time) async {
     String final_time;
-    if (time == "Today | 16:00 - 17:00") {
+    String timeString0 = time.split('|')[1].trim().split(':')[0];
+
+    if (time.split('|')[0].trim() == "Today") {
       DateTime getTime = DateTime.now();
       String timeString = getTime.year.toString() +
           "-" +
           getTime.month.toString() +
           "-" +
           (getTime.day - 1).toString() +
-          " 16:00:00";
-      print(timeString);
+          " $timeString0:00:00";
       final_time = timeString;
     } else {
       DateTime now = DateTime.now();
@@ -139,13 +140,14 @@ class ApplicaitonBloc with ChangeNotifier {
           tomorrow.month.toString() +
           "-" +
           tomorrow.day.toString() +
-          " 16:00:00";
-      print(tomorrow);
+          " $timeString0:00:00";
       final_time = timeString;
     }
+    print(final_time);
     loading = true;
     notifyListeners();
-    String res = await delivaryService.confirmOrder(from, to, recpDetail, time);
+    String res =
+        await delivaryService.confirmOrder(from, to, recpDetail, final_time);
     var cost = res.split(',');
     if (cost.first != "-1") {
       totalCost = int.parse(cost.first);
@@ -207,6 +209,48 @@ class ApplicaitonBloc with ChangeNotifier {
     notifyListeners();
   }
 
+  initializeDeliveryPayment(
+      String operator,
+      String txref,
+      String phone,
+      String amount,
+      BuildContext context,
+      String email,
+      String currency) async {
+    paymentRequestStatus = "loading";
+    notifyListeners();
+    if (operator == "Safaricom") {
+      if (await paymentService.initializeFlutterwavePayment(
+          txref, phone, amount, context, email, currency)) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const PaymentSuccess(),
+          ),
+          (route) => false,
+        );
+        MpostNotification.notify(
+            "Payment has been initialized.",
+            "Dear user your payment has been successfully initialized and its on pending. You can now continue using MPOST",
+            "basic_channel");
+      } else {
+        MpostNotification.notify(
+            "Payment has been faild.",
+            "Dear user your payment has been failed due to tachnical issue. We are sorry for the inconvinence please try again.",
+            "basic_channel");
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const PaymentError(),
+          ),
+          (route) => false,
+        );
+      }
+    }
+    paymentRequestStatus = "error";
+    notifyListeners();
+  }
+
   Future<bool> checkConnection(BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -236,10 +280,10 @@ class ApplicaitonBloc with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Address> getAddress(double lat, lng) async {
+  Future<List<Address>> getAddress(double lat, lng) async {
     loading = true;
     notifyListeners();
-    Address address = await placesService.getAddress(lat, lng);
+    List<Address> address = await placesService.getAddress(lat, lng);
     loading = false;
     notifyListeners();
     return address;

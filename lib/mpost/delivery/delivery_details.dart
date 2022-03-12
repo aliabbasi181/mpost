@@ -327,12 +327,15 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.fromLTRB(20, 10, 5, 10),
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                 width: Constants.getWidth(context),
                 decoration: const BoxDecoration(),
                 child: InputButton(
                     label: "SAVE",
                     onPress: () {
+                      phone.text = int.parse(phone.text).toString();
+                      //phone.text = "0" + phone.text;
+                      print(phone.text);
                       if (name.text.isEmpty) {
                         showSnackBar("Validation error",
                             "Recipient name is required", context);

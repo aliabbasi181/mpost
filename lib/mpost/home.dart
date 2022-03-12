@@ -617,33 +617,26 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context),
                             child: CinemaSection(
                                 poster:
-                                    "https://c4.wallpaperflare.com/wallpaper/64/469/259/spider-man-spider-man-3-hd-wallpaper-preview.jpg",
-                                movieName: "Spider-Man - No Way Home",
+                                    "https://imageio.forbes.com/blogs-images/scottmendelson/files/2018/06/jurassic-world-2B-1200x594.jpg?format=jpg&width=1200&fit=bounds",
+                                movieName: "Jurassic World Dominion",
                                 location: "Westage Cinema"),
                           ),
                           Container(
                             width: Constants.getWidth(context),
                             child: CinemaSection(
                                 poster:
-                                    "https://wallpapercave.com/wp/AFtCNLt.jpg",
-                                movieName: "Iron Man 2 - PA KINO NA",
+                                    "https://images.thedirect.com/media/article_full/captain-carter-doctor-strange-2.jpg",
+                                movieName:
+                                    "Doctor Strange in the Multiverse of Madness",
                                 location: "Marvel Studio"),
                           ),
                           Container(
                             width: Constants.getWidth(context),
                             child: CinemaSection(
                                 poster:
-                                    "https://i.ytimg.com/vi/5IQLdgLliS4/maxresdefault.jpg",
-                                movieName: "Mad Love - Every Thing Has A Price",
+                                    "https://the8-bit.com/wp-content/uploads/2021/01/Top_Gun_Maveric.jpg",
+                                movieName: "Top Gun: Maverick",
                                 location: "Coorperative Bank Building"),
-                          ),
-                          Container(
-                            width: Constants.getWidth(context),
-                            child: CinemaSection(
-                                poster:
-                                    "https://sudarshanpurohit.com/wp-content/uploads/2020/04/3_idiots-1140x641.jpeg",
-                                movieName: "3 idiots",
-                                location: "6th Road Rawalpindi"),
                           ),
                         ],
                       ),
@@ -664,19 +657,17 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context) * 0.5,
                             child: OfferSection(
                                 poster:
-                                    "https://gomudigo.com/wp-content/uploads/2021/02/Surf-Excel-Washing-Powder-Free-one-bucket-1-kg-220-tk-1.jpg",
+                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/Great_Unilever_budle.png",
                                 category: "Bundle",
-                                title:
-                                    "Surf Excel Washing Powder (Free one bucket) 1 kg"),
+                                title: "Great Unilever home bundle"),
                           ),
                           Container(
                             width: Constants.getWidth(context) * 0.5,
                             child: OfferSection(
                                 poster:
-                                    "https://i0.wp.com/menuprices.pk/wp-content/uploads/2021/04/McDonalds-Ramadan-Deal-1-scaled.jpg?ssl=1",
-                                category: "Restaurant",
-                                title:
-                                    "McDonald's Ramadan Deal 2021 With Prices Sehri Iftar"),
+                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/skin_care.jpg",
+                                category: "Skin Care",
+                                title: "Herbal Stretch marks remover"),
                           ),
                         ],
                       ),
@@ -709,7 +700,7 @@ class _HomeState extends State<Home> {
                       height: 5,
                     ),
                     SectionLabel(
-                      title: "Best events in January",
+                      title: "Best events",
                       icon: CupertinoIcons.arrow_right,
                     ),
                     Container(
@@ -721,35 +712,17 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context) * 0.5,
                             child: BestEventsSection(
                                 poster:
-                                    "https://americanhiking.org/wp-content/uploads/2013/04/NTD_2013_copyright3_RGB-1024x941.jpg",
+                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/bro_code-1.jpg",
                                 category: "Best events",
-                                title: "MT Longonot hike for natural lovers"),
+                                title: "Bro code"),
                           ),
                           Container(
                             width: Constants.getWidth(context) * 0.5,
                             child: BestEventsSection(
                                 poster:
-                                    "https://www.wellnessliving.com/blog/wp-content/uploads/2020/11/yoga-workshops-image-1.jpg",
+                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/look_me_inthe_i-1.jpg",
                                 category: "Book Now",
-                                title:
-                                    "Annual youa festival and spiritual healing"),
-                          ),
-                          Container(
-                            width: Constants.getWidth(context) * 0.5,
-                            child: BestEventsSection(
-                                poster:
-                                    "https://americanhiking.org/wp-content/uploads/2013/04/NTD_2013_copyright3_RGB-1024x941.jpg",
-                                category: "Best events",
-                                title: "MT Longonot hike for natural lovers"),
-                          ),
-                          Container(
-                            width: Constants.getWidth(context) * 0.5,
-                            child: BestEventsSection(
-                                poster:
-                                    "https://www.wellnessliving.com/blog/wp-content/uploads/2020/11/yoga-workshops-image-1.jpg",
-                                category: "Book Now",
-                                title:
-                                    "Annual youa festival and spiritual healing"),
+                                title: "Look Me in the I"),
                           ),
                         ],
                       ),
@@ -784,17 +757,17 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context) * 0.5,
                             child: OfferSection(
                                 poster:
-                                    "https://media.istockphoto.com/photos/women-clothes-hanging-on-hangers-clothing-rails-fashion-design-picture-id916092484?k=20&m=916092484&s=612x612&w=0&h=2aTLAucj_-qbbfhBiJEXfdiY3-k0gx0el8OrKFpi3O8=",
-                                category: "Womens Fashion",
-                                title: "Foot Candy Pink Elegent Flat Shoes"),
+                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/shoes-1.jpg",
+                                category: "Women's Fashion",
+                                title: "Foot Candy Pink Elegant Flat Shoes"),
                           ),
                           Container(
                             width: Constants.getWidth(context) * 0.5,
                             child: OfferSection(
                                 poster:
-                                    "https://i.pinimg.com/originals/f4/6a/6c/f46a6c6eead8a975ee38520a016023a4.jpg",
-                                category: "Womens Fashion",
-                                title: "Herbal stretch marks removal"),
+                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/tracksuits-1.jpg",
+                                category: "Mens Fashion",
+                                title: "Tracksuits Men's Suits Track Suit"),
                           ),
                         ],
                       ),

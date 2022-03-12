@@ -100,9 +100,9 @@ class PlacesService {
     }
   }
 
-  Future<Address> getAddress(double lat, lng) async {
-    Address address;
-    String result, placeId;
+  Future<List<Address>> getAddress(double lat, lng) async {
+    List<Address> address = [];
+    String result, result2, result3, placeId;
     try {
       var url =
           "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=${Constants.googleAPIkey}";
@@ -110,21 +110,38 @@ class PlacesService {
       if (response.statusCode == 200) {
         //print(response);
         result = response.data['results'][0]['formatted_address'].toString();
+        result2 = response.data['plus_code']['compound_code'].toString();
+        result3 = response.data['results'][0]['address_components'][0]
+                ['long_name']
+            .toString();
+        String res1 = '';
         String res2 = '';
+        String res3 = '';
         for (var item in result.split(' ')) {
+          if (!item.contains('+')) {
+            res1 += item + " ";
+          }
+        }
+        for (var item in result2.split(' ')) {
           if (!item.contains('+')) {
             res2 += item + " ";
           }
         }
-        print(result);
+        for (var item in result3.split(' ')) {
+          if (!item.contains('+')) {
+            res3 += item + " ";
+          }
+        }
         placeId = response.data['results'][0]['place_id'].toString();
-        address = Address(lat, lng, res2, res2, placeId);
+        address.add(Address(lat, lng, res1, res1, placeId));
+        address.add(Address(lat, lng, res2, res2, placeId));
+        address.add(Address(lat, lng, res3, res3, placeId));
       } else {
-        address = Address(lat, lng, "Error", "Error", "");
+        address.add(Address(lat, lng, "Error", "Error", ""));
       }
     } catch (ex) {
       print(ex);
-      address = Address(lat, lng, "Error", "Error", "");
+      address.add(Address(lat, lng, "Error", "Error", ""));
     }
     return address;
   }

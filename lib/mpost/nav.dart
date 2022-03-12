@@ -53,6 +53,7 @@ class _BottomNavState extends State<BottomNav> {
         },
         controller: _pageController,
         itemCount: _screens.length,
+        physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return _screens[index];
         },

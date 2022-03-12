@@ -25,6 +25,7 @@ class _SplashState extends State<Splash> {
 
   _checkUser() async {
     if (await DatabaseHandler.instance.getUser(true) == 1) {
+      //await DatabaseHandler.instance.removeUser();
       UserService _userService = UserService();
       await _userService.getUser(true);
       isLoggedIn = true;

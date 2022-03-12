@@ -152,7 +152,7 @@ class _CinemaSectionState extends State<CinemaSection> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                    fit: BoxFit.fill, image: NetworkImage(widget.poster))),
+                    fit: BoxFit.cover, image: NetworkImage(widget.poster))),
           ),
           Text(
             widget.location,

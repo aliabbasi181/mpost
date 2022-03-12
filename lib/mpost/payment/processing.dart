@@ -96,7 +96,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                 height: 20,
               ),
               const Text(
-                'Payment pending',
+                'Payment Successful',
                 style: TextStyle(
                     fontFamily: "Montserrat",
                     fontSize: 16,
@@ -106,7 +106,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                 height: 5,
               ),
               const Text(
-                'Please pay now and you will get notified shortly! \nYou can now continue using MPOST',
+                'Your payment was successful! You can now continue using MPOST',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: "Montserrat",
