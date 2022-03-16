@@ -215,6 +215,7 @@ class _PaymentErrorState extends State<PaymentError> {
                       MaterialPageRoute(
                           builder: (context) => ChoosePayment(
                                 cost: applicationBloc.totalCost.toString(),
+                                isDelivery: true,
                                 id: applicationBloc.paymentRequestId.toString(),
                               )));
                 },
@@ -231,6 +232,42 @@ class _PaymentErrorState extends State<PaymentError> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Color(0xffBE1515),
+                        fontFamily: "Montserrat",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BottomNav(
+                                loadDeliveries: false,
+                              )),
+                      (route) => false);
+                  // Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => const BottomNav()));
+                },
+                child: Container(
+                  width: Constants.getWidth(context),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 1.5, color: const Color(0xff15BE8B)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: const Text(
+                    "Continue to home",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Color(0xff15BE8B),
                         fontFamily: "Montserrat",
                         fontSize: 16,
                         fontWeight: FontWeight.w500),

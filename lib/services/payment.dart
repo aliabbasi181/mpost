@@ -71,7 +71,6 @@ class PaymentService {
             checkPaymentIsSuccessful(response, txref, currency, amount);
         if (isSuccessful) {
           print("payment sucess");
-
           return true;
         } else {
           // check message
@@ -97,5 +96,22 @@ class PaymentService {
         response.data!.currency == currency &&
         response.data!.amount == amount &&
         response.data!.txRef == txref;
+  }
+
+  Future<bool> updatePaymentStatus(String paymentId, int status) async {
+    String url = Constants.hostUrl + "payment-request/$paymentId/";
+    try {
+      var response = await Dio().patch(url,
+          options: Options(headers: Constants.requestHeadersWithToken),
+          data: {"status_id": status});
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (ex) {
+      print(ex);
+      return false;
+    }
   }
 }

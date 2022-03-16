@@ -224,6 +224,7 @@ class _AddressPickerState extends State<AddressPicker> {
             ),
           ),
           SafeArea(
+            bottom: Platform.isIOS ? false : true,
             child: Align(
                 alignment: Alignment.bottomCenter,
                 child: InkWell(

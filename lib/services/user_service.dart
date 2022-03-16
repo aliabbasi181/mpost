@@ -20,6 +20,7 @@ class UserService {
         virtualAddressModel =
             VirtualAddressModel.fromJson(data['addresses'][0]);
         Constants.virtualAddress = virtualAddressModel;
+        print(Constants.virtualAddress.statusId);
       } else {
         Constants.virtualAddress = VirtualAddressModel(id: -1);
       }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
@@ -64,6 +66,7 @@ class _BottomNavState extends State<BottomNav> {
             color: Colors.white,
             boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 15)]),
         child: SafeArea(
+          bottom: Platform.isIOS ? false : true,
           child: BottomNavigationBar(
             selectedFontSize: 12,
             unselectedFontSize: 12,

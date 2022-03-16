@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
-import 'package:mpost/mpost/payment/processing.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +9,12 @@ import '../../constants.dart';
 
 class ChoosePayment extends StatefulWidget {
   String cost, id;
-  ChoosePayment({Key? key, required this.cost, required this.id})
+  bool isDelivery;
+  ChoosePayment(
+      {Key? key,
+      required this.cost,
+      required this.id,
+      required this.isDelivery})
       : super(key: key);
 
   @override
@@ -302,7 +306,8 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                                 widget.cost,
                                 context,
                                 Constants.user.email.toString(),
-                                "KES");
+                                "KES",
+                                widget.isDelivery);
                             // Navigator.push(
                             //     context,
                             //     MaterialPageRoute(

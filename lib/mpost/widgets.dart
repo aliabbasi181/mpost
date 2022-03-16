@@ -148,7 +148,7 @@ class _CinemaSectionState extends State<CinemaSection> {
           Container(
             margin: const EdgeInsets.only(bottom: 15),
             height: 150,
-            width: Constants.getWidth(context) * 0.85,
+            width: Constants.getWidth(context) * 0.95,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(

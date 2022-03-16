@@ -14,11 +14,20 @@ class Splash extends StatefulWidget {
   _SplashState createState() => _SplashState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   late bool isLoggedIn;
-
+  AnimationController? _animationController;
+  Animation<double>? _animation;
   @override
   void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController!,
+      curve: Curves.fastLinearToSlowEaseIn,
+    );
     super.initState();
     _checkUser();
   }
@@ -34,6 +43,7 @@ class _SplashState extends State<Splash> {
       isLoggedIn = false;
       _navigateToHome();
     }
+    _animationController!.forward();
   }
 
   _navigateToHome() async {
@@ -52,18 +62,40 @@ class _SplashState extends State<Splash> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
+        padding: const EdgeInsets.all(12),
         width: Constants.getWidth(context),
         height: Constants.getHeight(context),
         color: Constants.primaryColor,
-        child: const Center(
-          child: Image(
-            color: Colors.white,
-            width: 78,
-            height: 67,
-            image: AssetImage("asset/images/mpost_blue_icon.png"),
-          ),
+        child: Stack(
+          children: [
+            Center(
+              child: RotationTransition(
+                turns: _animation!,
+                child: Image(
+                  color: Colors.white,
+                  width: 78,
+                  height: 67,
+                  image: AssetImage("asset/images/mpost_blue_icon.png"),
+                ),
+              ),
+            ),
+            Align(
+              alignment: AlignmentDirectional.bottomCenter,
+              child: SafeArea(
+                  child: const Text(
+                "Version: 1.0.1",
+                style: TextStyle(color: Colors.white, fontFamily: "Montserrat"),
+              )),
+            )
+          ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController!.dispose();
+    super.dispose();
   }
 }

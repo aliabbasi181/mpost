@@ -216,23 +216,41 @@ class ApplicaitonBloc with ChangeNotifier {
       String amount,
       BuildContext context,
       String email,
-      String currency) async {
+      String currency,
+      bool deliveryPayment) async {
     paymentRequestStatus = "loading";
     notifyListeners();
     if (operator == "Safaricom") {
       if (await paymentService.initializeFlutterwavePayment(
           txref, phone, amount, context, email, currency)) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => const PaymentSuccess(),
-          ),
-          (route) => false,
-        );
-        MpostNotification.notify(
-            "Payment has been initialized.",
-            "Dear user your payment has been successfully initialized and its on pending. You can now continue using MPOST",
-            "basic_channel");
+        if (await paymentService.updatePaymentStatus(txref, 3)) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const PaymentSuccess(),
+            ),
+            (route) => false,
+          );
+          MpostNotification.notify(
+              "Payment has been initialized.",
+              "Dear user your payment has been successfully initialized and its on pending. You can now continue using MPOST",
+              "basic_channel");
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const PaymentSuccess(),
+            ),
+            (route) => false,
+          );
+          MpostNotification.notify(
+              "Error in payment status update.",
+              "Dear user your payment has been successfully initialized and its on pending. You can now continue using MPOST",
+              "basic_channel");
+          if (!deliveryPayment) {
+            await userService.getUser(true);
+          }
+        }
       } else {
         MpostNotification.notify(
             "Payment has been faild.",
@@ -268,7 +286,7 @@ class ApplicaitonBloc with ChangeNotifier {
     try {
       deliveries = await delivaryService.getAllDeliveries();
       for (var item in deliveries) {
-        if (item.paymentRequest != null) {
+        if (item.statusId != "3") {
           if (int.parse(item.paymentRequest!.balance.toString()) > 0) {
             pendingPayments++;
           }

@@ -29,9 +29,11 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    //_getDeliveries();
     userName = Constants.user.firstName![0].toString() +
         Constants.user.lastName![0].toString();
+    final applicationBloc =
+        Provider.of<ApplicaitonBloc>(context, listen: false);
+    applicationBloc.getMyDeliveries();
     super.initState();
   }
 
@@ -298,8 +300,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Constants.virtualAddress.id != -1
-                        ? Constants.virtualAddress.status!.name ==
-                                "Pending Payment"
+                        ? Constants.virtualAddress.statusId != "1"
                             ? Container(
                                 padding:
                                     const EdgeInsets.fromLTRB(14, 14, 14, 14),
@@ -326,7 +327,7 @@ class _HomeState extends State<Home> {
                                             children: [
                                               TextSpan(
                                                   text:
-                                                      "You created your virtual address \n\"${Constants.virtualAddress.address} - ${Constants.virtualAddress.postalCode!.postalCode}\n(${Constants.virtualAddress.postalCode!.name})\".\nBut you have not payed yet.",
+                                                      "You created your virtual address \n\"${Constants.virtualAddress.address} - ${Constants.virtualAddress.postalCode!.postalCode}\n(${Constants.virtualAddress.postalCode!.name})\".\nBut you have not paid yet.",
                                                   style: const TextStyle(
                                                       fontSize: 12,
                                                       color: Colors.black,
@@ -346,6 +347,7 @@ class _HomeState extends State<Home> {
                                                           .virtualAddress
                                                           .paymentRequestId
                                                           .toString(),
+                                                      isDelivery: false,
                                                     )));
                                       },
                                       child: Container(
@@ -792,10 +794,6 @@ class _HomeState extends State<Home> {
                         backgroundColor: const Color(0XFFF16a1be)),
                     const SizedBox(
                       height: 25,
-                    ),
-                    SectionLabel(
-                      title: "Holiday deals just for you",
-                      icon: CupertinoIcons.add,
                     ),
                   ],
                 ),

@@ -161,7 +161,7 @@ class LoginRegisterService {
         if (json['errors']['mobile'].toString() ==
             "[The mobile has already been taken.]") {
           showSnackBar("Registration failed.",
-              "This number has already an account", context);
+              "THIS NUMBER ALREADY HAS AN ACCOUNT", context);
         }
         return false;
       }

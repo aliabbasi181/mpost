@@ -247,6 +247,10 @@ class _ScheduledDeliveriesListState extends State<ScheduledDeliveriesList> {
               child: ListView.builder(
                   itemCount: widget.deliveries.length,
                   itemBuilder: (context, index) {
+                    String payment_status =
+                        widget.deliveries[index].status!.id.toString() == "3"
+                            ? " Paid"
+                            : " Pending";
                     return Column(
                       children: [
                         ListTile(
@@ -268,19 +272,51 @@ class _ScheduledDeliveriesListState extends State<ScheduledDeliveriesList> {
                                   color: Color(0XFFF808689),
                                   fontWeight: FontWeight.w500),
                             ),
-                            subtitle: Text(
-                              widget.deliveries[index].itemType.toString(),
-                              style: const TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    text: widget.deliveries[index].itemType
+                                        .toString(),
+                                    style: const TextStyle(
+                                        fontFamily: "Montserrat",
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                      text: "Status: ",
+                                      style: const TextStyle(
+                                          fontFamily: "Montserrat",
+                                          fontSize: 10,
+                                          color: Color(0XFFF808689),
+                                          fontWeight: FontWeight.w500),
+                                      children: [
+                                        TextSpan(
+                                          text: payment_status,
+                                          style: TextStyle(
+                                              fontFamily: "Montserrat",
+                                              fontSize: 9,
+                                              color: payment_status == " Paid"
+                                                  ? const Color(0XFFF18B284)
+                                                  : const Color(0XFFFBE6615),
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ]),
+                                ),
+                              ],
                             ),
                             trailing: const Icon(
                               Icons.keyboard_arrow_right_rounded,
                               color: Color(0XFFF8D8D92),
                               size: 20,
                             )),
+                        const SizedBox(
+                          height: 5,
+                        ),
                         const Divider(
                           color: Color.fromRGBO(237, 238, 240, 0.5),
                           thickness: 1,

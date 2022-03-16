@@ -498,6 +498,7 @@ class _DeliveryState extends State<Delivery> {
                                 builder: (context) => ChoosePayment(
                                       cost:
                                           applicationBloc.totalCost.toString(),
+                                      isDelivery: false,
                                       id: applicationBloc.paymentRequestId
                                           .toString(),
                                     )));

@@ -394,6 +394,7 @@ class _CreateVirtualAddressState extends State<CreateVirtualAddress> {
                               MaterialPageRoute(
                                   builder: (context) => ChoosePayment(
                                       cost: result.split(',')[1],
+                                      isDelivery: false,
                                       id: result.split(',')[0])));
                         } else {
                           showSnackBar("Error",

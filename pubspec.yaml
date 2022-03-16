@@ -84,7 +84,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - asset/icons/arrow_left.png
-    - asset/images/slider_01.png
+    - asset/images/slider_01.jpeg
     - asset/images/shopping_offers_icon.png
     - asset/images/hotel_icon.png
     - asset/images/bus_icon.png
@@ -113,6 +113,7 @@ flutter:
     - asset/images/mpost_blue_icon.png
     - asset/images/mpost_white_logo.png
     - asset/images/app_icon.png
+    - asset/images/slider_2.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

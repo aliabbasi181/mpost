@@ -25,7 +25,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
     _slides.add(
       Slide(
           widgetTitle: const Image(
-            image: AssetImage("asset/images/slider_01.png"),
+            image: AssetImage("asset/images/slider_01.jpeg"),
           ),
           marginTitle: const EdgeInsets.all(25),
           centerWidget: const Text(
@@ -51,33 +51,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
     _slides.add(
       Slide(
           widgetTitle: const Image(
-            image: AssetImage("asset/images/slider_01.png"),
-          ),
-          marginTitle: const EdgeInsets.all(25),
-          centerWidget: const Text(
-            "Welcome to MPost!",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontFamily: "Montserrat",
-                fontWeight: FontWeight.w700),
-          ),
-          marginDescription: const EdgeInsets.all(0),
-          widgetDescription: Text(
-            "From essential services to earning apportunities.\nWe are all in one platform",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: "Montserrat",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Constants.descriptionColor),
-          ),
-          backgroundColor: Colors.transparent),
-    );
-    _slides.add(
-      Slide(
-          widgetTitle: const Image(
-            image: AssetImage("asset/images/slider_01.png"),
+            image: AssetImage("asset/images/slider_2.jpeg"),
           ),
           marginTitle: const EdgeInsets.all(25),
           centerWidget: const Text(
@@ -140,7 +114,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                 thickness: 1.5,
               ),
               Container(
-                height: Constants.getHeight(context) * 0.57,
+                height: Constants.getHeight(context) * 0.47,
                 child: IntroSlider(
                     backgroundColorAllSlides: Colors.transparent,
                     showDoneBtn: false,

@@ -473,6 +473,7 @@ pendingPayment(BuildContext context, DeliveryModel delivery) {
                       MaterialPageRoute(
                           builder: (context) => ChoosePayment(
                               cost: delivery.paymentRequest!.balance.toString(),
+                              isDelivery: false,
                               id: delivery.paymentRequestId.toString())));
                 },
                 child: Container(
@@ -548,7 +549,7 @@ sucessPayment(BuildContext context, DeliveryModel delivery) {
                       fontSize: 12,
                       color: Color(0XFFF8D8D92),
                       fontWeight: FontWeight.w500)),
-              Text(delivery.paymentRequest!.paymentMethod!.name.toString(),
+              Text("MPesa",
                   style: const TextStyle(
                       fontFamily: "Montserrat",
                       fontSize: 14,
