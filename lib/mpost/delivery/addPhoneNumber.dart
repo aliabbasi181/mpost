@@ -4,6 +4,7 @@ import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/otp_verify_login.dart';
 import 'package:mpost/mpost/delivery/verifyPhone.dart';
+import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -99,20 +100,25 @@ class _AddPhoneNumberState extends State<AddPhoneNumber> {
                 ),
                 const Spacer(),
                 InputButton(
-                    label: !applicationBloc.loading
-                        ? "CONTINUE"
-                        : "Please wait...",
+                    label: "CONTINUE",
                     onPress: () async {
+                      phone.text = int.parse(phone.text).toString();
                       try {
-                        if (await applicationBloc.login(
-                            countryCode + phone.text, context)) {
-                          String res = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => VerifyPhone(
-                                      phone: "$countryCode${phone.text}")));
-                          Navigator.pop(context, res);
+                        if (phone.text.length < 9) {
+                          showSnackBar(
+                              "Validation error",
+                              "Phone number can not be less then 9 digits",
+                              context);
+                          return;
+                        } else if (phone.text.length > 9) {
+                          showSnackBar(
+                              "Validation error",
+                              "Phone number can not be up to 9 digits",
+                              context);
+                          return;
                         }
+                        String res = "$countryCode${phone.text}";
+                        Navigator.pop(context, res);
                       } catch (ex) {}
                     })
               ],
