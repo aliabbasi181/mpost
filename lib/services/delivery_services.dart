@@ -54,8 +54,8 @@ class DeliveryService {
       var response = await Dio().get(url,
           options: Options(headers: Constants.requestHeadersWithToken));
       List<dynamic> data = response.data;
-      deliveries =
-          List<DeliveryModel>.from(data.map((e) => DeliveryModel.fromJson(e)));
+      deliveries = List<DeliveryModel>.from(
+          data.reversed.map((e) => DeliveryModel.fromJson(e)));
       deliveries = List.from(deliveries.reversed);
     } catch (ex) {
       print(ex);

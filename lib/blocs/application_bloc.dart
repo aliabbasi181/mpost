@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mpost/connectivity.dart';
+import 'package:mpost/constants.dart';
 import 'package:mpost/models/address.dart';
 import 'package:mpost/models/delivery.dart';
 import 'package:mpost/models/places_search.dart';
@@ -42,6 +43,7 @@ class ApplicaitonBloc with ChangeNotifier {
   List<DeliveryModel> deliveries = [];
   int pendingPayments = 0;
   List<PostalCodeModel> postalCodes = [];
+  bool request_verify = false;
 
   // register variables
 
@@ -176,21 +178,39 @@ class ApplicaitonBloc with ChangeNotifier {
     paymentRequestStatus = "loading";
     notifyListeners();
     if (operator == "Safaricom") {
-      if (await paymentService.safaricomInitialize(
-          phone, int.parse(paymentRequestId))) {
+      if (await paymentService.safaricomInitialize(phone,
+          int.parse(paymentRequestId), Constants.user.email.toString())) {
         paymentRequestStatus = "pending";
         notifyListeners();
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => const PaymentSuccess(),
-          ),
-          (route) => false,
-        );
-        MpostNotification.notify(
-            "Payment has been initialized.",
-            "Dear user your payment has been successfully initialized and its on pending. Put your security PIN to complete delivery process.",
-            "basic_channel");
+        await Future.delayed(const Duration(seconds: 8));
+        request_verify = true;
+        notifyListeners();
+        if (await paymentService.paymentVerificarion(paymentRequestId) == "3") {
+          request_verify = false;
+          notifyListeners();
+          MpostNotification.notify(
+              "Payment has been initialized.",
+              "Dear user your payment has been successfully initialized and its on pending. Put your security PIN to complete delivery process.",
+              "basic_channel");
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const PaymentSuccess(),
+            ),
+            (route) => false,
+          );
+        } else {
+          request_verify = false;
+          notifyListeners();
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  PaymentPending(paymentId: paymentRequestId),
+            ),
+            (route) => false,
+          );
+        }
       } else {
         MpostNotification.notify(
             "Payment has been faild.",
@@ -207,6 +227,20 @@ class ApplicaitonBloc with ChangeNotifier {
     }
     paymentRequestStatus = "error";
     notifyListeners();
+  }
+
+  Future<bool> paymentVerification(String paymentId) async {
+    request_verify = true;
+    notifyListeners();
+    if (await paymentService.paymentVerificarion(paymentId) == "3") {
+      request_verify = false;
+      notifyListeners();
+      return true;
+    } else {
+      request_verify = false;
+      notifyListeners();
+      return false;
+    }
   }
 
   initializeDeliveryPayment(
@@ -334,5 +368,13 @@ class ApplicaitonBloc with ChangeNotifier {
     loading = false;
     notifyListeners();
     return result;
+  }
+
+  loginWithUsernamePassword(String username, String password) async {
+    loading = true;
+    notifyListeners();
+    await loginRegisterService.loginWithUsernamePassword(username, password);
+    loading = false;
+    notifyListeners();
   }
 }

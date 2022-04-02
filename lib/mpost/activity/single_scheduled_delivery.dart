@@ -19,6 +19,12 @@ class SingleScheduledDelivery extends StatefulWidget {
 
 class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
   @override
+  void initState() {
+    print(widget.deliveryDetail.paymentRequestId);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
@@ -189,7 +195,7 @@ class _SingleScheduledDeliveryState extends State<SingleScheduledDelivery> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Poin to point delivery",
+                            const Text("Point to point delivery",
                                 style: TextStyle(
                                     fontFamily: "Montserrat",
                                     fontSize: 12,

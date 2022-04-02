@@ -9,11 +9,13 @@ import 'package:mpost/constants.dart';
 import 'package:http/http.dart' as http;
 
 class PaymentService {
-  Future<bool> safaricomInitialize(String phone, int paymentRequestId) async {
+  Future<bool> safaricomInitialize(
+      String phone, int paymentRequestId, String email) async {
     String url = Constants.hostUrl + "payment/initialize";
     Map<String, dynamic> payload = {
       "payment_request_id": paymentRequestId,
-      "mobile": phone
+      "mobile": phone,
+      "email": email
     };
     try {
       var response = await http.post(Uri.parse(url),
@@ -33,6 +35,20 @@ class PaymentService {
     //     options: Options(headers: Constants.requestHeadersWithToken));
   }
 
+  Future<String> paymentVerificarion(String paymentId) async {
+    String url = Constants.hostUrl + "payment/$paymentId/verify";
+    String status_id = "-1";
+    try {
+      var response = await Dio().post(url,
+          options: Options(headers: Constants.requestHeadersWithToken));
+      status_id = response.data['status_id'].toString();
+      print(status_id);
+    } catch (ex) {
+      print(ex);
+    }
+    return status_id;
+  }
+
   Future<bool> initializeFlutterwavePayment(
       String txref,
       String phone,
@@ -40,6 +56,8 @@ class PaymentService {
       BuildContext context,
       String email,
       String currency) async {
+    String url = "https://api.ravepay.co/v3/sdkcheckout/charges?type=mpesa";
+
     final Flutterwave flutterwave = Flutterwave.forUIPayment(
         context: context,
         encryptionKey: Constants.flutterwaveEncryptionKey,

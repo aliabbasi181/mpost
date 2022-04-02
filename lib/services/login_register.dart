@@ -70,6 +70,23 @@ class LoginRegisterService {
     }
   }
 
+  loginWithUsernamePassword(String username, String password) async {
+    try {
+      String url = "https://mpost-app.co.ke/api/auth/login";
+      print(url);
+      Map<String, dynamic> payload = {
+        "username": username,
+        "password": password,
+        "login": true
+      };
+      print(payload);
+      var response = await http.post(Uri.parse(url), body: jsonEncode(payload));
+      print(response.body);
+    } catch (ex) {
+      print(ex.toString());
+    }
+  }
+
   Future<bool> verifyOtp(String code, String phone) async {
     try {
       String url = Constants.hostUrl + "auth/verify-otp";

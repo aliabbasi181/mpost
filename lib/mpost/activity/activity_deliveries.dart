@@ -225,6 +225,11 @@ class ScheduledDeliveriesList extends StatefulWidget {
 
 class _ScheduledDeliveriesListState extends State<ScheduledDeliveriesList> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     //applicationBloc.getMyDeliveries();
@@ -251,6 +256,9 @@ class _ScheduledDeliveriesListState extends State<ScheduledDeliveriesList> {
                         widget.deliveries[index].status!.id.toString() == "3"
                             ? " Paid"
                             : " Pending";
+                    var date = widget.deliveries[index].createdAt
+                        .toString()
+                        .split('T');
                     return Column(
                       children: [
                         ListTile(
@@ -309,10 +317,24 @@ class _ScheduledDeliveriesListState extends State<ScheduledDeliveriesList> {
                                 ),
                               ],
                             ),
-                            trailing: const Icon(
-                              Icons.keyboard_arrow_right_rounded,
-                              color: Color(0XFFF8D8D92),
-                              size: 20,
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                const Icon(
+                                  Icons.keyboard_arrow_right_rounded,
+                                  color: Color(0XFFF8D8D92),
+                                  size: 20,
+                                ),
+                                Text(
+                                  date[0],
+                                  style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      fontSize: 9,
+                                      color: Color(0XFFF8D8D92),
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
                             )),
                         const SizedBox(
                           height: 5,

@@ -174,7 +174,7 @@ class _DeliveryState extends State<Delivery> {
                               leading: const Icon(
                                 CupertinoIcons.smallcircle_fill_circle_fill,
                                 color: Color(0XFFF39bacd),
-                                size: 25,
+                                size: 22,
                               ),
                               title: Text(
                                 pickFrom.address.isEmpty
@@ -185,7 +185,7 @@ class _DeliveryState extends State<Delivery> {
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: Color(0XFFF80868a),
-                                    fontSize: 17,
+                                    fontSize: 14,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w500),
                               ),
@@ -218,7 +218,7 @@ class _DeliveryState extends State<Delivery> {
                               leading: const Icon(
                                 Icons.location_on_rounded,
                                 color: Color(0XFFFbf157a),
-                                size: 25,
+                                size: 22,
                               ),
                               contentPadding: EdgeInsets.zero,
                               title: Text(
@@ -230,7 +230,7 @@ class _DeliveryState extends State<Delivery> {
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: Color(0XFFF80868a),
-                                    fontSize: 17,
+                                    fontSize: 14,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w500),
                               ),

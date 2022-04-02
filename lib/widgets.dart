@@ -23,6 +23,7 @@ class _InputFieldState extends State<InputField> {
           border: Border.all(color: const Color(0XFFFd9d9d9), width: 1.5),
           borderRadius: BorderRadius.circular(10)),
       child: TextField(
+        autocorrect: false,
         controller: widget.controller,
         style: const TextStyle(
             fontSize: 14,
@@ -99,6 +100,7 @@ class InputPhoneNumber extends StatelessWidget {
           ),
           Expanded(
             child: TextField(
+              autocorrect: false,
               controller: controller,
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -174,6 +176,8 @@ class _InputEmailFieldState extends State<InputEmailField> {
               width: 1.5),
           borderRadius: BorderRadius.circular(10)),
       child: TextField(
+        autocorrect: false,
+        keyboardType: TextInputType.emailAddress,
         controller: widget.controller,
         style: const TextStyle(
             fontSize: 14,

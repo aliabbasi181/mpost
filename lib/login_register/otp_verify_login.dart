@@ -54,192 +54,57 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
 
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
+    return Container(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.arrow_back_rounded,
-                        size: 25,
-                      ),
-                    )
-                  ],
+                const SizedBox(
+                  height: 20,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      "Verify OTP",
-                      style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    RichText(
-                        text: TextSpan(
-                            text: "OTP sent to ${widget.phone}, ",
-                            style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Constants.descriptionColor),
-                            children: [
-                          TextSpan(
-                            text: "Change?",
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => Navigator.pop(context),
-                            style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Constants.primaryColor),
-                          )
-                        ])),
-                    SizedBox(
-                      height: Constants.getWidth(context) * 0.1,
-                    ),
-                    InputField(
-                      hint: "Enter OTP code",
-                      controller: otp,
-                    ),
-                    SizedBox(
-                      height: Constants.getWidth(context) * 0.05,
-                    ),
-                    _countDown > 0
-                        ? Text(
-                            "Resend code in $_countDown seconds",
-                            style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Constants.descriptionColor),
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    color: const Color(0XFFF1482be),
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: InkWell(
-                                  onTap: () async {
-                                    if (await applicationBloc.login(
-                                        widget.phone, context)) {
-                                      print("data");
-                                      setState(() {
-                                        _runTimer();
-                                      });
-                                    }
-                                  },
-                                  child: Text(
-                                    !applicationBloc.loading
-                                        ? "Resend OTP"
-                                        : "Please wait...",
-                                    style: const TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 30),
-                              Container(
-                                width: Constants.getWidth(context),
-                                padding:
-                                    const EdgeInsets.fromLTRB(22, 17, 22, 17),
-                                decoration: BoxDecoration(
-                                    color: Color(0XFFFDF7DE),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.warning_rounded,
-                                          color: Color(0XFFEB8501),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        const Text(
-                                          "Failed to receive an OTP",
-                                          style: TextStyle(
-                                            fontFamily: "Montserrat",
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    const Text(
-                                      "This may be due blocking of promotional messages on your device.",
-                                      style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              messageDialog(
-                                                  context,
-                                                  "If you're not receiving OTP, follow the steps below to activate promotional messages.",
-                                                  "\nDial *100#\n5. My Subscriptions\n2. Promotional Messages\n5. Activate Promo Messages\n1. Yes\n\nThen request OTP again. If it still fails after this, please contact us on 0208000631.",
-                                                  "OK"),
-                                        );
-                                      },
-                                      child: Text(
-                                        "See how you can enable them ",
-                                        style: TextStyle(
-                                            fontFamily: "Montserrat",
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w700,
-                                            color: Constants.primaryColor),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                    applicationBloc.otpVerified != true
-                        ? const Text(
-                            "Invalid Code.\nMake sure your number or re-check the OTP you received.",
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
-                          )
-                        : const Text("")
-                  ],
+                const Text(
+                  "Verify OTP",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700),
                 ),
-                const Spacer(),
+                const SizedBox(
+                  height: 5,
+                ),
+                RichText(
+                    text: TextSpan(
+                        text: "OTP sent to ${widget.phone}, ",
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Constants.descriptionColor),
+                        children: [
+                      TextSpan(
+                        text: "Change?",
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => Navigator.pop(context),
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Constants.primaryColor),
+                      )
+                    ])),
+                SizedBox(
+                  height: Constants.getWidth(context) * 0.05,
+                ),
+                InputField(
+                  hint: "Enter OTP code",
+                  controller: otp,
+                ),
+                SizedBox(
+                  height: Constants.getWidth(context) * 0.03,
+                ),
                 InputButton(
                     label:
                         !applicationBloc.loading ? "SUBMIT" : "Please wait...",
@@ -261,15 +126,128 @@ class _OTPVerifyLoginState extends State<OTPVerifyLogin> {
                           ),
                           (route) => false,
                         );
-                        // Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => const BottomNav()));
                       }
-                    })
+                    }),
+                SizedBox(
+                  height: Constants.getWidth(context) * 0.03,
+                ),
+                _countDown > 0
+                    ? Text(
+                        "Resend code in $_countDown seconds",
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Constants.descriptionColor),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: const Color(0XFFF1482be),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: InkWell(
+                              onTap: () async {
+                                if (await applicationBloc.login(
+                                    widget.phone, context)) {
+                                  print("data");
+                                  setState(() {
+                                    _runTimer();
+                                  });
+                                }
+                              },
+                              child: Text(
+                                !applicationBloc.loading
+                                    ? "Resend OTP"
+                                    : "Please wait...",
+                                style: const TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          Container(
+                            width: Constants.getWidth(context),
+                            padding: const EdgeInsets.fromLTRB(22, 17, 22, 17),
+                            decoration: BoxDecoration(
+                                color: Color(0XFFFDF7DE),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.warning_rounded,
+                                      color: Color(0XFFEB8501),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    const Text(
+                                      "Failed to receive an OTP",
+                                      style: TextStyle(
+                                        fontFamily: "Montserrat",
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                const Text(
+                                  "This may be due blocking of promotional messages on your device.",
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) => messageDialog(
+                                          context,
+                                          "If you're not receiving OTP, follow the steps below to activate promotional messages.",
+                                          "\nDial *100#\n5. My Subscriptions\n2. Promotional Messages\n5. Activate Promo Messages\n1. Yes\n\nThen request OTP again. If it still fails after this, please contact us on 0208000631.",
+                                          "OK"),
+                                    );
+                                  },
+                                  child: Text(
+                                    "See how you can enable them ",
+                                    style: TextStyle(
+                                        fontFamily: "Montserrat",
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                        color: Constants.primaryColor),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                applicationBloc.otpVerified != true
+                    ? const Text(
+                        "Invalid Code.\nMake sure your number or re-check the OTP you received.",
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
+                      )
+                    : const Text("")
               ],
-            )),
-      ),
-    );
+            ),
+          ],
+        ));
   }
 }

@@ -6,7 +6,8 @@ import 'package:mpost/services/database.dart';
 
 class UserService {
   getUser(bool loggedin) async {
-    String url = Constants.hostUrl + "users/me?with[]=addresses.status";
+    String url = Constants.hostUrl +
+        "users/me/?with[]=addresses.status&with[]=addresses.postal_code";
     var response = await Dio()
         .get(url, options: Options(headers: Constants.requestHeadersWithToken));
     UserModel user;

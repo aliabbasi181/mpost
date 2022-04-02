@@ -7,6 +7,8 @@ import 'package:intro_slider/slide_object.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/login.dart';
 import 'package:mpost/login_register/register.dart';
+import 'package:mpost/login_register/with_email/login_signup_email.dart';
+import 'package:mpost/login_register/with_phone/login_signup_phone.dart';
 import 'package:mpost/mpost/privacy_policy.dart';
 import 'package:mpost/mpost/terms_of_service.dart';
 import 'package:mpost/widgets.dart';
@@ -38,7 +40,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
           ),
           marginDescription: const EdgeInsets.all(0),
           widgetDescription: Text(
-            "From essential services to earning apportunities.\nWe are all in one platform",
+            "From essential services to earning opportunities.\nWe are all in one platform",
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: "Montserrat",
@@ -64,7 +66,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
           ),
           marginDescription: const EdgeInsets.all(0),
           widgetDescription: Text(
-            "From essential services to earning apportunities.\nWe are all in one platform",
+            "From essential services to earning opportunities.\nWe are all in one platform",
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: "Montserrat",
@@ -131,22 +133,58 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                   child: Column(
                     children: [
                       InputButton(
-                          label: "Login",
+                          label: "Continue with phone number",
                           onPress: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Login()));
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) {
+                                  return SafeArea(
+                                    bottom: false,
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          top: Constants.getHeight(context) *
+                                              0.1),
+                                      width: Constants.getWidth(context),
+                                      height: Constants.getHeight(context),
+                                      decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20),
+                                              topRight: Radius.circular(20))),
+                                      child: const LoginSignupPhone(),
+                                    ),
+                                  );
+                                });
                           }),
                       const SizedBox(
                         height: 10,
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Register()));
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) {
+                                return SafeArea(
+                                  bottom: false,
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                        top:
+                                            Constants.getHeight(context) * 0.1),
+                                    width: Constants.getWidth(context),
+                                    height: Constants.getHeight(context),
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            topRight: Radius.circular(20))),
+                                    child: const LoginSignupEmail(),
+                                  ),
+                                );
+                              });
                         },
                         child: Container(
                           width: Constants.getWidth(context),
@@ -157,7 +195,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10)),
                           child: const Text(
-                            "I'm new, sign me up",
+                            "Continue with email",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: const Color(0XFFF1482be),

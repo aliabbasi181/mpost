@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
+import 'package:mpost/mpost/payment/processing.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
@@ -238,30 +239,30 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                     //         }),
                     //   ),
                     // ),
-                    const Divider(),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          _value = 2;
-                          cash = true;
-                          mobile = false;
-                          card = false;
-                        });
-                      },
-                      child: ListTile(
-                        title: InputLabel(label: "Pay with cash", isReq: false),
-                        minLeadingWidth: 0,
-                        contentPadding: const EdgeInsets.all(0),
-                        leading: Radio(
-                            value: 2,
-                            groupValue: _value,
-                            onChanged: (value) {
-                              setState(() {
-                                _value = int.parse(value.toString());
-                              });
-                            }),
-                      ),
-                    ),
+                    // const Divider(),
+                    // InkWell(
+                    //   onTap: () {
+                    //     setState(() {
+                    //       _value = 2;
+                    //       cash = true;
+                    //       mobile = false;
+                    //       card = false;
+                    //     });
+                    //   },
+                    //   child: ListTile(
+                    //     title: InputLabel(label: "Pay with cash", isReq: false),
+                    //     minLeadingWidth: 0,
+                    //     contentPadding: const EdgeInsets.all(0),
+                    //     leading: Radio(
+                    //         value: 2,
+                    //         groupValue: _value,
+                    //         onChanged: (value) {
+                    //           setState(() {
+                    //             _value = int.parse(value.toString());
+                    //           });
+                    //         }),
+                    //   ),
+                    // ),
                   ],
                 ),
                 const Spacer(),
@@ -299,20 +300,13 @@ class _ChoosePaymentState extends State<ChoosePayment> {
                         } else if (pickMobilePayment == "Safaricom") {
                           if (account_phonenumber.text.isNotEmpty) {
                             await applicationBloc.checkConnection(context);
-                            applicationBloc.initializeDeliveryPayment(
-                                pickMobilePayment,
-                                widget.id,
-                                "254" + account_phonenumber.text,
-                                widget.cost,
+                            applicationBloc.initializeMobilePayment("Safaricom",
+                                account_phonenumber.text, widget.id, context);
+                            Navigator.push(
                                 context,
-                                Constants.user.email.toString(),
-                                "KES",
-                                widget.isDelivery);
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //             const ProcessingPayment()));
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ProcessingPayment()));
                           } else {
                             showSnackBar(
                                 "Safaricom",

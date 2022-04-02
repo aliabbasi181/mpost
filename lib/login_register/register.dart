@@ -172,32 +172,32 @@ class _RegisterState extends State<Register> {
                               SizedBox(
                                 height: Constants.getWidth(context) * 0.05,
                               ),
-                              InputLabel(label: "Phone Number", isReq: true),
-                              CountryCodePicker(
-                                initialSelection: "Kenya",
-                                showDropDownButton: true,
-                                showCountryOnly: true,
-                                textStyle: const TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                showOnlyCountryWhenClosed: true,
-                                favorite: const ['+254', 'KE'],
-                                flagWidth: 30,
-                                onChanged: (code) {
-                                  setState(() {
-                                    countryCode = code.toString();
-                                  });
-                                },
-                              ),
-                              InputLabel(label: "Mobile Number", isReq: true),
-                              InputPhoneNumber(
-                                hint: "Mobile Number",
-                                countryCode: countryCode,
-                                controller: phone,
-                              ),
+                              // InputLabel(label: "Phone Number", isReq: true),
+                              // CountryCodePicker(
+                              //   initialSelection: "Kenya",
+                              //   showDropDownButton: true,
+                              //   showCountryOnly: true,
+                              //   textStyle: const TextStyle(
+                              //     fontFamily: "Montserrat",
+                              //     fontSize: 14,
+                              //     color: Colors.black,
+                              //     fontWeight: FontWeight.w600,
+                              //   ),
+                              //   showOnlyCountryWhenClosed: true,
+                              //   favorite: const ['+254', 'KE'],
+                              //   flagWidth: 30,
+                              //   onChanged: (code) {
+                              //     setState(() {
+                              //       countryCode = code.toString();
+                              //     });
+                              //   },
+                              // ),
+                              // InputLabel(label: "Mobile Number", isReq: true),
+                              // InputPhoneNumber(
+                              //   hint: "Mobile Number",
+                              //   countryCode: countryCode,
+                              //   controller: phone,
+                              // ),
                             ],
                           ),
                           const SizedBox(
@@ -229,15 +229,10 @@ class _RegisterState extends State<Register> {
                             "National identity or passport number is required",
                             context);
                         return;
-                      } else if (phone.text.isEmpty) {
-                        showSnackBar("Validation Error",
-                            "Phone number is required", context);
-                        return;
                       }
                       Constants.registerName = name.text;
                       Constants.registerEmail = email.text;
                       Constants.registerPassword = "Test@123";
-                      Constants.registerMobile = countryCode + phone.text;
                       if (identity.text.isNotEmpty) {
                         Constants.identityNumber = identity.text;
                         Constants.isNational = true;
@@ -246,15 +241,11 @@ class _RegisterState extends State<Register> {
                         Constants.identityNumber = passport.text;
                         Constants.isNational = false;
                       }
-                      await applicationBloc.checkConnection(context);
-                      if (await applicationBloc
-                          .requestOTP(countryCode + phone.text)) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OTPVerify(
-                                    phone: "$countryCode${phone.text}")));
-                      }
+                      //print(Constants.registerMobile);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HowYouWillUse()));
                     }),
               )
             ],

@@ -104,11 +104,11 @@ class _HomeState extends State<Home> {
                             child: Stack(
                               alignment: Alignment.topRight,
                               children: [
-                                const Icon(
-                                  Icons.notifications_none_rounded,
-                                  size: 35,
-                                  color: Colors.white,
-                                ),
+                                Image(
+                                    height: 30,
+                                    width: 30,
+                                    image: AssetImage(
+                                        "asset/images/notification-icon.png")),
                                 Visibility(
                                   visible: applicationBloc.pendingPayments > 0,
                                   child: Container(
@@ -247,25 +247,27 @@ class _HomeState extends State<Home> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            RichText(
-                                textAlign: TextAlign.left,
-                                text: TextSpan(
-                                    text: "Mpost virtual address\n",
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: "Montserrat",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600),
-                                    children: [
-                                      TextSpan(
-                                          text:
-                                              "Use your number ${Constants.user.mobile.toString()} ",
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black,
-                                              fontFamily: "Montserrat",
-                                              fontWeight: FontWeight.w400))
-                                    ])),
+                            Flexible(
+                              child: RichText(
+                                  textAlign: TextAlign.left,
+                                  text: TextSpan(
+                                      text: "Mpost virtual address\n",
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: "Montserrat",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600),
+                                      children: [
+                                        TextSpan(
+                                            text:
+                                                "Use your number ${Constants.user.mobile.toString()} ",
+                                            style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontFamily: "Montserrat",
+                                                fontWeight: FontWeight.w400))
+                                      ])),
+                            ),
                             InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -611,7 +613,7 @@ class _HomeState extends State<Home> {
                       icon: CupertinoIcons.arrow_right,
                     ),
                     Container(
-                      height: 210,
+                      height: 220,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: <Widget>[

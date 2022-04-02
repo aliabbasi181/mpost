@@ -114,11 +114,11 @@ class _UserProfileState extends State<UserProfile> {
                           child: Stack(
                             alignment: Alignment.topRight,
                             children: [
-                              const Icon(
-                                Icons.notifications_none_rounded,
-                                size: 35,
-                                color: Colors.white,
-                              ),
+                              const Image(
+                                  height: 30,
+                                  width: 30,
+                                  image: AssetImage(
+                                      "asset/images/notification-icon.png")),
                               Visibility(
                                 visible: applicationBloc.pendingPayments > 0,
                                 child: Container(
