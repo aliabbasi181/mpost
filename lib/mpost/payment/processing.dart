@@ -213,7 +213,7 @@ class _PaymentPendingState extends State<PaymentPending> {
                 height: 5,
               ),
               const Text(
-                'Your payment is on pending! Please pay if you have not paied yet or verify payment.',
+                'Your payment is on pending! Please pay if you have not paid yet or verify payment.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: "Montserrat",

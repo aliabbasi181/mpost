@@ -195,7 +195,7 @@ class _LoginAndRegisterState extends State<LoginAndRegister> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10)),
                           child: const Text(
-                            "Continue with email",
+                            "Continue with username",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: const Color(0XFFF1482be),

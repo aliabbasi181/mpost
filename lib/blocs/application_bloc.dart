@@ -7,7 +7,7 @@ import 'package:mpost/models/address.dart';
 import 'package:mpost/models/delivery.dart';
 import 'package:mpost/models/places_search.dart';
 import 'package:mpost/models/postal_code_model.dart';
-import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/delivery/post_delivery.dart';
 import 'package:mpost/mpost/payment/processing.dart';
 import 'package:mpost/services/delivery_services.dart';
 import 'package:mpost/services/login_register.dart';
@@ -107,10 +107,10 @@ class ApplicaitonBloc with ChangeNotifier {
     return false;
   }
 
-  Future<bool> register(BuildContext context) async {
+  Future<bool> register(BuildContext context, bool withPhone) async {
     loading = true;
     notifyListeners();
-    if (await loginRegisterService.register(context)) {
+    if (await loginRegisterService.register(context, withPhone)) {
       loading = false;
       notifyListeners();
       return true;
@@ -370,11 +370,15 @@ class ApplicaitonBloc with ChangeNotifier {
     return result;
   }
 
-  loginWithUsernamePassword(String username, String password) async {
+  Future<bool> loginWithUsernamePassword(
+      String username, String password, BuildContext context) async {
     loading = true;
     notifyListeners();
-    await loginRegisterService.loginWithUsernamePassword(username, password);
+    bool success;
+    success = await loginRegisterService.loginWithUsernamePassword(
+        username, password, context);
     loading = false;
     notifyListeners();
+    return success;
   }
 }

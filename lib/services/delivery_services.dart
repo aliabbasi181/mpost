@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mpost/constants.dart';
 import 'package:mpost/models/delivery.dart';
-import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/delivery/post_delivery.dart';
 
 class DeliveryService {
   Future<String> confirmOrder(

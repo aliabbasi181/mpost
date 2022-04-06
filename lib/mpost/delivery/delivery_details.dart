@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/delivery/post_delivery.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';

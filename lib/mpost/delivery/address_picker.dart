@@ -166,7 +166,6 @@ class _AddressPickerState extends State<AddressPicker> {
                             await applicationBloc.getAddress(
                                 applicationBloc.userLocation.latitude,
                                 applicationBloc.userLocation.longitude);
-                        print(addresses.length);
                         for (var item in addresses) {
                           if (item.address.isNotEmpty) {
                             print(item.address);

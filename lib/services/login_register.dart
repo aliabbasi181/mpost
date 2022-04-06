@@ -54,9 +54,9 @@ class LoginRegisterService {
         body: jsonEncode(
             <String, dynamic>{"mobile": phone, "login": true, "otp": code}),
       );
-      var json = jsonDecode(response.body);
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
+        print(json);
         Constants.token = json['access_token'];
         Constants.setToken();
         await userService.getUser(false);
@@ -70,20 +70,32 @@ class LoginRegisterService {
     }
   }
 
-  loginWithUsernamePassword(String username, String password) async {
+  Future<bool> loginWithUsernamePassword(
+      String username, String password, BuildContext context) async {
     try {
       String url = "https://mpost-app.co.ke/api/auth/login";
-      print(url);
       Map<String, dynamic> payload = {
         "username": username,
         "password": password,
-        "login": true
       };
       print(payload);
-      var response = await http.post(Uri.parse(url), body: jsonEncode(payload));
-      print(response.body);
+      var response = await http.post(Uri.parse(url),
+          body: jsonEncode(payload), headers: Constants.requestHeaders);
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
+        Constants.token = json['access_token'];
+        Constants.setToken();
+        await userService.getUser(false);
+        return true;
+      } else if (response.statusCode == 401) {
+        showSnackBar("Login failed", "Invalid login details", context);
+        return false;
+      } else {
+        return false;
+      }
     } catch (ex) {
       print(ex.toString());
+      return false;
     }
   }
 
@@ -133,34 +145,65 @@ class LoginRegisterService {
   }
 
   // register
-  Future<bool> register(BuildContext context) async {
+  Future<bool> register(BuildContext context, bool withPhone) async {
     try {
       String url = Constants.hostUrl + "auth/register";
       String firstName = Constants.registerName.split(' ').first.trim();
       String lastName = Constants.registerName.trim().split(' ').last.trim();
       Map<String, dynamic> payload = {};
-      if (Constants.isNational) {
-        payload = {
-          "first_name": firstName,
-          "last_name": lastName,
-          "mobile": Constants.registerMobile,
-          "email": Constants.registerEmail,
-          "postal_code_id": Constants.postal_code_id,
-          "request_otp": true,
-          "type": Constants.registerType,
-          "national_id_number": Constants.identityNumber
-        };
+      if (withPhone) {
+        print("phone");
+        if (Constants.isNational) {
+          payload = {
+            "first_name": firstName,
+            "last_name": lastName,
+            "mobile": Constants.registerMobile,
+            "email": Constants.registerEmail,
+            "postal_code_id": Constants.postal_code_id,
+            "request_otp": true,
+            "type": Constants.registerType,
+            "national_id_number": Constants.identityNumber
+          };
+        } else {
+          payload = {
+            "first_name": firstName,
+            "last_name": lastName,
+            "mobile": Constants.registerMobile,
+            "email": Constants.registerEmail,
+            "postal_code_id": Constants.postal_code_id,
+            "request_otp": true,
+            "type": Constants.registerType,
+            "passport_number": Constants.identityNumber
+          };
+        }
       } else {
-        payload = {
-          "first_name": firstName,
-          "last_name": lastName,
-          "mobile": Constants.registerMobile,
-          "email": Constants.registerEmail,
-          "postal_code_id": Constants.postal_code_id,
-          "request_otp": true,
-          "type": Constants.registerType,
-          "passport_number": Constants.identityNumber
-        };
+        if (Constants.isNational) {
+          payload = {
+            "first_name": firstName,
+            "last_name": lastName,
+            "mobile": Constants.registerMobile,
+            "email": Constants.registerEmail,
+            "postal_code_id": Constants.postal_code_id,
+            "request_otp": true,
+            "type": Constants.registerType,
+            "national_id_number": Constants.identityNumber,
+            "password": Constants.registerPassword,
+            "password_confirmation": Constants.registerPassword
+          };
+        } else {
+          payload = {
+            "first_name": firstName,
+            "last_name": lastName,
+            "mobile": Constants.registerMobile,
+            "email": Constants.registerEmail,
+            "postal_code_id": Constants.postal_code_id,
+            "request_otp": true,
+            "type": Constants.registerType,
+            "passport_number": Constants.identityNumber,
+            "password": Constants.registerPassword,
+            "password_confirmation": Constants.registerPassword
+          };
+        }
       }
       print(payload);
       var response = await http.post(Uri.parse(url),
@@ -175,6 +218,7 @@ class LoginRegisterService {
         return true;
       } else {
         var json = jsonDecode(response.body);
+        showSnackBar("Registration failed.", json.toString(), context);
         if (json['errors']['mobile'].toString() ==
             "[The mobile has already been taken.]") {
           showSnackBar("Registration failed.",

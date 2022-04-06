@@ -115,6 +115,14 @@ flutter:
     - asset/images/app_icon.png
     - asset/images/slider_2.jpeg
     - asset/images/notification-icon.png
+    - asset/images/mpost_blue_logo.png
+    - asset/images/truck_delivery_icon.png
+    - asset/images/clothing-icon.png
+    - asset/images/documents-icon.png
+    - asset/images/food-icon.png
+    - asset/images/fragile-icon.png
+    - asset/images/mylocation-icon.png
+    - asset/images/tick-cirlce-icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

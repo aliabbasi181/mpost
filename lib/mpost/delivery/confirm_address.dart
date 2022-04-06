@@ -5,7 +5,7 @@ import 'package:mpost/constants.dart';
 import 'package:mpost/models/address.dart';
 import 'package:mpost/mpost/delivery/add_building.dart';
 import 'package:mpost/mpost/delivery/add_floor.dart';
-import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/delivery/post_delivery.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mpost/mpost/delivery/location_from_map.dart';
 

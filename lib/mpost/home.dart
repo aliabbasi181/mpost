@@ -6,6 +6,7 @@ import 'package:mpost/constants.dart';
 import 'package:mpost/log_and_reg.dart';
 import 'package:mpost/mpost/activity/activity.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
+import 'package:mpost/mpost/delivery/post_delivery.dart';
 import 'package:mpost/mpost/payment/choose_payment.dart';
 import 'package:mpost/mpost/virtual_address.dart/create_virtual_address.dart';
 import 'package:mpost/mpost/widgets.dart';
@@ -459,7 +460,7 @@ class _HomeState extends State<Home> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const Delivery()));
+                                            const DeliveryHome()));
                               },
                               title: "Delivery",
                               image: "asset/images/delivery-icon.png"),

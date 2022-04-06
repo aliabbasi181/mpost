@@ -2,21 +2,19 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/login_register/login.dart';
-import 'package:mpost/login_register/otp_verify.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class RegisterWithEmail extends StatefulWidget {
+  const RegisterWithEmail({Key? key}) : super(key: key);
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _RegisterWithEmailState createState() => _RegisterWithEmailState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterWithEmailState extends State<RegisterWithEmail> {
   String countryCode = "254";
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -90,33 +88,38 @@ class _RegisterState extends State<Register> {
                               SizedBox(
                                 height: Constants.getWidth(context) * 0.04,
                               ),
-                              InputLabel(label: "Email", isReq: true),
-                              InputEmailField(
-                                hint: "e.g name@email.com",
-                                controller: email,
-                              ),
-                              SizedBox(
-                                height: Constants.getWidth(context) * 0.05,
-                              ),
+                              // InputLabel(label: "Email", isReq: true),
+                              // InputEmailField(
+                              //   hint: "e.g name@email.com",
+                              //   controller: email,
+                              // ),
+                              // SizedBox(
+                              //   height: Constants.getWidth(context) * 0.05,
+                              // ),
                               InkWell(
                                 onTap: () {
                                   _value = 0;
                                   passport.text = "";
                                   setState(() {});
                                 },
-                                child: ListTile(
-                                  title: InputLabel(
-                                      label: "National Identity", isReq: false),
-                                  minLeadingWidth: 0,
-                                  contentPadding: const EdgeInsets.all(0),
-                                  leading: Radio(
-                                      value: 0,
-                                      groupValue: _value,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _value = int.parse(value.toString());
-                                        });
-                                      }),
+                                child: Row(
+                                  children: [
+                                    Radio(
+                                        value: 0,
+                                        groupValue: _value,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _value =
+                                                int.parse(value.toString());
+                                          });
+                                        }),
+                                    const SizedBox(
+                                      width: 0,
+                                    ),
+                                    InputLabel(
+                                        label: "National Identity",
+                                        isReq: false),
+                                  ],
                                 ),
                               ),
                               Visibility(
@@ -139,19 +142,22 @@ class _RegisterState extends State<Register> {
                                   identity.text = "";
                                   setState(() {});
                                 },
-                                child: ListTile(
-                                  title: InputLabel(
-                                      label: "Passport", isReq: false),
-                                  minLeadingWidth: 0,
-                                  contentPadding: const EdgeInsets.all(0),
-                                  leading: Radio(
-                                      value: 1,
-                                      groupValue: _value,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _value = int.parse(value.toString());
-                                        });
-                                      }),
+                                child: Row(
+                                  children: [
+                                    Radio(
+                                        value: 1,
+                                        groupValue: _value,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _value =
+                                                int.parse(value.toString());
+                                          });
+                                        }),
+                                    const SizedBox(
+                                      width: 0,
+                                    ),
+                                    InputLabel(label: "Passport", isReq: false),
+                                  ],
                                 ),
                               ),
                               Visibility(
@@ -172,32 +178,32 @@ class _RegisterState extends State<Register> {
                               SizedBox(
                                 height: Constants.getWidth(context) * 0.05,
                               ),
-                              // InputLabel(label: "Phone Number", isReq: true),
-                              // CountryCodePicker(
-                              //   initialSelection: "Kenya",
-                              //   showDropDownButton: true,
-                              //   showCountryOnly: true,
-                              //   textStyle: const TextStyle(
-                              //     fontFamily: "Montserrat",
-                              //     fontSize: 14,
-                              //     color: Colors.black,
-                              //     fontWeight: FontWeight.w600,
-                              //   ),
-                              //   showOnlyCountryWhenClosed: true,
-                              //   favorite: const ['+254', 'KE'],
-                              //   flagWidth: 30,
-                              //   onChanged: (code) {
-                              //     setState(() {
-                              //       countryCode = code.toString();
-                              //     });
-                              //   },
-                              // ),
-                              // InputLabel(label: "Mobile Number", isReq: true),
-                              // InputPhoneNumber(
-                              //   hint: "Mobile Number",
-                              //   countryCode: countryCode,
-                              //   controller: phone,
-                              // ),
+                              InputLabel(label: "Phone Number", isReq: true),
+                              CountryCodePicker(
+                                initialSelection: "Kenya",
+                                showDropDownButton: true,
+                                showCountryOnly: true,
+                                textStyle: const TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                showOnlyCountryWhenClosed: true,
+                                favorite: const ['+254', 'KE'],
+                                flagWidth: 30,
+                                onChanged: (code) {
+                                  setState(() {
+                                    countryCode = code.toString();
+                                  });
+                                },
+                              ),
+                              InputLabel(label: "Mobile Number", isReq: true),
+                              InputPhoneNumber(
+                                hint: "Mobile Number",
+                                countryCode: countryCode,
+                                controller: phone,
+                              ),
                             ],
                           ),
                           const SizedBox(
@@ -218,10 +224,6 @@ class _RegisterState extends State<Register> {
                         showSnackBar(
                             "Validation Error", "Name is required", context);
                         return;
-                      } else if (email.text.isEmpty) {
-                        showSnackBar(
-                            "Validation Error", "Email is required", context);
-                        return;
                       } else if (identity.text.isEmpty &&
                           passport.text.isEmpty) {
                         showSnackBar(
@@ -229,9 +231,13 @@ class _RegisterState extends State<Register> {
                             "National identity or passport number is required",
                             context);
                         return;
+                      } else if (phone.text.isEmpty) {
+                        showSnackBar("Validation Error",
+                            "Phone number number is required", context);
+                        return;
                       }
+                      Constants.registerMobile = "254" + phone.text;
                       Constants.registerName = name.text;
-                      Constants.registerEmail = email.text;
                       if (identity.text.isNotEmpty) {
                         Constants.identityNumber = identity.text;
                         Constants.isNational = true;
@@ -240,7 +246,6 @@ class _RegisterState extends State<Register> {
                         Constants.identityNumber = passport.text;
                         Constants.isNational = false;
                       }
-                      //print(Constants.registerMobile);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -381,7 +386,7 @@ class _HowYouWillUseState extends State<HowYouWillUse> {
                       Constants.registerType =
                           _value == 2 ? "Business" : "Personal";
                       await applicationBloc.checkConnection(context);
-                      if (await applicationBloc.register(context, true)) {
+                      if (await applicationBloc.register(context, false)) {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

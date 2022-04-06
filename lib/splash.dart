@@ -83,7 +83,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
               alignment: AlignmentDirectional.bottomCenter,
               child: SafeArea(
                   child: const Text(
-                "Version: 1.0.1",
+                "Version: 1.0.2",
                 style: TextStyle(color: Colors.white, fontFamily: "Montserrat"),
               )),
             )

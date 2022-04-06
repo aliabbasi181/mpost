@@ -1,711 +1,887 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mpost/blocs/application_bloc.dart';
-import 'package:mpost/constants.dart';
-import 'package:mpost/mpost/delivery/addPhoneNumber.dart';
-import 'package:mpost/mpost/delivery/address_picker.dart';
-import 'package:mpost/mpost/delivery/delivery_details.dart';
-import 'package:mpost/mpost/payment/choose_payment.dart';
+import 'package:mpost/models/address.dart';
+import 'package:mpost/mpost/delivery/delivered_packages.dart';
+import 'package:mpost/mpost/delivery/post_delivery.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:mpost/models/address.dart';
 
-class Delivery extends StatefulWidget {
-  const Delivery({Key? key}) : super(key: key);
+import '../../constants.dart';
+
+class DeliveryHome extends StatefulWidget {
+  const DeliveryHome({Key? key}) : super(key: key);
 
   @override
-  _DeliveryState createState() => _DeliveryState();
+  State<DeliveryHome> createState() => _DeliveryHomeState();
 }
 
-class DeliveryDetail {
-  String recpName, phone, typeOfItem, note, instructions;
-  DeliveryDetail(
-      this.recpName, this.phone, this.typeOfItem, this.note, this.instructions);
-}
-
-class _DeliveryState extends State<Delivery> {
-  Address pickFrom = Address(0, 0, "", "", ""),
-      deliver = Address(0, 0, "", "", "");
-  var cameraPosition =
-      const CameraPosition(target: LatLng(-1.2888736, 36.7913343));
-  late GoogleMapController googleMapController;
-  String pickupTime = "";
-  String phone = "";
-  late DeliveryDetail recpDetail;
-  String itemType = "Delivery details";
-  int price = 135;
-  final Set<Polyline> polyline = Set();
-  final Set<Marker> markers = Set();
-
-  createPolyline() async {
-    if (pickFrom.lat != 0 && deliver.lat != 0) {
-      PolylinePoints polylinePoints = PolylinePoints();
-      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        Constants.googleAPIkey,
-        PointLatLng(
-          pickFrom.lat,
-          pickFrom.lng,
-        ),
-        PointLatLng(deliver.lat, deliver.lng),
-      );
-      print(result);
-      List<LatLng> points = [];
-      for (PointLatLng item in result.points) {
-        points.add(LatLng(item.latitude, item.longitude));
-      }
-      polyline.add(Polyline(
-          polylineId: const PolylineId("value"),
-          points: points,
-          width: 5,
-          color: Constants.primaryColor));
-      setState(() {});
-    }
+class _DeliveryHomeState extends State<DeliveryHome> {
+  String location = "";
+  @override
+  void initState() {
+    _getAddress();
+    super.initState();
   }
 
-  setMarkers() {
-    if (pickFrom.lat != 0 && deliver.lat != 0) {
-      if (pickFrom.lat != 0 && deliver.lat == 0) {
-        markers.clear();
-        markers.add(Marker(
-          markerId: MarkerId(pickFrom.address),
-          position: LatLng(pickFrom.lat, pickFrom.lng),
-          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-        ));
-      } else if (pickFrom.lat == 0 && deliver.lat != 0) {
-        markers.clear();
-        markers.add(Marker(
-          markerId: MarkerId(deliver.address),
-          position: LatLng(deliver.lat, deliver.lng),
-          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-        ));
-      } else {
-        markers.clear();
-        markers.add(Marker(
-          markerId: MarkerId(pickFrom.address),
-          position: LatLng(pickFrom.lat, pickFrom.lng),
-          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-        ));
-        markers.add(Marker(
-          markerId: MarkerId(deliver.address),
-          position: LatLng(deliver.lat, deliver.lng),
-          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-        ));
+  _getAddress() async {
+    final applicationBloc =
+        Provider.of<ApplicaitonBloc>(context, listen: false);
+    await applicationBloc.getUserLocation();
+    List<Address> addresses = await applicationBloc.getAddress(
+        applicationBloc.userLocation.latitude,
+        applicationBloc.userLocation.longitude);
+    var data = addresses.first.address.split(' ');
+    location = "";
+    for (var item in data) {
+      if (!item.contains("1800")) {
+        location += item + " ";
       }
     }
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    final applicationBloc = Provider.of<ApplicaitonBloc>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SingleChildScrollView(
+        child: SafeArea(
+            child: Column(
           children: [
             Container(
-              height: Constants.getHeight(context) * 0.83,
-              child: SingleChildScrollView(
-                child: Container(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Icon(
-                                    Icons.arrow_back_rounded,
-                                    size: 25,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                const Expanded(
-                                  child: Text(
-                                    'Delivery',
-                                    style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                                const Image(
-                                    width: 30,
-                                    image: AssetImage(
-                                        "asset/images/location_history.png"))
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ListTile(
-                              minLeadingWidth: 0,
-                              onTap: () async {
-                                try {
-                                  pickFrom = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const AddressPicker()));
-                                  setMarkers();
-                                  if (pickFrom.lat != 0 && deliver.lat != 0) {
-                                    createPolyline();
-                                    price = await applicationBloc.getDistance(
-                                        LatLng(pickFrom.lat, pickFrom.lng),
-                                        LatLng(deliver.lat, deliver.lng));
-                                  }
-                                  setState(() {});
-                                } catch (ex) {}
-                                setState(() {});
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              leading: const Icon(
-                                CupertinoIcons.smallcircle_fill_circle_fill,
-                                color: Color(0XFFF39bacd),
-                                size: 22,
-                              ),
-                              title: Text(
-                                pickFrom.address.isEmpty
-                                    ? "Pick up item at?"
-                                    : pickFrom.detailedAddress,
-                                maxLines: 2,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    color: Color(0XFFF80868a),
-                                    fontSize: 14,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              trailing: const Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: Color(0XFFFc1c1c1),
-                                size: 25,
-                              ),
-                            ),
-                            ListTile(
-                              minLeadingWidth: 0,
-                              onTap: () async {
-                                try {
-                                  deliver = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const AddressPicker()));
-                                  setMarkers();
-                                  if (pickFrom.lat != 0 && deliver.lat != 0) {
-                                    createPolyline();
-                                    price = await applicationBloc.getDistance(
-                                        LatLng(pickFrom.lat, pickFrom.lng),
-                                        LatLng(deliver.lat, deliver.lng));
-                                  }
-                                  setState(() {});
-                                } catch (ex) {}
-                                setState(() {});
-                              },
-                              leading: const Icon(
-                                Icons.location_on_rounded,
-                                color: Color(0XFFFbf157a),
-                                size: 22,
-                              ),
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(
-                                deliver.address.isEmpty
-                                    ? "Deliver to?"
-                                    : deliver.detailedAddress,
-                                maxLines: 2,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    color: Color(0XFFF80868a),
-                                    fontSize: 14,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              trailing: const Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: Color(0XFFFc1c1c1),
-                                size: 25,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            pickFrom.lat != 0
-                                ? Container(
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    width: Constants.getWidth(context),
-                                    child: GoogleMap(
-                                      initialCameraPosition: CameraPosition(
-                                          target: LatLng(
-                                              pickFrom.lat, pickFrom.lng),
-                                          zoom: 7.5),
-                                      mapType: MapType.normal,
-                                      markers: markers,
-                                      onTap: (latlng) {},
-                                      polylines: polyline,
-                                      myLocationButtonEnabled: false,
-                                    ))
-                                : Container(
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                        image: const DecorationImage(
-                                            image: AssetImage(
-                                                "asset/images/map.png"),
-                                            fit: BoxFit.cover),
-                                        borderRadius: BorderRadius.circular(5)),
-                                    width: Constants.getWidth(context),
-                                  ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            ListTile(
-                              onTap: () async {
-                                try {
-                                  recpDetail = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const DeliveryDetails()));
-                                  itemType = recpDetail.typeOfItem;
-                                  setState(() {});
-                                } catch (ex) {}
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              title: const Text(
-                                "Your order",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              subtitle: Padding(
-                                padding: const EdgeInsets.only(top: 3),
-                                child: Text(
-                                  itemType,
-                                  style: const TextStyle(
-                                      color: Color(0XFFF80868a),
-                                      fontSize: 12,
-                                      fontFamily: "Montserrat",
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              trailing: const Icon(
-                                Icons.keyboard_arrow_right_rounded,
-                                color: Color(0XFFFc1c1c1),
-                                size: 25,
-                              ),
-                            ),
-                            const Divider(
-                              color: Color(0XFFFeceef0),
-                              thickness: 1.5,
-                              height: 15,
-                            ),
-                            ListTile(
-                              onTap: () async {
-                                try {
-                                  pickupTime = await showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      builder: (context) {
-                                        return SafeArea(
-                                          bottom: false,
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                                top: Constants.getHeight(
-                                                        context) *
-                                                    0.6),
-                                            width: Constants.getWidth(context),
-                                            height:
-                                                Constants.getHeight(context),
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(20),
-                                                    topRight:
-                                                        Radius.circular(20))),
-                                            child: const TimePicker(),
-                                          ),
-                                        );
-                                      });
-                                  print(pickupTime);
-                                  setState(() {});
-                                } catch (ex) {}
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              title: const Text(
-                                "Pickup time",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              subtitle: Padding(
-                                padding: const EdgeInsets.only(top: 3),
-                                child: Text(
-                                  pickupTime.isEmpty
-                                      ? "As soon as possible"
-                                      : pickupTime,
-                                  style: const TextStyle(
-                                      color: Color(0XFFF80868a),
-                                      fontSize: 12,
-                                      fontFamily: "Montserrat",
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              trailing: const Icon(
-                                Icons.keyboard_arrow_right_rounded,
-                                color: Color(0XFFFc1c1c1),
-                                size: 25,
-                              ),
-                            ),
-                            const Divider(
-                              color: Color(0XFFFeceef0),
-                              thickness: 1.5,
-                              height: 15,
-                            ),
-                            ListTile(
-                              onTap: () async {
-                                try {
-                                  phone = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const AddPhoneNumber()));
-                                  setState(() {});
-                                } catch (ex) {}
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              title: const Text(
-                                "Add your phone number (optional)",
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              subtitle: Padding(
-                                padding: const EdgeInsets.only(top: 3),
-                                child: Text(
-                                  phone.isEmpty
-                                      ? "In case we need to contact you about your package"
-                                      : phone,
-                                  style: const TextStyle(
-                                      color: Color(0XFFF80868a),
-                                      fontSize: 12,
-                                      fontFamily: "Montserrat",
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              trailing: const Icon(
-                                Icons.keyboard_arrow_right_rounded,
-                                color: Color(0XFFFc1c1c1),
-                                size: 25,
-                              ),
-                            ),
-                            const Divider(
-                              color: Color(0XFFFeceef0),
-                              thickness: 1.5,
-                              height: 15,
-                            ),
-                            ListTile(
-                              title: const Text(
-                                "Total",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              contentPadding: EdgeInsets.zero,
-                              trailing: Text(
-                                "KSH ${price.toString()}",
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-              child: InputButton(
-                  label: !applicationBloc.loading
-                      ? "CONFIRM ORDER"
-                      : "Please wait...",
-                  onPress: () async {
-                    // applicationBloc.initializeMobilePayment(
-                    //     "", "phone", "paymentRequestId");
-                    // return;
-                    if (pickFrom.detailedAddress == "") {
-                      showSnackBar("Validation error",
-                          "Pickup address is required.", context);
-                      return;
-                    } else if (deliver.detailedAddress == "") {
-                      showSnackBar("Validation error",
-                          "Delivery address is required.", context);
-                      return;
-                    } else if (pickupTime == "") {
-                      showSnackBar("Validation error",
-                          "Pickup time is required.", context);
-                      return;
-                    } else if (pickFrom.detailedAddress ==
-                        deliver.detailedAddress) {
-                      showSnackBar(
-                          "Validation error",
-                          "Both pickup and deliver address can not be same.",
-                          context);
-                      return;
-                    } else if (itemType == "Delivery details") {
-                      showSnackBar("Validation error",
-                          "Recipient details can not be empty.", context);
-                      return;
-                    } else {
-                      await applicationBloc.checkConnection(context);
-                      if (await applicationBloc.confirmOrder(
-                          pickFrom, deliver, recpDetail, pickupTime)) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChoosePayment(
-                                      cost:
-                                          applicationBloc.totalCost.toString(),
-                                      isDelivery: false,
-                                      id: applicationBloc.paymentRequestId
-                                          .toString(),
-                                    )));
-                      }
-                    }
-                  }),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class TimePicker extends StatefulWidget {
-  const TimePicker({Key? key}) : super(key: key);
-
-  @override
-  _TimePickerState createState() => _TimePickerState();
-}
-
-class _TimePickerState extends State<TimePicker> {
-  Color optionColor = Color(0XFFFbdbfc1);
-  bool today = true, tomorrow = false;
-  String selection = " | 16:00 - 17:00";
-  int _value = 1;
-  String day = "Today";
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(40, 30, 40, 20),
-        height: Constants.getHeight(context) * 0.4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Text(
-              'Schedule a time',
-              style: TextStyle(
-                  fontFamily: "Montserrat",
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700),
-            ),
-            Container(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        _value = 1;
-                        day = "Today";
-                      });
-                      print(day);
+                      Navigator.pop(context);
                     },
-                    child: Container(
-                        child: Row(
-                      children: [
-                        Radio(
-                            value: 1,
-                            groupValue: _value,
-                            onChanged: (value) {
-                              setState(() {
-                                _value = int.parse(value.toString());
-                                day = "Today";
-                              });
-                            }),
-                        Text("Today",
-                            style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500)),
-                      ],
-                    )),
+                    child: const Icon(
+                      Icons.arrow_back_rounded,
+                      size: 25,
+                    ),
                   ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                      child: Image(
+                          height: 18,
+                          width: 63,
+                          image:
+                              AssetImage("asset/images/mpost_blue_logo.png"))),
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        _value = 2;
-                        day = "Tommorow";
-                      });
-                      print(day);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DeliveredPackages()));
                     },
-                    child: Container(
-                        child: Row(
-                      children: [
-                        Radio(
-                            value: 2,
-                            groupValue: _value,
-                            onChanged: (value) {
-                              setState(() {
-                                _value = int.parse(value.toString());
-                                day = "Tommorow";
-                              });
-                            }),
-                        Text("Tommorow",
-                            style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500)),
-                      ],
-                    )),
-                  ),
+                    child: const Image(
+                        width: 30,
+                        image: AssetImage("asset/images/location_history.png")),
+                  )
                 ],
               ),
             ),
-            Container(
-              height: Constants.getHeight(context) * 0.2,
-              child: CupertinoPicker(
-                  selectionOverlay: Container(
-                    height: 30,
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            top:
-                                BorderSide(color: Color(0XFFFeceef0), width: 1),
-                            bottom: BorderSide(
-                                color: Color(0XFFFeceef0), width: 1))),
-                  ),
-                  itemExtent: 50,
-                  onSelectedItemChanged: (value) {
-                    print(day);
-                    setState(() {
-                      switch (value) {
-                        case 0:
-                          selection = " | 09:00am to 10:00am";
-                          break;
-                        case 1:
-                          selection = " | 10:00am to 11:00am";
-                          break;
-                        case 2:
-                          selection = "| 11:00am to 12:00pm";
-                          break;
-                        case 3:
-                          selection = "| 12:00pm to 13:00pm";
-                          break;
-                        case 4:
-                          selection = " | 13:00pm to 14:00pm";
-                          break;
-                        case 5:
-                          selection = " | 14:00pm to 15:00pm";
-                          break;
-                        case 6:
-                          selection = " | 15.00pm to 16.00pm";
-                          break;
-                        case 7:
-                          selection = " | 16.00pm to 17.00pm";
-                          break;
-                      }
-                    });
-                  },
-                  children: [
-                    _timeStamp("09:00am to 10:00am"),
-                    _timeStamp("10:00am to 11:00am"),
-                    _timeStamp("11:00am to 12:00pm"),
-                    _timeStamp("12:00pm to 13:00pm"),
-                    _timeStamp("13:00pm to 14:00pm"),
-                    _timeStamp("14:00pm to 15:00pm"),
-                    _timeStamp("15.00pm to 16.00pm"),
-                    _timeStamp("16.00pm to 17.00pm"),
-                  ]),
+            Divider(
+              color: Colors.black.withOpacity(0.2),
+              thickness: 0.5,
             ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context, "");
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: 16,
-                        color: Colors.red,
-                        fontWeight: FontWeight.w600),
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Image(
+                        height: 22,
+                        width: 22,
+                        image: AssetImage("asset/images/mylocation-icon.png"),
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Your current location",
+                              style: const TextStyle(
+                                  color: Color(0XFF808689),
+                                  fontSize: 13,
+                                  fontFamily: "Montserrat",
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              location.isEmpty
+                                  ? "Fetching location..."
+                                  : location,
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  color: Color(0XFF212121),
+                                  fontSize: 15,
+                                  fontFamily: "Montserrat",
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    selection = day + selection;
-                    Navigator.pop(context, selection);
-                  },
-                  child: Text(
-                    'Confirm',
-                    style: TextStyle(
-                        color: Constants.primaryColor,
-                        fontFamily: "Montserrat",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                  const SizedBox(
+                    height: 22,
                   ),
-                ),
-              ],
+                  Container(
+                    height: 182,
+                    width: Constants.getWidth(context),
+                    decoration: BoxDecoration(
+                        color: const Color(0xffFFCE82),
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Stack(
+                      children: [
+                        const Align(
+                          alignment: Alignment.bottomRight,
+                          child: Image(
+                            image:
+                                AssetImage("asset/images/banner-bg-image.png"),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 20),
+                            height: 172,
+                            width: 130,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: AssetImage(
+                                        "asset/images/delivery_man.png"))),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 20, 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 10),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Super fast",
+                                    maxLines: 1,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.black,
+                                        fontFamily: "Montserrat",
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 22),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              wellcomeDialog(context));
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 3, bottom: 2),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(7, 3, 7, 3),
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(colors: [
+                                        const Color(0xff187bb2),
+                                        const Color(0xffcd2631),
+                                      ])),
+                                      child: const Text(
+                                        "deliveries",
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.fast_forward_rounded,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        "Mpost tap a delivery",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: "Montserrat",
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 8),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Text(
+                      "You can now send any package with using Mpost Tap a delivery",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 13,
+                          fontFamily: "Montserrat",
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  InputButton(
+                      label: "I want to send a package",
+                      onPress: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PostDelivery()));
+                      }),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.11),
+                              blurRadius: 5),
+                        ],
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
+                          child: const Text(
+                            "Offer!! Pick a delivery package",
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                                color: Color(0xff808689),
+                                fontSize: 12,
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        const Divider(
+                          height: 0,
+                          color: Color.fromRGBO(0, 0, 0, 0.15),
+                          thickness: 0.5,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Ksh 1000",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        const Text(
+                                          "Get 10 deliveries",
+                                          style: const TextStyle(
+                                              color: Color(0xff9FA3A6),
+                                              fontSize: 11,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_right_rounded,
+                                    color: Color(0XFFFc1c1c1),
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Divider(
+                                height: 0,
+                                color: Color.fromRGBO(0, 0, 0, 0.15),
+                                thickness: 0.5,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Ksh 1000",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        const Text(
+                                          "Get 10 deliveries",
+                                          style: const TextStyle(
+                                              color: Color(0xff9FA3A6),
+                                              fontSize: 11,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_right_rounded,
+                                    color: Color(0XFFFc1c1c1),
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Divider(
+                                height: 0,
+                                color: Color.fromRGBO(0, 0, 0, 0.15),
+                                thickness: 0.5,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Ksh 1000",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        const Text(
+                                          "Get 10 deliveries",
+                                          style: const TextStyle(
+                                              color: Color(0xff9FA3A6),
+                                              fontSize: 11,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_right_rounded,
+                                    color: Color(0XFFFc1c1c1),
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 22,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.11),
+                              blurRadius: 5),
+                        ],
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
+                          child: const Text(
+                            "Current Package",
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                                color: Color(0xff808689),
+                                fontSize: 12,
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        const Divider(
+                          height: 0,
+                          color: Color.fromRGBO(0, 0, 0, 0.15),
+                          thickness: 0.5,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: const Text(
+                                      "Ksh 1000",
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(18, 5, 18, 5),
+                                    decoration: BoxDecoration(
+                                        color: Color(0xff18B284),
+                                        borderRadius: BorderRadius.circular(2)),
+                                    child: const Text(
+                                      "Track",
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 6,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    decoration: BoxDecoration(
+                                        color: Constants.primaryColor,
+                                        borderRadius:
+                                            BorderRadius.circular(100)),
+                                  ),
+                                  Container(
+                                    height: 6,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    decoration: BoxDecoration(
+                                        color: Constants.primaryColor,
+                                        borderRadius:
+                                            BorderRadius.circular(100)),
+                                  ),
+                                  Container(
+                                    height: 6,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Color(0xff0175B2).withOpacity(0.2),
+                                        borderRadius:
+                                            BorderRadius.circular(100)),
+                                  ),
+                                  Container(
+                                    height: 6,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Color(0xff0175B2).withOpacity(0.2),
+                                        borderRadius:
+                                            BorderRadius.circular(100)),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                children: [
+                                  Image(
+                                      width: 21,
+                                      height: 14,
+                                      image: AssetImage(
+                                          "asset/images/truck_delivery_icon.png")),
+                                  const SizedBox(
+                                    width: 3,
+                                  ),
+                                  const Text(
+                                    "Out of delivery",
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontFamily: "Montserrat",
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  const Spacer(),
+                                  Icon(
+                                    Icons.info_outline_rounded,
+                                    size: 15,
+                                    color: const Color(0xff9FA3A6),
+                                  ),
+                                  const SizedBox(
+                                    width: 3,
+                                  ),
+                                  const Text(
+                                    "ETA 30min",
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontFamily: "Montserrat",
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 22,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.11),
+                              blurRadius: 5),
+                        ],
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
+                          child: const Text(
+                            "Recent Packages",
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                                color: Color(0xff808689),
+                                fontSize: 12,
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        const Divider(
+                          height: 0,
+                          color: Color.fromRGBO(0, 0, 0, 0.15),
+                          thickness: 0.5,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Image(
+                                    height: 40,
+                                    width: 40,
+                                    image: AssetImage(
+                                        "asset/images/documents-icon.png"),
+                                  ),
+                                  const SizedBox(
+                                    width: 13,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Sat, May 23, 02:30 PM",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        const Text(
+                                          "#614251D",
+                                          style: const TextStyle(
+                                              color: Color(0xff9FA3A6),
+                                              fontSize: 11,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_right_rounded,
+                                    color: Color(0XFFFc1c1c1),
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Divider(
+                                height: 0,
+                                color: Color.fromRGBO(0, 0, 0, 0.15),
+                                thickness: 0.5,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Image(
+                                    height: 40,
+                                    width: 40,
+                                    image: AssetImage(
+                                        "asset/images/food-icon.png"),
+                                  ),
+                                  const SizedBox(
+                                    width: 13,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Fri, May 08, 12:34 PM",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        const Text(
+                                          "#614251D",
+                                          style: const TextStyle(
+                                              color: Color(0xff9FA3A6),
+                                              fontSize: 11,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_right_rounded,
+                                    color: Color(0XFFFc1c1c1),
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Divider(
+                                height: 0,
+                                color: Color.fromRGBO(0, 0, 0, 0.15),
+                                thickness: 0.5,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Image(
+                                    height: 40,
+                                    width: 40,
+                                    image: AssetImage(
+                                        "asset/images/clothing-icon.png"),
+                                  ),
+                                  const SizedBox(
+                                    width: 13,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Thu, May 05, 02:30 PM",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        const Text(
+                                          "#614251D",
+                                          style: const TextStyle(
+                                              color: Color(0xff9FA3A6),
+                                              fontSize: 11,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_right_rounded,
+                                    color: Color(0XFFFc1c1c1),
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Divider(
+                                height: 0,
+                                color: Color.fromRGBO(0, 0, 0, 0.15),
+                                thickness: 0.5,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Image(
+                                    height: 40,
+                                    width: 40,
+                                    image: AssetImage(
+                                        "asset/images/fragile-icon.png"),
+                                  ),
+                                  const SizedBox(
+                                    width: 13,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Mon, May 01, 02:30 PM",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        const Text(
+                                          "#614251D",
+                                          style: const TextStyle(
+                                              color: Color(0xff9FA3A6),
+                                              fontSize: 11,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_right_rounded,
+                                    color: Color(0XFFFc1c1c1),
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Divider(
+                                height: 0,
+                                color: Color.fromRGBO(0, 0, 0, 0.15),
+                                thickness: 0.5,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  print("Loading more");
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 12),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Text(
+                                          "Load more",
+                                          style: const TextStyle(
+                                              color: Color(0xff9FA3A6),
+                                              fontSize: 11,
+                                              fontFamily: "Montserrat",
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                        Icon(
+                                          Icons.keyboard_arrow_down_rounded,
+                                          color: Color(0XFFFc1c1c1),
+                                          size: 20,
+                                        )
+                                      ]),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 22,
+                  ),
+                ],
+              ),
             )
           ],
-        ),
+        )),
       ),
     );
   }
-}
-
-_timeStamp(String time) {
-  return Center(
-      child: Text(time,
-          style: TextStyle(
-              fontFamily: "Montserrat",
-              fontSize: 16,
-              fontWeight: FontWeight.w500)));
 }
