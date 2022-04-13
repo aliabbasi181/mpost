@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/log_and_reg.dart';
+import 'package:mpost/mpost/Directory/directory.dart';
 import 'package:mpost/mpost/activity/activity.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/delivery/post_delivery.dart';
+import 'package:mpost/mpost/msure/home.dart';
 import 'package:mpost/mpost/payment/choose_payment.dart';
 import 'package:mpost/mpost/virtual_address.dart/create_virtual_address.dart';
 import 'package:mpost/mpost/widgets.dart';
@@ -477,9 +479,14 @@ class _HomeState extends State<Home> {
                                 //       "Stay tuned to this. We are launching soon",
                                 //       "OK"),
                                 // );
-                                String URL =
-                                    "https://directory.mpostfintech.co.ke/";
-                                Linking.openMyLink(URL, context);
+                                // String URL =
+                                //     "https://directory.mpostfintech.co.ke/";
+                                // Linking.openMyLink(URL, context);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Directory()));
                               },
                               title: "Directory",
                               image: "asset/images/directory-icon.png"),
@@ -488,14 +495,18 @@ class _HomeState extends State<Home> {
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
                               onPress: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) => messageDialog(
-                                      context,
-                                      "Coming soon!",
-                                      "Stay tuned to this. We are launching soon",
-                                      "OK"),
-                                );
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MSUREHome()));
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) => messageDialog(
+                                //       context,
+                                //       "Coming soon!",
+                                //       "Stay tuned to this. We are launching soon",
+                                //       "OK"),
+                                // );
                               },
                               title: "Shopping",
                               image: "asset/images/shopping-icon.png"),

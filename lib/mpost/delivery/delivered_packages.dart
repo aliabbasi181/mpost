@@ -51,7 +51,7 @@ class _DeliveredPackagesState extends State<DeliveredPackages> {
                 thickness: 0.3,
               ),
               Container(
-                height: Constants.getHeight(context) * 0.85,
+                height: Constants.getHeight(context) * 0.80,
                 child: ListView.builder(
                   itemCount: 4,
                   itemBuilder: (context, index) {

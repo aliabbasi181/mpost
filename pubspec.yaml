@@ -123,6 +123,16 @@ flutter:
     - asset/images/fragile-icon.png
     - asset/images/mylocation-icon.png
     - asset/images/tick-cirlce-icon.png
+    - asset/images/bicycle.png
+    - asset/images/outdoor-&-garden.png
+    - asset/images/house-icon.png
+    - asset/images/car-icon.png
+    - asset/images/buy-sell-icon.png
+    - asset/images/services-icon.png
+    - asset/images/msure_icon.png
+    - asset/images/menu_icon.png
+    - asset/images/heart_icon.png
+    - asset/images/umbrella-icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

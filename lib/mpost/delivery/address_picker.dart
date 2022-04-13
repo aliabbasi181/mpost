@@ -7,8 +7,6 @@ import 'package:mpost/models/address.dart';
 import 'package:mpost/models/places_search.dart';
 import 'package:mpost/mpost/delivery/confirm_address.dart';
 import 'package:mpost/mpost/delivery/location_from_map.dart';
-import 'package:mpost/services/places_service.dart';
-import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 

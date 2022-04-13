@@ -7,6 +7,7 @@ import 'package:mpost/models/virtual_address_model.dart';
 class Constants {
   static Color primaryColor = const Color(0XFFF1582BE);
   static Color descriptionColor = const Color(0XFFF808689);
+  static Color msureRed = const Color(0XFFD8364D);
   static String hostUrl = "https://mpost-app.co.ke/api/";
   static String token = "";
   static String registerName = '';
