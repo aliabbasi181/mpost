@@ -508,7 +508,7 @@ class _HomeState extends State<Home> {
                                 //       "OK"),
                                 // );
                               },
-                              title: "Shopping",
+                              title: "Msure",
                               image: "asset/images/shopping-icon.png"),
                         ),
                         Container(
