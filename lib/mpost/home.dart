@@ -10,6 +10,7 @@ import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/delivery/post_delivery.dart';
 import 'package:mpost/mpost/msure/home.dart';
 import 'package:mpost/mpost/payment/choose_payment.dart';
+import 'package:mpost/mpost/transport/home.dart';
 import 'package:mpost/mpost/virtual_address.dart/create_virtual_address.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/services/database.dart';
@@ -539,14 +540,19 @@ class _HomeState extends State<Home> {
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
                               onPress: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) => messageDialog(
-                                      context,
-                                      "Coming soon!",
-                                      "Stay tuned to this. We are launching soon",
-                                      "OK"),
-                                );
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) => messageDialog(
+                                //       context,
+                                //       "Coming soon!",
+                                //       "Stay tuned to this. We are launching soon",
+                                //       "OK"),
+                                // );
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const TransportHome()));
                               },
                               title: "Transport",
                               image: "asset/images/transport-icon.png"),
