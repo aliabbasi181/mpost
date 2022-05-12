@@ -72,6 +72,82 @@ class _TransportInputFieldState extends State<TransportInputField> {
   }
 }
 
+class TransportInputSelector extends StatefulWidget {
+  String hintText;
+  IconData prefixIcon;
+  IconData sufixIcon;
+  VoidCallback onPress;
+  TransportInputSelector(
+      {Key? key,
+      required this.prefixIcon,
+      required this.hintText,
+      required this.sufixIcon,
+      required this.onPress})
+      : super(key: key);
+
+  @override
+  State<TransportInputSelector> createState() => _TransportInputSelectorState();
+}
+
+class _TransportInputSelectorState extends State<TransportInputSelector> {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: widget.onPress,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 13),
+        margin: const EdgeInsets.only(bottom: 7),
+        width: Constants.getWidth(context),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+                width: 0.8, color: const Color(0xff6A6A6A).withOpacity(0.3))),
+        child: Row(
+          children: [
+            Icon(
+              widget.prefixIcon,
+              size: 20,
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Expanded(
+              child: TextField(
+                enabled: false,
+                style: TextStyle(
+                    color: Color(0xff4D5559),
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14),
+                cursorColor: Colors.black,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  isCollapsed: true,
+                  border: const OutlineInputBorder(borderSide: BorderSide.none),
+                  contentPadding: const EdgeInsets.only(top: 10, bottom: 10),
+                  hintText: widget.hintText,
+                  hintStyle: TextStyle(
+                      color: Color(0xff4D5559),
+                      fontFamily: "Montserrat",
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14),
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Icon(
+              widget.sufixIcon,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class TransportInputButton extends StatelessWidget {
   String label;
   VoidCallback onPress;
@@ -788,7 +864,10 @@ class _TransportSeatSelectorSeatRowState
 
 class AddPessangerDetailsCard extends StatefulWidget {
   String seatTag;
-  AddPessangerDetailsCard({Key? key, required this.seatTag}) : super(key: key);
+  VoidCallback onPress;
+  AddPessangerDetailsCard(
+      {Key? key, required this.seatTag, required this.onPress})
+      : super(key: key);
 
   @override
   State<AddPessangerDetailsCard> createState() =>
@@ -798,68 +877,71 @@ class AddPessangerDetailsCard extends StatefulWidget {
 class _AddPessangerDetailsCardState extends State<AddPessangerDetailsCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Constants.transportHeading.withOpacity(0.2),
-          ),
-          borderRadius: BorderRadius.circular(4)),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 6,
+    return InkWell(
+      onTap: widget.onPress,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            border: Border.all(
+              color: Constants.transportHeading.withOpacity(0.2),
             ),
-            width: 40,
-            decoration: BoxDecoration(
-                color: const Color(0xff38B87C),
-                border: Border.all(
-                    color: Constants.transportHeading.withOpacity(0.2)),
-                borderRadius: BorderRadius.circular(4)),
-            child: Text(
-              widget.seatTag,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: "Montserrat",
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12),
+            borderRadius: BorderRadius.circular(4)),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 6,
+              ),
+              width: 40,
+              decoration: BoxDecoration(
+                  color: const Color(0xff38B87C),
+                  border: Border.all(
+                      color: Constants.transportHeading.withOpacity(0.2)),
+                  borderRadius: BorderRadius.circular(4)),
+              child: Text(
+                widget.seatTag,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12),
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Icon(Icons.person),
-          const SizedBox(
-            width: 5,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Add Pessager details",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: "Montserrat",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600),
-              ),
-              Text(
-                "Personal details will appear on ticket",
-                maxLines: 1,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: Colors.black.withOpacity(0.6),
-                    fontFamily: "Montserrat",
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500),
-              ),
-            ],
-          )
-        ],
+            const SizedBox(
+              width: 5,
+            ),
+            Icon(Icons.person),
+            const SizedBox(
+              width: 5,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Add Pessager details",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: "Montserrat",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  "Personal details will appear on ticket",
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: Colors.black.withOpacity(0.6),
+                      fontFamily: "Montserrat",
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

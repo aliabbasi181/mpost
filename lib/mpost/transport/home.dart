@@ -92,7 +92,8 @@ class _TransportHomeState extends State<TransportHome> {
                                           size: 18,
                                           color: oneWay
                                               ? Constants.transportColor2
-                                              : const Color(0xff4D5559),
+                                              : const Color(0xff4D5559)
+                                                  .withOpacity(0.5),
                                         ),
                                         const SizedBox(
                                           width: 5,
@@ -127,7 +128,8 @@ class _TransportHomeState extends State<TransportHome> {
                                           size: 18,
                                           color: !oneWay
                                               ? Constants.transportColor2
-                                              : const Color(0xff4D5559),
+                                              : const Color(0xff4D5559)
+                                                  .withOpacity(0.5),
                                         ),
                                         const SizedBox(
                                           width: 5,
