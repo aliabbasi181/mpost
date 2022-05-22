@@ -34,7 +34,8 @@ class _TransportInputFieldState extends State<TransportInputField> {
         children: [
           Icon(
             widget.icon,
-            size: 20,
+            size: 24,
+            color: const Color(0xffb7b7b7),
           ),
           const SizedBox(
             width: 8,
@@ -106,7 +107,8 @@ class _TransportInputSelectorState extends State<TransportInputSelector> {
           children: [
             Icon(
               widget.prefixIcon,
-              size: 20,
+              size: 24,
+              color: const Color(0xffb7b7b7),
             ),
             const SizedBox(
               width: 8,
@@ -140,6 +142,7 @@ class _TransportInputSelectorState extends State<TransportInputSelector> {
             Icon(
               widget.sufixIcon,
               size: 20,
+              color: const Color(0xffb7b7b7),
             ),
           ],
         ),
@@ -401,9 +404,10 @@ class _TransportAdvantageCardState extends State<TransportAdvantageCard> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.card_giftcard_rounded,
-            size: 60,
+          Image.asset(
+            widget.image,
+            height: 64,
+            width: 64,
           ),
           const SizedBox(
             width: 20,
@@ -865,8 +869,12 @@ class _TransportSeatSelectorSeatRowState
 class AddPessangerDetailsCard extends StatefulWidget {
   String seatTag;
   VoidCallback onPress;
+  Widget child;
   AddPessangerDetailsCard(
-      {Key? key, required this.seatTag, required this.onPress})
+      {Key? key,
+      required this.seatTag,
+      required this.onPress,
+      required this.child})
       : super(key: key);
 
   @override
@@ -888,12 +896,15 @@ class _AddPessangerDetailsCardState extends State<AddPessangerDetailsCard> {
             ),
             borderRadius: BorderRadius.circular(4)),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               padding: const EdgeInsets.symmetric(
                 vertical: 6,
               ),
               width: 40,
+              height: 35,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                   color: const Color(0xff38B87C),
                   border: Border.all(
@@ -910,36 +921,9 @@ class _AddPessangerDetailsCardState extends State<AddPessangerDetailsCard> {
               ),
             ),
             const SizedBox(
-              width: 5,
+              width: 20,
             ),
-            Icon(Icons.person),
-            const SizedBox(
-              width: 5,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Add Pessager details",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: "Montserrat",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  "Personal details will appear on ticket",
-                  maxLines: 1,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: Colors.black.withOpacity(0.6),
-                      fontFamily: "Montserrat",
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500),
-                ),
-              ],
-            )
+            widget.child
           ],
         ),
       ),

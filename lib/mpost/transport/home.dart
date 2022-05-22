@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/transport/date_picker_transport.dart';
 import 'package:mpost/mpost/transport/search_results.dart';
+import 'package:mpost/mpost/transport/select_destination.dart';
 import 'package:mpost/mpost/transport/widgets.dart';
 import 'package:mpost/widgets.dart';
 
@@ -16,8 +18,8 @@ class TransportHome extends StatefulWidget {
 
 class _TransportHomeState extends State<TransportHome> {
   bool oneWay = true;
-  TextEditingController locationFromController = TextEditingController();
-  TextEditingController locationToController = TextEditingController();
+  TextEditingController totalPessangersController = TextEditingController();
+  String from = "", to = "", departureDate = "", returnDate = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,28 +152,69 @@ class _TransportHomeState extends State<TransportHome> {
                               ],
                             ),
                           ),
-                          TransportInputField(
-                            hintText: "From",
-                            icon: Icons.location_on,
-                            controller: locationFromController,
-                            isLocationPicker: true,
-                          ),
-                          TransportInputField(
-                            hintText: "To",
-                            icon: Icons.location_on,
-                            controller: locationFromController,
-                            isLocationPicker: true,
-                          ),
-                          TransportInputField(
-                            hintText: "Departure Date",
-                            icon: Icons.location_on,
-                            controller: locationFromController,
-                            isLocationPicker: true,
-                          ),
+                          TransportInputSelector(
+                              prefixIcon: Icons.location_on,
+                              hintText: from.isEmpty ? "From" : from,
+                              sufixIcon: Icons.arrow_drop_down,
+                              onPress: () async {
+                                try {
+                                  from = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              const SelectDestinationTransport())));
+                                  if (from.isNotEmpty) {
+                                    setState(() {});
+                                  }
+                                } catch (ex) {}
+                              }),
+                          TransportInputSelector(
+                              prefixIcon: Icons.location_on,
+                              hintText: to.isEmpty ? "To" : to,
+                              sufixIcon: Icons.arrow_drop_down,
+                              onPress: () async {
+                                try {
+                                  to = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              const SelectDestinationTransport())));
+                                  if (to.isNotEmpty) {
+                                    setState(() {});
+                                  }
+                                } catch (ex) {}
+                              }),
+                          TransportInputSelector(
+                              prefixIcon: Icons.calendar_month,
+                              hintText: departureDate.isEmpty
+                                  ? "Departure date"
+                                  : departureDate,
+                              sufixIcon: Icons.arrow_drop_down,
+                              onPress: () async {
+                                try {
+                                  var dates = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              TransportDatePicker(
+                                                isReturn: !oneWay,
+                                              ))));
+                                  if (to.isNotEmpty) {
+                                    setState(() {});
+                                  }
+                                  print(dates);
+                                  if (dates.toString().split('|').length > 1) {
+                                    departureDate =
+                                        "${dates.toString().split('|')[0]} - ${dates.toString().split('|')[1]}";
+                                    oneWay = false;
+                                  }
+                                  setState(() {});
+                                } catch (ex) {}
+                              }),
                           TransportInputField(
                             hintText: "Number of passengers",
-                            icon: Icons.location_on,
-                            controller: locationFromController,
+                            icon: Icons.group,
+                            controller: totalPessangersController,
                             isLocationPicker: true,
                           ),
                           const SizedBox(
@@ -231,7 +274,7 @@ class _TransportHomeState extends State<TransportHome> {
                                             height: 42,
                                             width: 42,
                                             image: AssetImage(
-                                                "asset/images/transport-icon.png")),
+                                                "asset/images/bus_transport_icon.png")),
                                         Text(
                                           "Bus Hire",
                                           textAlign: TextAlign.start,
@@ -265,10 +308,10 @@ class _TransportHomeState extends State<TransportHome> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Image(
-                                            height: 42,
-                                            width: 42,
+                                            height: 46,
+                                            width: 46,
                                             image: AssetImage(
-                                                "asset/images/transport-icon.png")),
+                                                "asset/images/bus_timetable_icon.png")),
                                         Text(
                                           "Bus-timetable",
                                           textAlign: TextAlign.start,
@@ -529,13 +572,13 @@ class _TransportHomeState extends State<TransportHome> {
                           ),
                           TransportAdvantageCard(
                             title: "Unmatched Benefits",
-                            image: "",
+                            image: "asset/images/gift_icon.png",
                             subtitle:
                                 "We take care of your travel beyond ticketing by providing you with innovative and unique benefits.",
                           ),
                           TransportAdvantageCard(
                             title: "Customer Service",
-                            image: "",
+                            image: "asset/images/customer_care_icon.png",
                             subtitle:
                                 "We put our experience and relationships to good use and are available to solve your travel issues.",
                             child: Column(
@@ -562,7 +605,7 @@ class _TransportHomeState extends State<TransportHome> {
                           ),
                           TransportAdvantageCard(
                             title: "Lowest Prices",
-                            image: "",
+                            image: "asset/images/money_icon.png",
                             subtitle:
                                 "We always give you the lowest price with the best partner offers.",
                           ),

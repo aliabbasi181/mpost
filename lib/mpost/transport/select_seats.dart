@@ -251,9 +251,10 @@ class _TransportSelectBusSeatState extends State<TransportSelectBusSeat> {
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Icon(
-                                      Icons.circle_outlined,
-                                      size: 35,
+                                    Image.asset(
+                                      "asset/images/wheel_icon.png",
+                                      height: 36,
+                                      width: 36,
                                     )
                                   ]),
                               Divider(

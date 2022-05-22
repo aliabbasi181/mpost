@@ -142,6 +142,7 @@ class _TransportSearchResultsState extends State<TransportSearchResults> {
               bottom: Platform.isAndroid,
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(vertical: 10),
+                itemCount: 5,
                 itemBuilder: (context, index) {
                   return TransportResultBusCard(
                     onPress: () {

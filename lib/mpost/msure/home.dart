@@ -121,8 +121,8 @@ class _MSUREHomeState extends State<MSUREHome> {
                                               BorderRadius.circular(6),
                                           image: DecorationImage(
                                               fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                  "https://images.indianexpress.com/2019/08/imran-khan-4.jpg"))),
+                                              image: AssetImage(
+                                                  "asset/images/msure_banner_image.png"))),
                                     ),
                                     Align(
                                       alignment:
