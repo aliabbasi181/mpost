@@ -11,6 +11,7 @@ class Constants {
   static Color msureRed = const Color(0XFFD8364D);
   static Color transportColor1 = const Color(0XFFFFC432);
   static Color transportColor2 = const Color(0XFF6F1369);
+  static Color errorColor = const Color(0XFFBE1515);
   static Color transportHeading = const Color(0XFF1B3442);
   static String hostUrl = "https://mpost-app.co.ke/api/";
   static String token = "";

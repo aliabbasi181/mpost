@@ -10,6 +10,9 @@ import 'package:mpost/login_register/register.dart';
 import 'package:mpost/mpost/delivery/post_delivery.dart';
 import 'package:mpost/mpost/flutter_wave/wave_main.dart';
 import 'package:mpost/mpost/home.dart';
+import 'package:mpost/mpost/msure/about_msure.dart';
+import 'package:mpost/mpost/msure/contact_msure.dart';
+import 'package:mpost/mpost/msure/msure_nav.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/mpost/payment.dart';
 import 'package:mpost/services/notifications.dart';
@@ -59,9 +62,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (context) => ApplicaitonBloc(),
-        child: const MaterialApp(
+        child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: Splash(),
+          routes: {
+            '/': (context) => Splash(),
+            '/msure_home': (context) => MSUREBottomNav(loadDeliveries: false)
+          },
+          initialRoute: '/',
         ));
   }
 }

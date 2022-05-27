@@ -9,6 +9,7 @@ import 'package:mpost/mpost/activity/activity.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/delivery/post_delivery.dart';
 import 'package:mpost/mpost/msure/home.dart';
+import 'package:mpost/mpost/msure/msure_nav.dart';
 import 'package:mpost/mpost/payment/choose_payment.dart';
 import 'package:mpost/mpost/transport/home.dart';
 import 'package:mpost/mpost/virtual_address.dart/create_virtual_address.dart';
@@ -496,10 +497,13 @@ class _HomeState extends State<Home> {
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
                               onPress: () {
+                                Navigator.pushNamed(context, '/msure_home');
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => MSUREHome()));
+                                        builder: (context) => MSUREBottomNav(
+                                              loadDeliveries: false,
+                                            )));
                                 // showDialog(
                                 //   context: context,
                                 //   builder: (BuildContext context) => messageDialog(
