@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/msure/about_msure.dart';
 import 'package:mpost/mpost/msure/contact_msure.dart';
+import 'package:mpost/mpost/msure/insurance/insurance_home.dart';
+import 'package:mpost/mpost/msure/msure_payments/payments_select_amount.dart';
 import 'package:mpost/mpost/msure/update_profile.dart';
 import 'package:mpost/mpost/msure/widgets.dart';
 
@@ -292,7 +294,12 @@ class _MSUREHome2State extends State<MSUREHome2> {
                     title: "Payments",
                     subTitle: "Maecenas egestas donec sed interdum tristique",
                     iconBackgroundColor: const Color(0xff4D36D8),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MSUREPaymentSelect()));
+                    },
                   )
                 ],
               ),
@@ -307,7 +314,12 @@ class _MSUREHome2State extends State<MSUREHome2> {
                     title: "Insurance",
                     subTitle: "Maecenas egestas donec sed interdum tristique",
                     iconBackgroundColor: const Color(0xff36D8CE),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MSUREInsuranceHome()));
+                    },
                   ),
                   MSUREMenuCard(
                     icon: Icon(

@@ -319,7 +319,7 @@ class _MSUREUpdateProfileState extends State<MSUREUpdateProfile> {
                     controller: surname,
                     focusNode: surnameFocusNode),
                 MSUREInputField(
-                    labelText: "ID NUmber",
+                    labelText: "ID Nnmber",
                     controller: idNumber,
                     focusNode: idNumberFocusNode),
                 MSUREInputField(

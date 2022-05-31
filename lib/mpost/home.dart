@@ -660,7 +660,7 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context),
                             child: CinemaSection(
                                 poster:
-                                    "https://the8-bit.com/wp-content/uploads/2021/01/Top_Gun_Maveric.jpg",
+                                    "https://i.ytimg.com/vi/r2GZHjFBhp4/maxresdefault.jpg",
                                 movieName: "Top Gun: Maverick",
                                 location: "Coorperative Bank Building"),
                           ),

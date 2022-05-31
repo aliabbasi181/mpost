@@ -114,11 +114,9 @@ class _MSUREContactState extends State<MSUREContact> {
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: BorderSide(
                               color: Constants.msureRed, width: 1.5)),
-                      labelText: "Message",
-                      labelStyle: TextStyle(
-                          color: messageFocusNode.hasFocus
-                              ? Constants.msureRed
-                              : const Color(0xffCBCBCB),
+                      hintText: "Message",
+                      hintStyle: TextStyle(
+                          color: Color(0xffCBCBCB),
                           fontSize: 15,
                           fontWeight: FontWeight.w600),
                     ),

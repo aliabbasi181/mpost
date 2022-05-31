@@ -12,6 +12,7 @@ import 'package:mpost/mpost/flutter_wave/wave_main.dart';
 import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/msure/about_msure.dart';
 import 'package:mpost/mpost/msure/contact_msure.dart';
+import 'package:mpost/mpost/msure/insurance/claim/claim_home.dart';
 import 'package:mpost/mpost/msure/msure_nav.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/mpost/payment.dart';
@@ -66,7 +67,8 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           routes: {
             '/': (context) => Splash(),
-            '/msure_home': (context) => MSUREBottomNav(loadDeliveries: false)
+            '/msure_home': (context) => MSUREBottomNav(loadDeliveries: false),
+            '/msure_insurance_claim': (context) => MPOSTInsuranceClaimHome(),
           },
           initialRoute: '/',
         ));
