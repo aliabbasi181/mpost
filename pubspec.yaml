@@ -56,6 +56,7 @@ dependencies:
   table_calendar: ^3.0.5
   image_picker: ^0.8.5+3
   flutter_phone_direct_caller: ^2.1.1
+  fl_chart: ^0.51.0
 
 dev_dependencies:
   flutter_test:
@@ -133,7 +134,6 @@ flutter:
     - asset/images/car-icon.png
     - asset/images/buy-sell-icon.png
     - asset/images/services-icon.png
-    - asset/images/msure_icon.png
     - asset/images/menu_icon.png
     - asset/images/heart_icon.png
     - asset/images/umbrella-icon.png
@@ -144,6 +144,8 @@ flutter:
     - asset/images/bus_transport_icon.png
     - asset/images/bus_timetable_icon.png
     - asset/images/wheel_icon.png
+    - asset/images/msure_icon.png
+    - asset/images/msure_dashboard_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

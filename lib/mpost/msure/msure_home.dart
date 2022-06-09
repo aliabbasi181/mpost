@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/msure/about_msure.dart';
 import 'package:mpost/mpost/msure/contact_msure.dart';
+import 'package:mpost/mpost/msure/dashboard/msure_dashboard.dart';
 import 'package:mpost/mpost/msure/insurance/insurance_home.dart';
 import 'package:mpost/mpost/msure/msure_payments/payments_select_amount.dart';
 import 'package:mpost/mpost/msure/update_profile.dart';
@@ -277,14 +278,20 @@ class _MSUREHome2State extends State<MSUREHome2> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   MSUREMenuCard(
-                    icon: Icon(
-                      CupertinoIcons.square_grid_2x2,
-                      color: Colors.white,
+                    icon: Image.asset(
+                      "asset/images/msure_dashboard_icon.png",
+                      width: 27,
+                      height: 27,
                     ),
-                    title: "Dashboard",
+                    title: "Dashboar",
                     subTitle: "Maecenas egestas donec sed interdum tristique",
                     iconBackgroundColor: const Color(0xff60D836),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MsureDashboard()));
+                    },
                   ),
                   MSUREMenuCard(
                     icon: Icon(

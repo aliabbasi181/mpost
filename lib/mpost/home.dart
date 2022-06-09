@@ -498,12 +498,12 @@ class _HomeState extends State<Home> {
                           child: MenuIcon(
                               onPress: () {
                                 Navigator.pushNamed(context, '/msure_home');
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MSUREBottomNav(
-                                              loadDeliveries: false,
-                                            )));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => MSUREBottomNav(
+                                //               loadDeliveries: false,
+                                //             )));
                                 // showDialog(
                                 //   context: context,
                                 //   builder: (BuildContext context) => messageDialog(
@@ -683,7 +683,7 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context) * 0.5,
                             child: OfferSection(
                                 poster:
-                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/Great_Unilever_budle.png",
+                                    "https://cdn.sanity.io/images/92ui5egz/production/e800a8eabc6f17a0eaed1bf6621b46aefa57b8cb-990x557.jpg?w=800&h=450&auto=format",
                                 category: "Bundle",
                                 title: "Great Unilever home bundle"),
                           ),
@@ -691,7 +691,7 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context) * 0.5,
                             child: OfferSection(
                                 poster:
-                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/skin_care.jpg",
+                                    "https://media.allure.com/photos/5e9f44a64677ea0008ff4974/master/pass/reporter-wild-beauty-river.jpg",
                                 category: "Skin Care",
                                 title: "Herbal Stretch marks remover"),
                           ),
@@ -738,7 +738,7 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context) * 0.5,
                             child: BestEventsSection(
                                 poster:
-                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/bro_code-1.jpg",
+                                    "https://www.niva4cap.eu/wp-content/uploads/2021/05/home_banner_conferences_44976472.jpg",
                                 category: "Best events",
                                 title: "Bro code"),
                           ),
@@ -746,7 +746,7 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context) * 0.5,
                             child: BestEventsSection(
                                 poster:
-                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/look_me_inthe_i-1.jpg",
+                                    "https://www.niva4cap.eu/wp-content/uploads/2021/05/home_banner_conferences_44976472.jpg",
                                 category: "Book Now",
                                 title: "Look Me in the I"),
                           ),
@@ -783,7 +783,7 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context) * 0.5,
                             child: OfferSection(
                                 poster:
-                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/shoes-1.jpg",
+                                    "https://www.niva4cap.eu/wp-content/uploads/2021/05/home_banner_conferences_44976472.jpg",
                                 category: "Women's Fashion",
                                 title: "Foot Candy Pink Elegant Flat Shoes"),
                           ),
@@ -791,7 +791,7 @@ class _HomeState extends State<Home> {
                             width: Constants.getWidth(context) * 0.5,
                             child: OfferSection(
                                 poster:
-                                    "http://www.naomistyles.com/wp-content/uploads/2022/03/tracksuits-1.jpg",
+                                    "https://www.niva4cap.eu/wp-content/uploads/2021/05/home_banner_conferences_44976472.jpg",
                                 category: "Mens Fashion",
                                 title: "Tracksuits Men's Suits Track Suit"),
                           ),
