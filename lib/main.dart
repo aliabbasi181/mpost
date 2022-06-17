@@ -3,6 +3,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
+import 'package:mpost/blocs/msure_application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/log_and_reg.dart';
 import 'package:mpost/login_register/otp_verify.dart';
@@ -61,8 +62,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => ApplicaitonBloc(),
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => ApplicaitonBloc(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => MSUREApplicationBloc(),
+          )
+        ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           routes: {
@@ -73,6 +81,21 @@ class _MyAppState extends State<MyApp> {
           initialRoute: '/',
         ));
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return ChangeNotifierProvider(
+  //       create: (context) => ApplicaitonBloc(),
+  //       child: MaterialApp(
+  //         debugShowCheckedModeBanner: false,
+  //         routes: {
+  //           '/': (context) => Splash(),
+  //           '/msure_home': (context) => MSUREBottomNav(loadDeliveries: false),
+  //           '/msure_insurance_claim': (context) => MPOSTInsuranceClaimHome(),
+  //         },
+  //         initialRoute: '/',
+  //       ));
+  // }
 }
 
 class MyHttpOverrides extends HttpOverrides {

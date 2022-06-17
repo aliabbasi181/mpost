@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/msure_application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/msure/MsureModels/MsureUserModel.dart';
 import 'package:mpost/mpost/msure/about_msure.dart';
 import 'package:mpost/mpost/msure/contact_msure.dart';
 import 'package:mpost/mpost/msure/dashboard/msure_dashboard.dart';
@@ -8,6 +10,7 @@ import 'package:mpost/mpost/msure/insurance/insurance_home.dart';
 import 'package:mpost/mpost/msure/msure_payments/payments_select_amount.dart';
 import 'package:mpost/mpost/msure/update_profile.dart';
 import 'package:mpost/mpost/msure/widgets.dart';
+import 'package:provider/provider.dart';
 
 class MSUREHome2 extends StatefulWidget {
   const MSUREHome2({Key? key}) : super(key: key);
@@ -18,7 +21,33 @@ class MSUREHome2 extends StatefulWidget {
 
 class _MSUREHome2State extends State<MSUREHome2> {
   @override
+  void initState() {
+    // TODO: implement initState
+    _getUser();
+    super.initState();
+  }
+
+  MsureUserModel user = MsureUserModel();
+
+  _getUser() async {
+    final msureApplicationBloc =
+        Provider.of<MSUREApplicationBloc>(context, listen: false);
+
+    if (await msureApplicationBloc.msureLogin()) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.green,
+          content: const Text("Login Success!")));
+      user = await msureApplicationBloc.getUser();
+      setState(() {});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red, content: const Text("Login failed!")));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final msureApplicationBloc = Provider.of<MSUREApplicationBloc>(context);
     return Scaffold(
         body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
@@ -75,7 +104,7 @@ class _MSUREHome2State extends State<MSUREHome2> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Hello, ${Constants.user.fullName}",
+                        "Hello, ${user.name == null ? "N/A" : user.name}",
                         style: TextStyle(
                             color: Color(0xff9FA3A6),
                             fontFamily: "Montserrat",
@@ -193,17 +222,22 @@ class _MSUREHome2State extends State<MSUREHome2> {
                               ),
                             ),
                           ),
-                          Container(
-                              padding: const EdgeInsets.all(13),
-                              margin: const EdgeInsets.only(right: 20),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: Colors.white.withOpacity(1)),
-                              child: Icon(
-                                CupertinoIcons.add,
-                                color: Color(0xff1483BE),
-                                size: 35,
-                              ))
+                          InkWell(
+                            onTap: () {
+                              msureApplicationBloc.msureLogin();
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.all(13),
+                                margin: const EdgeInsets.only(right: 20),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.white.withOpacity(1)),
+                                child: Icon(
+                                  CupertinoIcons.add,
+                                  color: Color(0xff1483BE),
+                                  size: 35,
+                                )),
+                          )
                         ],
                       ),
                     ),
@@ -283,7 +317,7 @@ class _MSUREHome2State extends State<MSUREHome2> {
                       width: 27,
                       height: 27,
                     ),
-                    title: "Dashboar",
+                    title: "Dashboard",
                     subTitle: "Maecenas egestas donec sed interdum tristique",
                     iconBackgroundColor: const Color(0xff60D836),
                     onTap: () {

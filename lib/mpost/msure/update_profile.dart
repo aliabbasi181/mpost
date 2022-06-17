@@ -338,6 +338,14 @@ class _MSUREUpdateProfileState extends State<MSUREUpdateProfile> {
                     labelText: "Location",
                     controller: location,
                     focusNode: locationFocusNode),
+                // MSUREInputField(
+                //     labelText: "Beneficiary Phone",
+                //     controller: location,
+                //     focusNode: locationFocusNode),
+                // MSUREInputField(
+                //     labelText: "Beneficiary Name",
+                //     controller: location,
+                //     focusNode: locationFocusNode),
               ],
             ),
           ),
