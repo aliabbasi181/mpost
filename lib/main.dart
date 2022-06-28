@@ -1,28 +1,18 @@
 import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/blocs/msure_application_bloc.dart';
-import 'package:mpost/constants.dart';
-import 'package:mpost/log_and_reg.dart';
-import 'package:mpost/login_register/otp_verify.dart';
-import 'package:mpost/login_register/register.dart';
-import 'package:mpost/mpost/delivery/post_delivery.dart';
-import 'package:mpost/mpost/flutter_wave/wave_main.dart';
-import 'package:mpost/mpost/home.dart';
-import 'package:mpost/mpost/msure/about_msure.dart';
-import 'package:mpost/mpost/msure/contact_msure.dart';
+import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
 import 'package:mpost/mpost/msure/insurance/claim/claim_home.dart';
 import 'package:mpost/mpost/msure/msure_nav.dart';
-import 'package:mpost/mpost/nav.dart';
-import 'package:mpost/mpost/payment.dart';
+import 'package:mpost/mpost/msure/msure_splash.dart';
 import 'package:mpost/services/notifications.dart';
 import 'package:mpost/splash.dart';
 import 'package:provider/provider.dart';
-import 'mpost/payment/choose_payment.dart';
 
-void main() {
+void main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   try {
@@ -39,6 +29,7 @@ void main() {
   } catch (ex) {
     print(ex);
   }
+  await SPLocalStorage.init();
   runApp(const MyApp());
 }
 
@@ -75,10 +66,12 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           routes: {
             '/': (context) => Splash(),
+            '/msure_splash': (context) => MsureSplashScreen(),
             '/msure_home': (context) => MSUREBottomNav(loadDeliveries: false),
             '/msure_insurance_claim': (context) => MPOSTInsuranceClaimHome(),
           },
           initialRoute: '/',
+          builder: EasyLoading.init(),
         ));
   }
 

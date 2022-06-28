@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
 import 'package:mpost/mpost/msure/MsureModels/MsureUserModel.dart';
 import 'package:mpost/mpost/msure/msure_constants.dart';
+import 'package:http/http.dart' as http;
 
 class MsureUserService {
   Future<MsureUserModel> getUserDetail() async {
@@ -11,8 +16,13 @@ class MsureUserService {
           options: Options(headers: MsureConstants.msureheaderWithToken));
       if (response.statusCode == 200) {
         user = MsureUserModel.fromJson(response.data);
+        await SPLocalStorage.setMsureUserDetail(user);
+        user = await SPLocalStorage.getMsureUserDetail();
+        print(user);
       }
-    } catch (ex) {}
+    } catch (ex) {
+      print(ex);
+    }
     return user;
   }
 
@@ -27,17 +37,21 @@ class MsureUserService {
     } catch (ex) {}
   }
 
-  updateUser(Map<String, dynamic> params) async {
+  Future<bool> updateUser(Map<String, dynamic> params) async {
     try {
       String url = MsureConstants.msureBaseUrl + "/users";
       var response = await Dio().put(url,
           options: Options(headers: MsureConstants.msureheaderWithToken),
           queryParameters: params);
       if (response.statusCode == 200) {
-        print(response.data);
+        await getUserDetail();
+        return true;
+      } else {
+        return false;
       }
     } catch (ex) {
       print(ex);
+      return false;
     }
   }
 

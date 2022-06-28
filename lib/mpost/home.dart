@@ -2,14 +2,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
+import 'package:mpost/blocs/msure_application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/log_and_reg.dart';
 import 'package:mpost/mpost/Directory/directory.dart';
+import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
 import 'package:mpost/mpost/activity/activity.dart';
 import 'package:mpost/mpost/delivery/delivery.dart';
 import 'package:mpost/mpost/delivery/post_delivery.dart';
 import 'package:mpost/mpost/msure/home.dart';
+import 'package:mpost/mpost/msure/msure_constants.dart';
 import 'package:mpost/mpost/msure/msure_nav.dart';
+import 'package:mpost/mpost/msure/msure_splash.dart';
 import 'package:mpost/mpost/payment/choose_payment.dart';
 import 'package:mpost/mpost/transport/home.dart';
 import 'package:mpost/mpost/virtual_address.dart/create_virtual_address.dart';
@@ -496,14 +500,23 @@ class _HomeState extends State<Home> {
                         Container(
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
-                              onPress: () {
-                                Navigator.pushNamed(context, '/msure_home');
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => MSUREBottomNav(
-                                //               loadDeliveries: false,
-                                //             )));
+                              onPress: () async {
+                                Navigator.pushNamed(context, '/msure_splash');
+                                // var token = SPLocalStorage.preferences!
+                                //     .getString(SPLocalStorage.keyMsureToken);
+                                // if (token == "null") {
+                                //   Navigator.pushNamed(context, '/msure_splash');
+                                // } else {
+                                //   MsureConstants.token = "$token";
+                                //   MsureConstants.setToken("$token");
+                                //   final msureApplicationBloc =
+                                //       Provider.of<MSUREApplicationBloc>(context,
+                                //           listen: false);
+                                //   await msureApplicationBloc.getUser();
+                                //   Navigator.pushNamed(context, '/msure_home');
+                                // }
+                                //Navigator.pushNamed(context, '/msure_home');
+
                                 // showDialog(
                                 //   context: context,
                                 //   builder: (BuildContext context) => messageDialog(

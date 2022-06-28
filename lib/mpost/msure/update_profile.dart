@@ -3,10 +3,15 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/msure_application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
+import 'package:mpost/mpost/msure/MsureModels/MsureUserModel.dart';
 import 'package:mpost/mpost/msure/msure_nav.dart';
 import 'package:mpost/mpost/msure/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mpost/mpost/widgets.dart';
+import 'package:provider/provider.dart';
 
 class MSUREUpdateProfile extends StatefulWidget {
   const MSUREUpdateProfile({Key? key}) : super(key: key);
@@ -23,6 +28,8 @@ class _MSUREUpdateProfileState extends State<MSUREUpdateProfile> {
   FocusNode phoneFocusNode = new FocusNode();
   FocusNode emailFocusNode = new FocusNode();
   FocusNode locationFocusNode = new FocusNode();
+  FocusNode beneficiaryNameFocusNode = new FocusNode();
+  FocusNode beneficiaryPhoneFocusNode = new FocusNode();
   TextEditingController name = TextEditingController();
   TextEditingController surname = TextEditingController();
   TextEditingController idNumber = TextEditingController();
@@ -30,6 +37,8 @@ class _MSUREUpdateProfileState extends State<MSUREUpdateProfile> {
   TextEditingController phoneNumber = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController location = TextEditingController();
+  TextEditingController beneficiaryName = TextEditingController();
+  TextEditingController beneficiaryPhone = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   File? image;
 
@@ -41,6 +50,32 @@ class _MSUREUpdateProfileState extends State<MSUREUpdateProfile> {
         this.image = File(image.path);
       });
     } catch (ex) {}
+  }
+
+  @override
+  void initState() {
+    _getUserDetails();
+    super.initState();
+  }
+
+  _getUserDetails() async {
+    MsureUserModel user = await SPLocalStorage.getMsureUserDetail();
+    setState(() {
+      name.text = user.name.toString();
+      surname.text = user.surname.toString();
+      idNumber.text = user.nationalId!;
+      if (user.ntsaNumber.toString() != "null")
+        ntsNumber.text = user.ntsaNumber.toString();
+      phoneNumber.text = user.phone.toString();
+      email.text = user.email.toString();
+      location.text = user.location.toString();
+      user.beneficiaryName.toString() == "null"
+          ? beneficiaryName.text = ""
+          : beneficiaryName.text = user.beneficiaryName.toString();
+      user.beneficiaryPhone.toString() == "null"
+          ? beneficiaryPhone.text = ""
+          : beneficiaryPhone.text = user.beneficiaryPhone.toString();
+    });
   }
 
   @override
@@ -90,223 +125,223 @@ class _MSUREUpdateProfileState extends State<MSUREUpdateProfile> {
                       fontWeight: FontWeight.w700,
                       fontSize: 22),
                 ),
-                RichText(
-                    text: TextSpan(
-                        text: "Please add below your personal details. ",
-                        style: TextStyle(
-                            height: 1.5,
-                            color: Color(0xff808689),
-                            fontFamily: "Montserrat",
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14),
-                        children: [
-                      TextSpan(
-                        text: "Use my MPOST personal Details",
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () async {
-                            switch (await showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    CupertinoAlertDialog(
-                                      title: const Text("ALERT!"),
-                                      content: const Text(
-                                          "Are you sure you want to use MPOST personal details?"),
-                                      actions: [
-                                        CupertinoDialogAction(
-                                            child: const Text(
-                                              "Cancel",
-                                              style: TextStyle(
-                                                  fontFamily: "Montserrat",
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop("No");
-                                            }),
-                                        CupertinoDialogAction(
-                                            child: const Text(
-                                              "YES",
-                                              style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontFamily: "Montserrat",
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop("yes");
-                                            }),
-                                      ],
-                                    ))) {
-                              case "yes":
-                                setState(() {
-                                  FocusScope.of(context)
-                                      .requestFocus(nameFocusNode);
-                                  name.text =
-                                      Constants.user.fullName.toString();
-                                  FocusScope.of(context)
-                                      .requestFocus(phoneFocusNode);
-                                  phoneNumber.text =
-                                      Constants.user.mobile.toString();
-                                  FocusScope.of(context)
-                                      .requestFocus(emailFocusNode);
-                                  email.text = Constants.user.email.toString();
-                                });
-                                break;
-                            }
-                          },
-                        style: TextStyle(
-                            height: 1.5,
-                            color: Constants.msureRed,
-                            fontFamily: "Montserrat",
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14),
-                      ),
-                    ])),
-                const SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () async {
-                    try {
-                      await showCupertinoModalPopup(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoActionSheet(
-                              actions: [
-                                CupertinoActionSheetAction(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      _pickImage(ImageSource.gallery);
-                                    },
-                                    child: Text(
-                                      "Pick from gallery",
-                                      style: TextStyle(
-                                          color: Constants.transportHeading,
-                                          fontFamily: "Montserrat",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    )),
-                                CupertinoActionSheetAction(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      _pickImage(ImageSource.camera);
-                                    },
-                                    child: Text(
-                                      "Pick from camera",
-                                      style: TextStyle(
-                                          color: Constants.transportHeading,
-                                          fontFamily: "Montserrat",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    ))
-                              ],
-                              cancelButton: CupertinoActionSheetAction(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text(
-                                  "Cancel",
-                                  style: const TextStyle(
-                                      color: Colors.red,
-                                      fontFamily: "Montserrat",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                            );
-                          });
-                      setState(() {});
-                    } catch (ex) {}
-                  },
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 43,
-                        width: 43,
-                        decoration: BoxDecoration(
-                            image: image == null
-                                ? null
-                                : DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: FileImage(image!)),
-                            color: const Color(0xffDAD9D9),
-                            borderRadius: BorderRadius.circular(100)),
-                        child: Visibility(
-                            visible: image == null,
-                            child: Icon(Icons.person_outline_rounded)),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        "Add you picture",
-                        style: TextStyle(
-                            color: const Color(0xff808689),
-                            fontFamily: "Montserrat",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15),
-                      ),
-                      const Spacer(),
-                      InkWell(
-                        onTap: () async {
-                          if (image != null) {
-                            switch (await showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    CupertinoAlertDialog(
-                                      title: const Text("ALERT!"),
-                                      content: const Text(
-                                          "Are you sure you want to reset selected image?"),
-                                      actions: [
-                                        CupertinoDialogAction(
-                                            child: const Text(
-                                              "Cancel",
-                                              style: TextStyle(
-                                                  fontFamily: "Montserrat",
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop("No");
-                                            }),
-                                        CupertinoDialogAction(
-                                            child: const Text(
-                                              "RESET",
-                                              style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontFamily: "Montserrat",
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pop("reset");
-                                            }),
-                                      ],
-                                    ))) {
-                              case "reset":
-                                setState(() {
-                                  image = null;
-                                });
-                                break;
-                            }
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 15),
-                          decoration: BoxDecoration(
-                              color: Constants.msureRed,
-                              borderRadius: BorderRadius.circular(6)),
-                          child: const Text(
-                            "Reset",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                // RichText(
+                //     text: TextSpan(
+                //         text: "Please add below your personal details. ",
+                //         style: TextStyle(
+                //             height: 1.5,
+                //             color: Color(0xff808689),
+                //             fontFamily: "Montserrat",
+                //             fontWeight: FontWeight.w400,
+                //             fontSize: 14),
+                //         children: [
+                //       TextSpan(
+                //         text: "Use my MPOST personal Details",
+                //         recognizer: TapGestureRecognizer()
+                //           ..onTap = () async {
+                //             switch (await showDialog(
+                //                 context: context,
+                //                 builder: (BuildContext context) =>
+                //                     CupertinoAlertDialog(
+                //                       title: const Text("ALERT!"),
+                //                       content: const Text(
+                //                           "Are you sure you want to use MPOST personal details?"),
+                //                       actions: [
+                //                         CupertinoDialogAction(
+                //                             child: const Text(
+                //                               "Cancel",
+                //                               style: TextStyle(
+                //                                   fontFamily: "Montserrat",
+                //                                   fontSize: 14,
+                //                                   fontWeight: FontWeight.w600),
+                //                             ),
+                //                             onPressed: () {
+                //                               Navigator.of(context).pop("No");
+                //                             }),
+                //                         CupertinoDialogAction(
+                //                             child: const Text(
+                //                               "YES",
+                //                               style: TextStyle(
+                //                                   color: Colors.red,
+                //                                   fontFamily: "Montserrat",
+                //                                   fontSize: 14,
+                //                                   fontWeight: FontWeight.w600),
+                //                             ),
+                //                             onPressed: () {
+                //                               Navigator.of(context).pop("yes");
+                //                             }),
+                //                       ],
+                //                     ))) {
+                //               case "yes":
+                //                 setState(() {
+                //                   FocusScope.of(context)
+                //                       .requestFocus(nameFocusNode);
+                //                   name.text =
+                //                       Constants.user.fullName.toString();
+                //                   FocusScope.of(context)
+                //                       .requestFocus(phoneFocusNode);
+                //                   phoneNumber.text =
+                //                       Constants.user.mobile.toString();
+                //                   FocusScope.of(context)
+                //                       .requestFocus(emailFocusNode);
+                //                   email.text = Constants.user.email.toString();
+                //                 });
+                //                 break;
+                //             }
+                //           },
+                //         style: TextStyle(
+                //             height: 1.5,
+                //             color: Constants.msureRed,
+                //             fontFamily: "Montserrat",
+                //             fontWeight: FontWeight.w400,
+                //             fontSize: 14),
+                //       ),
+                //     ])),
+                // const SizedBox(
+                //   height: 20,
+                // ),
+                // InkWell(
+                //   onTap: () async {
+                //     try {
+                //       await showCupertinoModalPopup(
+                //           context: context,
+                //           builder: (BuildContext context) {
+                //             return CupertinoActionSheet(
+                //               actions: [
+                //                 CupertinoActionSheetAction(
+                //                     onPressed: () {
+                //                       Navigator.pop(context);
+                //                       _pickImage(ImageSource.gallery);
+                //                     },
+                //                     child: Text(
+                //                       "Pick from gallery",
+                //                       style: TextStyle(
+                //                           color: Constants.transportHeading,
+                //                           fontFamily: "Montserrat",
+                //                           fontSize: 16,
+                //                           fontWeight: FontWeight.w600),
+                //                     )),
+                //                 CupertinoActionSheetAction(
+                //                     onPressed: () {
+                //                       Navigator.pop(context);
+                //                       _pickImage(ImageSource.camera);
+                //                     },
+                //                     child: Text(
+                //                       "Pick from camera",
+                //                       style: TextStyle(
+                //                           color: Constants.transportHeading,
+                //                           fontFamily: "Montserrat",
+                //                           fontSize: 16,
+                //                           fontWeight: FontWeight.w600),
+                //                     ))
+                //               ],
+                //               cancelButton: CupertinoActionSheetAction(
+                //                 onPressed: () {
+                //                   Navigator.pop(context);
+                //                 },
+                //                 child: const Text(
+                //                   "Cancel",
+                //                   style: const TextStyle(
+                //                       color: Colors.red,
+                //                       fontFamily: "Montserrat",
+                //                       fontSize: 16,
+                //                       fontWeight: FontWeight.w600),
+                //                 ),
+                //               ),
+                //             );
+                //           });
+                //       setState(() {});
+                //     } catch (ex) {}
+                //   },
+                //   child: Row(
+                //     children: [
+                //       Container(
+                //         height: 43,
+                //         width: 43,
+                //         decoration: BoxDecoration(
+                //             image: image == null
+                //                 ? null
+                //                 : DecorationImage(
+                //                     fit: BoxFit.cover,
+                //                     image: FileImage(image!)),
+                //             color: const Color(0xffDAD9D9),
+                //             borderRadius: BorderRadius.circular(100)),
+                //         child: Visibility(
+                //             visible: image == null,
+                //             child: Icon(Icons.person_outline_rounded)),
+                //       ),
+                //       const SizedBox(
+                //         width: 20,
+                //       ),
+                //       Text(
+                //         "Add you picture",
+                //         style: TextStyle(
+                //             color: const Color(0xff808689),
+                //             fontFamily: "Montserrat",
+                //             fontWeight: FontWeight.w600,
+                //             fontSize: 15),
+                //       ),
+                //       const Spacer(),
+                //       InkWell(
+                //         onTap: () async {
+                //           if (image != null) {
+                //             switch (await showDialog(
+                //                 context: context,
+                //                 builder: (BuildContext context) =>
+                //                     CupertinoAlertDialog(
+                //                       title: const Text("ALERT!"),
+                //                       content: const Text(
+                //                           "Are you sure you want to reset selected image?"),
+                //                       actions: [
+                //                         CupertinoDialogAction(
+                //                             child: const Text(
+                //                               "Cancel",
+                //                               style: TextStyle(
+                //                                   fontFamily: "Montserrat",
+                //                                   fontSize: 14,
+                //                                   fontWeight: FontWeight.w600),
+                //                             ),
+                //                             onPressed: () {
+                //                               Navigator.of(context).pop("No");
+                //                             }),
+                //                         CupertinoDialogAction(
+                //                             child: const Text(
+                //                               "RESET",
+                //                               style: TextStyle(
+                //                                   color: Colors.red,
+                //                                   fontFamily: "Montserrat",
+                //                                   fontSize: 14,
+                //                                   fontWeight: FontWeight.w600),
+                //                             ),
+                //                             onPressed: () {
+                //                               Navigator.of(context)
+                //                                   .pop("reset");
+                //                             }),
+                //                       ],
+                //                     ))) {
+                //               case "reset":
+                //                 setState(() {
+                //                   image = null;
+                //                 });
+                //                 break;
+                //             }
+                //           }
+                //         },
+                //         child: Container(
+                //           padding: const EdgeInsets.symmetric(
+                //               vertical: 5, horizontal: 15),
+                //           decoration: BoxDecoration(
+                //               color: Constants.msureRed,
+                //               borderRadius: BorderRadius.circular(6)),
+                //           child: const Text(
+                //             "Reset",
+                //             style: TextStyle(color: Colors.white),
+                //           ),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -338,14 +373,14 @@ class _MSUREUpdateProfileState extends State<MSUREUpdateProfile> {
                     labelText: "Location",
                     controller: location,
                     focusNode: locationFocusNode),
-                // MSUREInputField(
-                //     labelText: "Beneficiary Phone",
-                //     controller: location,
-                //     focusNode: locationFocusNode),
-                // MSUREInputField(
-                //     labelText: "Beneficiary Name",
-                //     controller: location,
-                //     focusNode: locationFocusNode),
+                MSUREInputField(
+                    labelText: "Beneficiary Name",
+                    controller: beneficiaryName,
+                    focusNode: beneficiaryNameFocusNode),
+                MSUREInputField(
+                    labelText: "Beneficiary Phone",
+                    controller: beneficiaryPhone,
+                    focusNode: beneficiaryPhoneFocusNode),
               ],
             ),
           ),
@@ -357,11 +392,59 @@ class _MSUREUpdateProfileState extends State<MSUREUpdateProfile> {
           bottom: Platform.isAndroid,
           top: false,
           child: InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileUpdateSuccessMSURE()));
+            onTap: () async {
+              if (name.text.isEmpty) {
+                showSnackBar("Validation!", "Name can not be empty.", context);
+                return;
+              }
+              if (idNumber.text.isEmpty) {
+                showSnackBar(
+                    "Validation!", "ID Number can not be empty.", context);
+                return;
+              }
+              if (ntsNumber.text.isEmpty) {
+                ntsNumber.text = "null";
+              }
+              if (phoneNumber.text.isEmpty) {
+                showSnackBar(
+                    "Validation!", "Phone number can not be empty.", context);
+                return;
+              }
+              if (email.text.isEmpty) {
+                showSnackBar("Validation!", "Email can not be empty.", context);
+                return;
+              }
+              if (location.text.isEmpty) {
+                showSnackBar(
+                    "Validation!", "Location can not be empty.", context);
+                return;
+              }
+              if (beneficiaryName.text.isEmpty) {
+                beneficiaryName.text = "null";
+              }
+              if (beneficiaryPhone.text.isEmpty) {
+                beneficiaryPhone.text = "null";
+              }
+              Map<String, dynamic> payload = {
+                "name": name.text,
+                "surname": surname.text,
+                "phone": phoneNumber.text,
+                "email": email.text,
+                "location": location.text,
+                "ntsa_number": ntsNumber.text,
+                "national_id": idNumber.text,
+                "beneficiary_name": beneficiaryName.text,
+                "beneficiary_phone": beneficiaryPhone.text
+              };
+              final msureApplicationBloc =
+                  Provider.of<MSUREApplicationBloc>(context, listen: false);
+              if (await msureApplicationBloc.updateUser(payload)) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const ProfileUpdateSuccessMSURE()));
+              }
             },
             child: Container(
               width: Constants.getWidth(context),
@@ -374,7 +457,7 @@ class _MSUREUpdateProfileState extends State<MSUREUpdateProfile> {
                   ]),
                   borderRadius: BorderRadius.circular(4)),
               child: Text(
-                "Send",
+                "Update",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                     color: Colors.white,
@@ -448,8 +531,10 @@ class _ProfileUpdateSuccessMSUREState extends State<ProfileUpdateSuccessMSURE> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.popUntil(
-                      context, ModalRoute.withName('/msure_home'));
+                  // Navigator.popUntil(
+                  //     context, ModalRoute.withName('/msure_home'));
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/msure_home', (Route<dynamic> route) => false);
                   // Navigator.pushAndRemoveUntil(
                   //     context,
                   //     MaterialPageRoute(

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/msure_application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
+import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/msure/MsureModels/MsureUserModel.dart';
 import 'package:mpost/mpost/msure/about_msure.dart';
 import 'package:mpost/mpost/msure/contact_msure.dart';
@@ -30,19 +32,21 @@ class _MSUREHome2State extends State<MSUREHome2> {
   MsureUserModel user = MsureUserModel();
 
   _getUser() async {
-    final msureApplicationBloc =
-        Provider.of<MSUREApplicationBloc>(context, listen: false);
+    user = await SPLocalStorage.getMsureUserDetail();
+    setState(() {});
+    // final msureApplicationBloc =
+    //     Provider.of<MSUREApplicationBloc>(context, listen: false);
 
-    if (await msureApplicationBloc.msureLogin()) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.green,
-          content: const Text("Login Success!")));
-      user = await msureApplicationBloc.getUser();
-      setState(() {});
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.red, content: const Text("Login failed!")));
-    }
+    // if (await msureApplicationBloc.msureLogin()) {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //       backgroundColor: Colors.green,
+    //       content: const Text("Login Success!")));
+    //   user = await msureApplicationBloc.getUser();
+    //   setState(() {});
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //       backgroundColor: Colors.red, content: const Text("Login failed!")));
+    // }
   }
 
   @override
@@ -68,7 +72,13 @@ class _MSUREHome2State extends State<MSUREHome2> {
                 ),
                 InkWell(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => Home(),
+                        ),
+                        (route) => false,
+                      );
                     },
                     child: Icon(
                       CupertinoIcons.clear_circled,
@@ -122,7 +132,11 @@ class _MSUREHome2State extends State<MSUREHome2> {
                     ],
                   )),
                   InkWell(
-                    onTap: () {},
+                    onTap: () async {
+                      await SPLocalStorage.removeMsureToken();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/msure_splash', (Route<dynamic> route) => false);
+                    },
                     child: Stack(
                       alignment: Alignment.topRight,
                       children: [
@@ -223,9 +237,7 @@ class _MSUREHome2State extends State<MSUREHome2> {
                             ),
                           ),
                           InkWell(
-                            onTap: () {
-                              msureApplicationBloc.msureLogin();
-                            },
+                            onTap: () {},
                             child: Container(
                                 padding: const EdgeInsets.all(13),
                                 margin: const EdgeInsets.only(right: 20),

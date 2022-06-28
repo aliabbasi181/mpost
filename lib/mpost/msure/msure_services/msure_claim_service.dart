@@ -1,18 +1,21 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mpost/mpost/msure/msure_constants.dart';
 
 class MsureClaimService {
-  getClaimReasons() async {
+  Future<List<dynamic>> getClaimReasons() async {
+    List<dynamic> reasons = [];
     try {
       String url = MsureConstants.msureBaseUrl + "/reasons";
-      var response = await Dio()
-          .get(url, options: Options(headers: MsureConstants.msureheader));
+      var response = await Dio().get(url,
+          options: Options(headers: MsureConstants.msureheaderWithToken));
       if (response.statusCode == 200) {
-        print(response.data);
+        reasons = response.data['data'];
       }
     } catch (ex) {
       print(ex);
     }
+    return reasons;
   }
 
   createClaimReasons(var reason) async {
@@ -29,8 +32,8 @@ class MsureClaimService {
     }
   }
 
-  initiateClaim(var type, var relationToMainMember, var hospitalAdmissionDate,
-      var hospitalDischargeDate) async {
+  Future<bool> initiateClaim(var type, var relationToMainMember,
+      var hospitalAdmissionDate, var hospitalDischargeDate) async {
     try {
       String url = MsureConstants.msureBaseUrl + "/claims";
       var payload = {
@@ -43,10 +46,18 @@ class MsureClaimService {
           data: payload,
           options: Options(headers: MsureConstants.msureheaderWithToken));
       if (response.statusCode == 200) {
-        print(response.data);
+        if (response.data['errors'] != null) {
+          EasyLoading.showError(response.data['errors']);
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return false;
       }
     } catch (ex) {
       print(ex);
+      return false;
     }
   }
 
@@ -62,6 +73,23 @@ class MsureClaimService {
     } catch (ex) {
       print(ex);
     }
+  }
+
+  Future<List<dynamic>> getClaims() async {
+    List<dynamic> claims = [];
+    try {
+      String url = MsureConstants.msureBaseUrl + "/claims";
+      var response = await Dio().get(url,
+          options: Options(headers: MsureConstants.msureheaderWithToken));
+      if (response.statusCode == 200) {
+        claims = response.data;
+      }
+    } catch (ex) {
+      print(ex);
+      EasyLoading.showError("Error getting claim");
+      return claims;
+    }
+    return claims;
   }
 }
 

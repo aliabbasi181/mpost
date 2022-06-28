@@ -113,7 +113,7 @@ class _MSUREPaymentSelectState extends State<MSUREPaymentSelect> {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            _amountSelector(0, "20");
+                            _amountSelector(0, "25");
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 11),
@@ -123,7 +123,7 @@ class _MSUREPaymentSelectState extends State<MSUREPaymentSelect> {
                                     : Constants.msureRed,
                                 borderRadius: BorderRadius.circular(4)),
                             child: Text(
-                              "Ksh 20",
+                              "Ksh 25",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: amountKeys[0]
@@ -196,97 +196,97 @@ class _MSUREPaymentSelectState extends State<MSUREPaymentSelect> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            _amountSelector(3, "500");
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 11),
-                            decoration: BoxDecoration(
-                                color: amountKeys[3]
-                                    ? Colors.black.withOpacity(0.03)
-                                    : Constants.msureRed,
-                                borderRadius: BorderRadius.circular(4)),
-                            child: Text(
-                              "Ksh 500",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: amountKeys[3]
-                                      ? const Color(0xff808689)
-                                      : Colors.white,
-                                  fontFamily: "Montserrat",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            _amountSelector(4, "1000");
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 11),
-                            decoration: BoxDecoration(
-                                color: amountKeys[4]
-                                    ? Colors.black.withOpacity(0.03)
-                                    : Constants.msureRed,
-                                borderRadius: BorderRadius.circular(4)),
-                            child: Text(
-                              "Ksh 1000",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: amountKeys[4]
-                                      ? const Color(0xff808689)
-                                      : Colors.white,
-                                  fontFamily: "Montserrat",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            _amountSelector(5, "5000");
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 11),
-                            decoration: BoxDecoration(
-                                color: amountKeys[5]
-                                    ? Colors.black.withOpacity(0.03)
-                                    : Constants.msureRed,
-                                borderRadius: BorderRadius.circular(4)),
-                            child: Text(
-                              "Ksh 5000",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: amountKeys[5]
-                                      ? const Color(0xff808689)
-                                      : Colors.white,
-                                  fontFamily: "Montserrat",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // SizedBox(
+                  //   height: 15,
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: InkWell(
+                  //         onTap: () {
+                  //           _amountSelector(3, "500");
+                  //         },
+                  //         child: Container(
+                  //           padding: const EdgeInsets.symmetric(vertical: 11),
+                  //           decoration: BoxDecoration(
+                  //               color: amountKeys[3]
+                  //                   ? Colors.black.withOpacity(0.03)
+                  //                   : Constants.msureRed,
+                  //               borderRadius: BorderRadius.circular(4)),
+                  //           child: Text(
+                  //             "Ksh 500",
+                  //             textAlign: TextAlign.center,
+                  //             style: TextStyle(
+                  //                 color: amountKeys[3]
+                  //                     ? const Color(0xff808689)
+                  //                     : Colors.white,
+                  //                 fontFamily: "Montserrat",
+                  //                 fontWeight: FontWeight.w600,
+                  //                 fontSize: 15),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     SizedBox(
+                  //       width: 15,
+                  //     ),
+                  //     Expanded(
+                  //       child: InkWell(
+                  //         onTap: () {
+                  //           _amountSelector(4, "1000");
+                  //         },
+                  //         child: Container(
+                  //           padding: const EdgeInsets.symmetric(vertical: 11),
+                  //           decoration: BoxDecoration(
+                  //               color: amountKeys[4]
+                  //                   ? Colors.black.withOpacity(0.03)
+                  //                   : Constants.msureRed,
+                  //               borderRadius: BorderRadius.circular(4)),
+                  //           child: Text(
+                  //             "Ksh 1000",
+                  //             textAlign: TextAlign.center,
+                  //             style: TextStyle(
+                  //                 color: amountKeys[4]
+                  //                     ? const Color(0xff808689)
+                  //                     : Colors.white,
+                  //                 fontFamily: "Montserrat",
+                  //                 fontWeight: FontWeight.w600,
+                  //                 fontSize: 15),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     SizedBox(
+                  //       width: 15,
+                  //     ),
+                  //     Expanded(
+                  //       child: InkWell(
+                  //         onTap: () {
+                  //           _amountSelector(5, "5000");
+                  //         },
+                  //         child: Container(
+                  //           padding: const EdgeInsets.symmetric(vertical: 11),
+                  //           decoration: BoxDecoration(
+                  //               color: amountKeys[5]
+                  //                   ? Colors.black.withOpacity(0.03)
+                  //                   : Constants.msureRed,
+                  //               borderRadius: BorderRadius.circular(4)),
+                  //           child: Text(
+                  //             "Ksh 5000",
+                  //             textAlign: TextAlign.center,
+                  //             style: TextStyle(
+                  //                 color: amountKeys[5]
+                  //                     ? const Color(0xff808689)
+                  //                     : Colors.white,
+                  //                 fontFamily: "Montserrat",
+                  //                 fontWeight: FontWeight.w600,
+                  //                 fontSize: 15),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   const SizedBox(height: 30),
                   MSUREInputField(
                       labelText: "Enter amount ( Ksh 50 - Ksh 15,000)",

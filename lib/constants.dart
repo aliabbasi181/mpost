@@ -1,6 +1,10 @@
 // ignore_for_file: use_full_hex_values_for_flutter_colors
 
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mpost/models/user.dart';
 import 'package:mpost/models/virtual_address_model.dart';
 
@@ -56,6 +60,45 @@ class Constants {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
+  }
+
+  static showLoader(status) {
+    EasyLoading.show(
+        maskType: EasyLoadingMaskType.black,
+        dismissOnTap: false,
+        indicator: Container(
+          decoration: BoxDecoration(),
+          width: 250,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+          child: Row(
+            children: [
+              Platform.isAndroid
+                  ? Container(
+                      height: 30,
+                      width: 30,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 3,
+                      ),
+                    )
+                  : CupertinoActivityIndicator(
+                      color: Colors.white,
+                      radius: 15,
+                    ),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                  child: Text(
+                "$status...",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "Montserrat",
+                    fontSize: 16),
+              ))
+            ],
+          ),
+        ));
   }
 
   // {

@@ -78,7 +78,7 @@ class _MSUREInsuranceHomeState extends State<MSUREInsuranceHome> {
                           builder: (context) =>
                               const MPOSTInsurancePolicyStatus()));
                 },
-                image: "asset/images/buy-sell-icon.png",
+                image: "asset/images/policy_status_icon.png",
                 title: "Policy status"),
             const SizedBox(
               height: 10,
@@ -91,7 +91,7 @@ class _MSUREInsuranceHomeState extends State<MSUREInsuranceHome> {
                           builder: (context) =>
                               const MPOSTInsuranceAddCover()));
                 },
-                image: "asset/images/buy-sell-icon.png",
+                image: "asset/images/add_cover_icon.png",
                 title: "Add cover"),
             const SizedBox(
               height: 10,
@@ -100,21 +100,21 @@ class _MSUREInsuranceHomeState extends State<MSUREInsuranceHome> {
                 onTap: () {
                   Navigator.pushNamed(context, '/msure_insurance_claim');
                 },
-                image: "asset/images/buy-sell-icon.png",
+                image: "asset/images/claim_icon.png",
                 title: "Claim"),
             const SizedBox(
               height: 10,
             ),
             MSUREInsuranceDetailCard(
                 onTap: () {},
-                image: "asset/images/buy-sell-icon.png",
+                image: "asset/images/what_covered_icon.png",
                 title: "What is covered?"),
             const SizedBox(
               height: 10,
             ),
             MSUREInsuranceDetailCard(
                 onTap: () {},
-                image: "asset/images/buy-sell-icon.png",
+                image: "asset/images/faqs_icon.png",
                 title: "FAQs"),
           ],
         ),

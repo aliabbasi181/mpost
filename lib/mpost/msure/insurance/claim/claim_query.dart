@@ -1,16 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/msure/widgets.dart';
 import 'package:mpost/mpost/payment_status.dart';
 
 class MPOSTInsuranceClaimQuery extends StatefulWidget {
-  Widget claimMessageWidget;
-  MPOSTInsuranceClaimQuery({Key? key, required this.claimMessageWidget})
-      : super(key: key);
+  List<dynamic> claims;
+  MPOSTInsuranceClaimQuery({Key? key, required this.claims}) : super(key: key);
 
   @override
   State<MPOSTInsuranceClaimQuery> createState() =>
@@ -77,7 +78,152 @@ class _MPOSTInsuranceClaimQueryState extends State<MPOSTInsuranceClaimQuery> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.claimMessageWidget,
+            Container(
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: widget.claims.length == 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
+                      decoration: BoxDecoration(
+                          color: Constants.msureRed.withOpacity(0.07),
+                          borderRadius: BorderRadius.circular(6)),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.warning_amber_rounded,
+                                color: const Color(0xffD8364D),
+                                size: 30,
+                              ),
+                              const SizedBox(width: 15),
+                              Text(
+                                "No claims",
+                                style: TextStyle(
+                                    color: const Color(0xffD8364D),
+                                    fontFamily: "Montserrat",
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          Text(
+                            "You currently do not have any claims logged in your policy",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: widget.claims.length > 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
+                      decoration: BoxDecoration(
+                          color: Constants.msureRed.withOpacity(0.07),
+                          borderRadius: BorderRadius.circular(6)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                CupertinoIcons.doc_checkmark,
+                                color: const Color(0xffD8AB36),
+                                size: 30,
+                              ),
+                              const SizedBox(width: 15),
+                              Text(
+                                "Submitted claims",
+                                style: TextStyle(
+                                    color: const Color(0xffD8AB36),
+                                    fontFamily: "Montserrat",
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          Text(
+                            "You currently have one submitted claim in your policy awaiting approval.",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14),
+                          ),
+                          Divider(
+                            color: Colors.black.withOpacity(0.07),
+                            height: 30,
+                          ),
+                          RichText(
+                              textAlign: TextAlign.start,
+                              text: TextSpan(
+                                  text: "Have any questions? ",
+                                  style: TextStyle(
+                                      height: 1.5,
+                                      color: Color(0xff808689),
+                                      fontFamily: "Montserrat",
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 13),
+                                  children: [
+                                    TextSpan(
+                                      text: "Call us now.",
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          await showCupertinoModalPopup(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return CupertinoActionSheet(
+                                                  title: const Text(
+                                                      "Do you want to call +254 711 305097?"),
+                                                  cancelButton:
+                                                      CupertinoActionSheetAction(
+                                                    onPressed: () async {
+                                                      Navigator.pop(context);
+                                                      bool? res =
+                                                          await FlutterPhoneDirectCaller
+                                                              .callNumber(
+                                                                  "03404037045");
+                                                    },
+                                                    child: Text(
+                                                      "Call: +254 711 305097",
+                                                      style: TextStyle(
+                                                          color: Constants
+                                                              .primaryColor,
+                                                          fontFamily:
+                                                              "Montserrat",
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+                                        },
+                                      style: TextStyle(
+                                          height: 1.5,
+                                          color: Constants.primaryColor,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13),
+                                    ),
+                                  ])),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(
               height: 30,
             ),

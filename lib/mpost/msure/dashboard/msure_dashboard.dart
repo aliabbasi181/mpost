@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/msure/dashboard/all_payments.dart';
+import 'package:mpost/mpost/msure/insurance/claim/all_claims.dart';
 
 class MsureDashboard extends StatefulWidget {
   const MsureDashboard({Key? key}) : super(key: key);
@@ -388,13 +389,21 @@ class _MsureDashboardState extends State<MsureDashboard> {
                         fontWeight: FontWeight.w700,
                         fontSize: 16),
                   ),
-                  Text(
-                    "View all",
-                    style: TextStyle(
-                        color: Constants.primaryColor,
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MsureClaimsAllClaims()));
+                    },
+                    child: Text(
+                      "View all",
+                      style: TextStyle(
+                          color: Constants.primaryColor,
+                          fontFamily: "Montserrat",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13),
+                    ),
                   ),
                 ],
               ),

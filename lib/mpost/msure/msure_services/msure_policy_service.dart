@@ -5,10 +5,11 @@ class MsurePolicyService {
   getPolicies() async {
     try {
       String url = MsureConstants.msureBaseUrl + "/policy";
-      var response = await Dio()
-          .get(url, options: Options(headers: MsureConstants.msureheader));
+      var response = await Dio().get(url,
+          options: Options(headers: MsureConstants.msureheaderWithToken));
       if (response.statusCode == 200) {
         print(response.data);
+        return response.data['message'];
       }
     } catch (ex) {
       print(ex);
