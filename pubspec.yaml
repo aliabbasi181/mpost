@@ -59,6 +59,10 @@ dependencies:
   fl_chart: ^0.51.0
   flutter_easyloading: ^3.0.5
   shared_preferences: ^2.0.15
+  html: ^0.15.0
+  shimmer: ^2.0.0
+  cached_network_image: any
+  jiffy: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -154,6 +158,7 @@ flutter:
     - asset/images/faqs_icon.png
     - asset/images/claim_icon.png
     - asset/images/add_cover_icon.png
+    - asset/images/classified_image_placeholder.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

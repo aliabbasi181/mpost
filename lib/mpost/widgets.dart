@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/terms_of_service.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MenuIcon extends StatefulWidget {
   String title, image;
@@ -645,4 +646,30 @@ Widget wellcomeDialog(BuildContext context) {
       ),
     ],
   );
+}
+
+class ShimmerBox extends StatelessWidget {
+  double height, width;
+  Widget? child;
+  ShimmerBox({Key? key, required this.height, required this.width, this.child})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey[50]!,
+        highlightColor: Colors.grey[300]!,
+        period: Duration(seconds: 2),
+        child: Container(
+          child: child,
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(color: Colors.black.withOpacity(0.07), blurRadius: 20)
+              ],
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(height <= 50 ? 100 : 10)),
+        ));
+  }
 }

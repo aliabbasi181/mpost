@@ -1,9 +1,13 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/directory_application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/Directory/directory_models/DirectoryCategoryModel.dart';
 import 'package:mpost/mpost/Directory/single_category.dart';
 import 'package:mpost/mpost/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DirectoryCategories {
   String image, name;
@@ -675,49 +679,28 @@ class Directory extends StatefulWidget {
 }
 
 class _DirectoryState extends State<Directory> {
-  List<DirectoryCategories> directoryCategories = [];
-  List<DirectoryCategories> seacrchResults = [];
+  List<DirectoryCategoryModel> seacrchResults = [];
   TextEditingController searchResultController = TextEditingController();
+  List<DirectoryCategoryModel> categories = [];
   @override
   void initState() {
-    directoryCategories
-        .add(DirectoryCategories("asset/images/buy-sell-icon.png", "Vehicles"));
-    directoryCategories
-        .add(DirectoryCategories("asset/images/services-icon.png", "Property"));
-    directoryCategories.add(DirectoryCategories(
-        "asset/images/car-icon.png", "Mobile phone, Tablets"));
-    directoryCategories
-        .add(DirectoryCategories("asset/images/house-icon.png", "Electronics"));
-    directoryCategories.add(
-        DirectoryCategories("asset/images/buy-sell-icon.png", "Furniture"));
-    directoryCategories.add(DirectoryCategories(
-        "asset/images/services-icon.png", "Home Appliances"));
-    directoryCategories.add(
-        DirectoryCategories("asset/images/car-icon.png", "Health & Beauty"));
-    directoryCategories
-        .add(DirectoryCategories("asset/images/house-icon.png", "Fashion"));
-    directoryCategories.add(
-        DirectoryCategories("asset/images/house-icon.png", "Sport & Outdoor"));
-    directoryCategories
-        .add(DirectoryCategories("asset/images/house-icon.png", "Services"));
-    directoryCategories
-        .add(DirectoryCategories("asset/images/house-icon.png", "Jobs"));
-    directoryCategories
-        .add(DirectoryCategories("asset/images/house-icon.png", "Kids"));
-    directoryCategories.add(DirectoryCategories(
-        "asset/images/house-icon.png", "Agriculture & Food"));
-    directoryCategories.add(
-        DirectoryCategories("asset/images/house-icon.png", "Animal & Pets"));
-    directoryCategories.add(DirectoryCategories(
-        "asset/images/house-icon.png", "Commercial Equipement"));
-    directoryCategories.add(DirectoryCategories(
-        "asset/images/house-icon.png", "Repair & Contruction"));
+    _getDirectoryCategories();
     super.initState();
+  }
+
+  _getDirectoryCategories() async {
+    final directoryApplicationBloc =
+        Provider.of<DirectoryApplicationBloc>(context, listen: false);
+    categories = await directoryApplicationBloc.getCategories();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final directoryApplicationBloc =
+        Provider.of<DirectoryApplicationBloc>(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         bottom: Platform.isAndroid,
         child: Container(
@@ -743,11 +726,14 @@ class _DirectoryState extends State<Directory> {
                       width: 20,
                     ),
                     Expanded(
-                        child: Image(
-                            height: 18,
-                            width: 63,
-                            image: AssetImage(
-                                "asset/images/mpost_blue_logo.png"))),
+                        child: InkWell(
+                      onTap: () {},
+                      child: Image(
+                          height: 18,
+                          width: 63,
+                          image:
+                              AssetImage("asset/images/mpost_blue_logo.png")),
+                    )),
                     InkWell(
                       onTap: () {},
                       child: Stack(
@@ -804,8 +790,8 @@ class _DirectoryState extends State<Directory> {
                             onChanged: (value) {
                               seacrchResults = [];
                               setState(() {
-                                for (var item in directoryCategories) {
-                                  if (item.name
+                                for (var item in categories) {
+                                  if (item.name!
                                       .toLowerCase()
                                       .contains(value.toLowerCase())) {
                                     seacrchResults.add(item);
@@ -843,179 +829,204 @@ class _DirectoryState extends State<Directory> {
                 thickness: 0.5,
                 height: 0,
               ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Categories",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: "Montserrat",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16),
-                      ),
-                      Text(
-                        "Welcome to MPOST classifieds",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            color: const Color(0xff808689),
-                            fontFamily: "Montserrat",
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Visibility(
-                        visible: seacrchResults.isEmpty,
-                        child: Expanded(
-                          child: Container(
-                            child: GridView.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                        mainAxisSpacing: 15,
-                                        crossAxisSpacing: 15,
-                                        crossAxisCount: 3),
-                                itemCount: directoryCategories.length,
-                                itemBuilder: (BuildContext context, index) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SingleCategoryDirectory(
-                                                      category:
-                                                          directoryCategories[
-                                                              index])));
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 2),
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Image.asset(
-                                              directoryCategories[index].image,
-                                              width: 35,
-                                              height: 30,
+              Container(
+                padding: const EdgeInsets.only(top: 18, left: 18, right: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Categories",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: "Montserrat",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
+                    ),
+                    Text(
+                      "Welcome to MPOST classifieds",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: const Color(0xff808689),
+                          fontFamily: "Montserrat",
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
+              Visibility(
+                visible: directoryApplicationBloc.loading,
+                child: Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(18),
+                    child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                mainAxisSpacing: 15,
+                                crossAxisSpacing: 15,
+                                crossAxisCount: 3),
+                        itemCount: 9,
+                        itemBuilder: (BuildContext context, index) {
+                          return ShimmerBox(
+                            height: 200,
+                            width: 200,
+                          );
+                        }),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: !directoryApplicationBloc.loading,
+                child: Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(18),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Visibility(
+                          visible: seacrchResults.isEmpty,
+                          child: Expanded(
+                            child: Container(
+                              child: GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                          mainAxisSpacing: 15,
+                                          crossAxisSpacing: 15,
+                                          crossAxisCount: 3),
+                                  itemCount: categories.length,
+                                  itemBuilder: (BuildContext context, index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SingleCategoryDirectory(
+                                                      categoryModel:
+                                                          categories[index],
+                                                    )));
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2),
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Expanded(child: Icon(Icons.image)),
+                                            const SizedBox(
+                                              height: 8,
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          Flexible(
-                                            child: Text(
-                                              directoryCategories[index].name,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: "Montserrat",
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12),
+                                            Flexible(
+                                              child: Text(
+                                                categories[index]
+                                                    .name
+                                                    .toString(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: "Montserrat",
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 12),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: const Color(0xffDEDEDE),
-                                              width: 1),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.07),
-                                                blurRadius: 8)
                                           ],
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(6)),
-                                    ),
-                                  );
-                                }),
+                                        ),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color(0xffDEDEDE),
+                                                width: 1),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.07),
+                                                  blurRadius: 8)
+                                            ],
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(6)),
+                                      ),
+                                    );
+                                  }),
+                            ),
                           ),
                         ),
-                      ),
-                      Visibility(
-                        visible: seacrchResults.isNotEmpty,
-                        child: Expanded(
-                          child: Container(
-                            child: GridView.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                        mainAxisSpacing: 15,
-                                        crossAxisSpacing: 15,
-                                        crossAxisCount: 3),
-                                itemCount: seacrchResults.length,
-                                itemBuilder: (BuildContext context, index) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SingleCategoryDirectory(
-                                                      category: seacrchResults[
-                                                          index])));
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 2),
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Image.asset(
-                                              seacrchResults[index].image,
-                                              width: 35,
-                                              height: 30,
+                        Visibility(
+                          visible: seacrchResults.isNotEmpty,
+                          child: Expanded(
+                            child: Container(
+                              child: GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                          mainAxisSpacing: 15,
+                                          crossAxisSpacing: 15,
+                                          crossAxisCount: 3),
+                                  itemCount: seacrchResults.length,
+                                  itemBuilder: (BuildContext context, index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SingleCategoryDirectory(
+                                                      categoryModel:
+                                                          categories[index],
+                                                    )));
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2),
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Expanded(child: Icon(Icons.image)),
+                                            const SizedBox(
+                                              height: 8,
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          Flexible(
-                                            child: Text(
-                                              seacrchResults[index].name,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: "Montserrat",
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12),
+                                            Flexible(
+                                              child: Text(
+                                                seacrchResults[index]
+                                                    .name
+                                                    .toString(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: "Montserrat",
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 12),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: const Color(0xffDEDEDE),
-                                              width: 1),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.07),
-                                                blurRadius: 8)
                                           ],
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(6)),
-                                    ),
-                                  );
-                                }),
+                                        ),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color(0xffDEDEDE),
+                                                width: 1),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.07),
+                                                  blurRadius: 8)
+                                            ],
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(6)),
+                                      ),
+                                    );
+                                  }),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               )

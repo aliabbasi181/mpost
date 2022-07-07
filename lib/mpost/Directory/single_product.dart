@@ -2,34 +2,59 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
+import 'package:mpost/blocs/directory_application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/Directory/directory_constants.dart';
+import 'package:mpost/mpost/Directory/directory_models/DirectoryCategoryModel.dart';
+import 'package:mpost/mpost/Directory/directory_models/DirectoryProductModel.dart';
 import 'package:mpost/mpost/Directory/single_category.dart';
+import 'package:mpost/mpost/Directory/widgets.dart';
+import 'package:provider/provider.dart';
 
 class SingleProductDirectory extends StatefulWidget {
-  const SingleProductDirectory({Key? key}) : super(key: key);
+  DirectoryProductModel product;
+  DirectoryCategoryModel categoryModel;
+  SingleProductDirectory(
+      {Key? key, required this.product, required this.categoryModel})
+      : super(key: key);
 
   @override
   State<SingleProductDirectory> createState() => _SingleProductDirectoryState();
 }
 
 class _SingleProductDirectoryState extends State<SingleProductDirectory> {
-  List<String> images = [
-    "https://s3-prod.autonews.com/s3fs-public/HELLCAT-MAIN_0.jpg",
-    "https://di-uploads-pod18.dealerinspire.com/shavercdjr/uploads/2020/06/2020-dodge-charger-blue.jpg",
-    "https://cdn.jdpower.com/JDPA_2020%20Dodge%20Charger%20SRT%20Hellcat%20Widebody%20Blue%20Rear%20View.jpg",
-    "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/2020-dodge-charger-1599055642.jpg?crop=0.879xw:0.877xh;0.0780xw,0.0646xh&resize=640:*",
-    "https://www.dodge.com/content/dam/cross-regional/asean/dodge/common/charger-promotile-500x242.png.img.500.png",
-    "https://pictures.topspeed.com/IMG/crop/201902/2019-dodge-challenger-32_1600x0w.jpg",
-  ];
+  List<String> images = [];
   int selectedImage = 0;
+  List<DirectoryProductModel> relatedProducts = [];
+  DateTime? createdDate;
   @override
   void initState() {
+    widget.product.images!.forEach((element) {
+      images.add(element.src.toString());
+    });
     selectedImage = (images.length - 1);
+    createdDate = DateTime.parse(widget.product.dateCreated.toString());
+    print(createdDate);
+    if (widget.product.relatedIds!.length > 0) {
+      print(widget.product.relatedIds!.length);
+      _getRelatedProducts();
+    }
     super.initState();
+  }
+
+  _getRelatedProducts() async {
+    final directoryApplicationBloc =
+        Provider.of<DirectoryApplicationBloc>(context, listen: false);
+    relatedProducts = await directoryApplicationBloc
+        .getRelatedProducts(widget.product.relatedIds);
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final directoryApplicationBloc =
+        Provider.of<DirectoryApplicationBloc>(context);
     return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -110,7 +135,7 @@ class _SingleProductDirectoryState extends State<SingleProductDirectory> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Toyota Wish 2013 White",
+                                      widget.product.name.toString(),
                                       softWrap: true,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -125,7 +150,7 @@ class _SingleProductDirectoryState extends State<SingleProductDirectory> {
                                       height: 10,
                                     ),
                                     Text(
-                                      "KSh 1,180,000",
+                                      "KSh ${widget.product.price.toString()}",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           color: Color(0xff659447),
@@ -152,7 +177,7 @@ class _SingleProductDirectoryState extends State<SingleProductDirectory> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "Posted  over a month ago",
+                                              Jiffy(createdDate).fromNow(),
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                   color:
@@ -199,7 +224,7 @@ class _SingleProductDirectoryState extends State<SingleProductDirectory> {
                                         width: Constants.getWidth(context),
                                         child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
-                                            itemCount: 5,
+                                            itemCount: images.length,
                                             itemBuilder: ((context, index) {
                                               return InkWell(
                                                 onTap: () {
@@ -243,7 +268,9 @@ class _SingleProductDirectoryState extends State<SingleProductDirectory> {
                                       height: 7,
                                     ),
                                     Text(
-                                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut ut ullamcorper blandit lectus lorem libero eros scelerisque. Faucibus augue montes, ut sed ac morbi ultrices eros. Congue adipiscing auctor mollis magna dui. Blandit proin accumsan faucibus malesuada nam velit eget. \nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut ut ullamcorper blandit lectus lorem libero eros scelerisque. ",
+                                      DirectoryConstants.parseHtmlString(widget
+                                          .product.description
+                                          .toString()),
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           height: 2,
@@ -380,22 +407,47 @@ class _SingleProductDirectoryState extends State<SingleProductDirectory> {
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16),
                                     ),
-                                    Container(
-                                      height: 550,
-                                      child: GridView.builder(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 10),
-                                          gridDelegate:
-                                              SliverGridDelegateWithMaxCrossAxisExtent(
-                                                  childAspectRatio: 3 / 4.2,
-                                                  maxCrossAxisExtent: 200,
-                                                  mainAxisSpacing: 10,
-                                                  crossAxisSpacing: 10),
-                                          itemCount: 4,
-                                          itemBuilder:
-                                              (BuildContext context, index) {
-                                            return ProductCardDirectory();
-                                          }),
+                                    Visibility(
+                                      visible: directoryApplicationBloc.loading,
+                                      child: Container(
+                                        height: 225,
+                                        child: GridView.builder(
+                                            gridDelegate:
+                                                SliverGridDelegateWithMaxCrossAxisExtent(
+                                                    childAspectRatio: 3 / 4.2,
+                                                    maxCrossAxisExtent: 200,
+                                                    mainAxisSpacing: 10,
+                                                    crossAxisSpacing: 10),
+                                            itemCount: 2,
+                                            itemBuilder:
+                                                (BuildContext context, index) {
+                                              return ProductShimmer();
+                                            }),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible:
+                                          !directoryApplicationBloc.loading,
+                                      child: Container(
+                                        height: 225,
+                                        child: GridView.builder(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            gridDelegate:
+                                                SliverGridDelegateWithMaxCrossAxisExtent(
+                                                    childAspectRatio: 3 / 4.2,
+                                                    maxCrossAxisExtent: 200,
+                                                    mainAxisSpacing: 10,
+                                                    crossAxisSpacing: 10),
+                                            itemCount: 2,
+                                            itemBuilder:
+                                                (BuildContext context, index) {
+                                              return ProductCardDirectory(
+                                                product: relatedProducts[index],
+                                                category: widget.categoryModel,
+                                              );
+                                            }),
+                                      ),
                                     ),
                                   ],
                                 ),

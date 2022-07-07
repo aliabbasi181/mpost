@@ -3,6 +3,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mpost/blocs/application_bloc.dart';
+import 'package:mpost/blocs/directory_application_bloc.dart';
 import 'package:mpost/blocs/msure_application_bloc.dart';
 import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
 import 'package:mpost/mpost/msure/insurance/claim/claim_home.dart';
@@ -60,6 +61,9 @@ class _MyAppState extends State<MyApp> {
           ),
           ChangeNotifierProvider(
             create: (context) => MSUREApplicationBloc(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => DirectoryApplicationBloc(),
           )
         ],
         child: MaterialApp(

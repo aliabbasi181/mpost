@@ -1,14 +1,20 @@
 import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/mpost/Directory/directory.dart';
+import 'package:mpost/mpost/Directory/directory_models/DirectoryCategoryModel.dart';
+import 'package:mpost/mpost/Directory/directory_models/DirectoryProductModel.dart';
 import 'package:mpost/mpost/Directory/single_product.dart';
+import 'package:mpost/mpost/Directory/widgets.dart';
+import 'package:provider/provider.dart';
+
+import '../../blocs/directory_application_bloc.dart';
 
 class SingleCategoryDirectory extends StatefulWidget {
-  DirectoryCategories category;
-  SingleCategoryDirectory({Key? key, required this.category}) : super(key: key);
+  DirectoryCategoryModel categoryModel;
+  SingleCategoryDirectory({Key? key, required this.categoryModel})
+      : super(key: key);
 
   @override
   State<SingleCategoryDirectory> createState() =>
@@ -17,14 +23,30 @@ class SingleCategoryDirectory extends StatefulWidget {
 
 class _SingleCategoryDirectoryState extends State<SingleCategoryDirectory> {
   TextEditingController searchResultController = TextEditingController();
+  List<DirectoryProductModel> products = [];
+  double screenWidth = 0;
   @override
   void initState() {
+    _getProducts();
     super.initState();
+  }
+
+  _getProducts() async {
+    final directoryApplicationBloc =
+        Provider.of<DirectoryApplicationBloc>(context, listen: false);
+    products =
+        await directoryApplicationBloc.getAllProducts(widget.categoryModel.id);
+    print(products.length);
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final directoryApplicationBloc =
+        Provider.of<DirectoryApplicationBloc>(context);
+    screenWidth = Constants.getWidth(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         bottom: Platform.isAndroid,
         child: Container(
@@ -50,35 +72,37 @@ class _SingleCategoryDirectoryState extends State<SingleCategoryDirectory> {
                       width: 20,
                     ),
                     Expanded(
-                        child: Image(
-                            height: 18,
-                            width: 63,
+                        child: InkWell(
+                      onTap: () {
+                        print(screenWidth * 0.5);
+                      },
+                      child: Image(
+                          height: 18,
+                          width: 63,
+                          image:
+                              AssetImage("asset/images/mpost_blue_logo.png")),
+                    )),
+                    Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Image(
+                            height: 30,
+                            width: 30,
                             image: AssetImage(
-                                "asset/images/mpost_blue_logo.png"))),
-                    InkWell(
-                      onTap: () {},
-                      child: Stack(
-                        alignment: Alignment.topRight,
-                        children: [
-                          Image(
-                              height: 30,
-                              width: 30,
-                              image: AssetImage(
-                                  "asset/images/notification-icon.png")),
-                          Visibility(
-                            visible: false,
-                            child: Container(
-                              height: 15,
-                              width: 15,
-                              decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.white, width: 1),
-                                  color: const Color(0XFFFBE1515),
-                                  borderRadius: BorderRadius.circular(100)),
-                            ),
+                                "asset/images/notification-icon.png")),
+                        Visibility(
+                          visible: false,
+                          child: Container(
+                            height: 15,
+                            width: 15,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.white, width: 1),
+                                color: const Color(0XFFFBE1515),
+                                borderRadius: BorderRadius.circular(100)),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     )
                   ],
                 ),
@@ -205,7 +229,7 @@ class _SingleCategoryDirectoryState extends State<SingleCategoryDirectory> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            widget.category.name,
+                            widget.categoryModel.name.toString(),
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 color: Colors.black,
@@ -237,7 +261,7 @@ class _SingleCategoryDirectoryState extends State<SingleCategoryDirectory> {
                         height: 10,
                       ),
                       Visibility(
-                        visible: true,
+                        visible: directoryApplicationBloc.loading,
                         child: Expanded(
                           child: Container(
                             child: GridView.builder(
@@ -247,9 +271,30 @@ class _SingleCategoryDirectoryState extends State<SingleCategoryDirectory> {
                                         maxCrossAxisExtent: 200,
                                         mainAxisSpacing: 10,
                                         crossAxisSpacing: 10),
-                                itemCount: 50,
+                                itemCount: 4,
                                 itemBuilder: (BuildContext context, index) {
-                                  return ProductCardDirectory();
+                                  return ProductShimmer();
+                                }),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: true && !directoryApplicationBloc.loading,
+                        child: Expanded(
+                          child: Container(
+                            child: GridView.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithMaxCrossAxisExtent(
+                                        childAspectRatio: 3 / 4.2,
+                                        maxCrossAxisExtent: 200,
+                                        mainAxisSpacing: 10,
+                                        crossAxisSpacing: 10),
+                                itemCount: products.length,
+                                itemBuilder: (BuildContext context, index) {
+                                  return ProductCardDirectory(
+                                    category: widget.categoryModel,
+                                    product: products[index],
+                                  );
                                 }),
                           ),
                         ),
@@ -267,7 +312,9 @@ class _SingleCategoryDirectoryState extends State<SingleCategoryDirectory> {
                                         crossAxisSpacing: 10),
                                 itemCount: 50,
                                 itemBuilder: (BuildContext context, index) {
-                                  return ProductCardDirectory();
+                                  return ProductCardDirectory(
+                                      category: widget.categoryModel,
+                                      product: products[index]);
                                 }),
                           ),
                         ),
@@ -285,7 +332,11 @@ class _SingleCategoryDirectoryState extends State<SingleCategoryDirectory> {
 }
 
 class ProductCardDirectory extends StatefulWidget {
-  const ProductCardDirectory({Key? key}) : super(key: key);
+  DirectoryProductModel product;
+  DirectoryCategoryModel category;
+  ProductCardDirectory(
+      {Key? key, required this.product, required this.category})
+      : super(key: key);
 
   @override
   State<ProductCardDirectory> createState() => _ProductCardDirectoryState();
@@ -293,29 +344,61 @@ class ProductCardDirectory extends StatefulWidget {
 
 class _ProductCardDirectoryState extends State<ProductCardDirectory> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => SingleProductDirectory()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SingleProductDirectory(
+                      product: widget.product,
+                      categoryModel: widget.category,
+                    )));
       },
       child: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+              alignment: Alignment.center,
               height: 120,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                          "https://pictures.topspeed.com/IMG/crop/201902/2019-dodge-challenger-32_1600x0w.jpg"))),
+              decoration: BoxDecoration(),
+              child: CachedNetworkImage(
+                imageUrl: widget.product.images!.first.src.toString(),
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    Container(
+                  height: 10,
+                  width: 100,
+                  alignment: Alignment.center,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: LinearProgressIndicator(
+                      value: downloadProgress.progress,
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Constants.primaryColor),
+                    ),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Image(
+                    image: AssetImage(
+                        "asset/images/classified_image_placeholder.png")),
+                fit: BoxFit.cover,
+                height: 120,
+                width: 200,
+              ),
             ),
             SizedBox(
               height: 5,
             ),
             Text(
-              "Toyota",
+              widget.category.name.toString(),
               textAlign: TextAlign.left,
               style: TextStyle(
                   color: const Color(0xff9f9f9f),
@@ -327,7 +410,7 @@ class _ProductCardDirectoryState extends State<ProductCardDirectory> {
               height: 2,
             ),
             Text(
-              "Toyota Premio 2014 1.8 Toyota Premio 2014",
+              widget.product.name.toString(),
               softWrap: true,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -342,7 +425,7 @@ class _ProductCardDirectoryState extends State<ProductCardDirectory> {
               height: 5,
             ),
             Text(
-              "KSh 1,180,000",
+              "KSh ${widget.product.price.toString()}",
               textAlign: TextAlign.left,
               style: TextStyle(
                   color: Color(0xff659447),

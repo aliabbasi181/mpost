@@ -1,9 +1,6 @@
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/login_register/login.dart';
-import 'package:mpost/login_register/otp_verify.dart';
 import 'package:mpost/mpost/nav.dart';
 import 'package:mpost/mpost/widgets.dart';
 import 'package:mpost/widgets.dart';

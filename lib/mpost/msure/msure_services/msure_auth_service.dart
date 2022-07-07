@@ -18,20 +18,32 @@ class MsureAuthService {
       var response = await Dio()
           .post(url, options: Options(headers: headers), data: payload);
       if (response.statusCode == 200) {
+        MsureConstants.token = "Bearer " + response.data['token'];
+        SPLocalStorage.setMsureToken(MsureConstants.token);
+        MsureUserService msureUserService = MsureUserService();
+        Constants.showLoader("Validating...");
+        int status = await msureUserService.getUserStatus();
+        if (status == -1) {
+          EasyLoading.showError("You are Unauthorised.");
+          return false;
+        } else if (status == 0) {
+          EasyLoading.showError("An error occured while validationg...");
+          return false;
+        }
+        Constants.showLoader("Fetching details...");
+        await msureUserService.getUserDetail();
+        EasyLoading.dismiss();
         MsureConstants.token =
             "${response.data['token_type']} ${response.data['token']}";
         MsureConstants.setToken(
             "${response.data['token_type']} ${response.data['token']}");
-        SPLocalStorage.setMsureToken(MsureConstants.token);
-        MsureUserService msureUserService = MsureUserService();
-        Constants.showLoader("Fetching details...");
-        await msureUserService.getUserDetail();
-        EasyLoading.dismiss();
         return true;
       } else {
+        print(response.data);
         EasyLoading.showError("One or more details are incorrect.");
       }
     } catch (ex) {
+      print(ex);
       EasyLoading.showError("One or more details are incorrect.");
     }
     if (!EasyLoading.isShow) {

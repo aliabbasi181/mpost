@@ -15,6 +15,8 @@ class MsureUserService {
       var response = await Dio().get(url,
           options: Options(headers: MsureConstants.msureheaderWithToken));
       if (response.statusCode == 200) {
+        print(response.data);
+        //var json = jsonDecode(response.data);
         user = MsureUserModel.fromJson(response.data);
         await SPLocalStorage.setMsureUserDetail(user);
         user = await SPLocalStorage.getMsureUserDetail();
@@ -26,15 +28,27 @@ class MsureUserService {
     return user;
   }
 
-  getUserStatus() async {
+  Future<int> getUserStatus() async {
     try {
       String url = MsureConstants.msureBaseUrl + '/user-status';
-      var response = await Dio().get(url,
-          options: Options(headers: MsureConstants.msureheaderWithToken));
+      var response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': MsureConstants.token,
+          'Accept': 'application/json'
+        },
+      );
+      print(response.body);
       if (response.statusCode == 200) {
-        print(response.data);
+        return 1;
+      } else if (response.statusCode == 401) {
+        return -1;
+      } else {
+        return 0;
       }
-    } catch (ex) {}
+    } catch (ex) {
+      return 0;
+    }
   }
 
   Future<bool> updateUser(Map<String, dynamic> params) async {

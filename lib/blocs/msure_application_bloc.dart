@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
 import 'package:mpost/mpost/msure/MsureModels/MsureUserModel.dart';
 import 'package:mpost/mpost/msure/msure_services/msure_claim_service.dart';
 import 'package:mpost/mpost/msure/msure_services/msure_auth_service.dart';
@@ -62,12 +61,8 @@ class MSUREApplicationBloc with ChangeNotifier {
     return user;
   }
 
-  getUserStatus() async {
-    loading = true;
-    notifyListeners();
-    await msureUserService.getUserStatus();
-    loading = false;
-    notifyListeners();
+  Future<int> getUserStatus() async {
+    return await msureUserService.getUserStatus();
   }
 
   Future<bool> updateUser(Map<String, dynamic> params) async {

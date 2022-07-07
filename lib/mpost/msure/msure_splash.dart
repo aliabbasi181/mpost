@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mpost/blocs/msure_application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
@@ -32,7 +33,7 @@ class _MsureSplashScreenState extends State<MsureSplashScreen> {
     setState(() {});
     var token =
         SPLocalStorage.preferences!.getString(SPLocalStorage.keyMsureToken);
-    if (token == "null") {
+    if (token.toString() == "null") {
       setState(() {
         isLoggedIn = false;
         isLoading = false;
@@ -42,12 +43,21 @@ class _MsureSplashScreenState extends State<MsureSplashScreen> {
       MsureConstants.setToken("$token");
       final msureApplicationBloc =
           Provider.of<MSUREApplicationBloc>(context, listen: false);
-      await msureApplicationBloc.getUser();
-      setState(() {
-        isLoading = false;
-        isLoggedIn = true;
-      });
-      Navigator.pushNamed(context, '/msure_home');
+      if (await msureApplicationBloc.getUserStatus() != -1) {
+        await msureApplicationBloc.getUser();
+        setState(() {
+          isLoading = false;
+          isLoggedIn = true;
+        });
+        Navigator.pushNamed(context, '/msure_home');
+      } else {
+        EasyLoading.showError("You are Unauthorised.");
+        await SPLocalStorage.removeMsureToken();
+        setState(() {
+          isLoggedIn = false;
+          isLoading = false;
+        });
+      }
     }
   }
 

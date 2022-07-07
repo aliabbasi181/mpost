@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:mpost/constants.dart';
-import 'package:mpost/login_register/login.dart';
-import 'package:mpost/login_register/register.dart';
 import 'package:mpost/login_register/with_email/login_signup_email.dart';
 import 'package:mpost/login_register/with_phone/login_signup_phone.dart';
 import 'package:mpost/mpost/privacy_policy.dart';
