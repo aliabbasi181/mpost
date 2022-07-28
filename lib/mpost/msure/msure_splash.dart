@@ -8,6 +8,7 @@ import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
 import 'package:mpost/mpost/msure/authentication/msure_login.dart';
 import 'package:mpost/mpost/msure/authentication/msure_signup.dart';
+import 'package:mpost/mpost/msure/authentication/msure_signup_region_details.dart';
 import 'package:mpost/mpost/msure/msure_constants.dart';
 import 'package:provider/provider.dart';
 
@@ -79,7 +80,7 @@ class _MsureSplashScreenState extends State<MsureSplashScreen> {
             ),
             RichText(
                 text: TextSpan(
-                    text: "Insuarance ",
+                    text: "Insurance ",
                     style: TextStyle(
                       fontSize: 45,
                       fontWeight: FontWeight.w700,
@@ -206,7 +207,7 @@ class _MsureSplashScreenState extends State<MsureSplashScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const MSURESignup()));
+                                              const MSURESignupRegionDetail()));
                                 },
                                 child: Container(
                                   height: 100,

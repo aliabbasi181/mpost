@@ -205,6 +205,8 @@ class _MSURELoginState extends State<MSURELogin> {
           top: false,
           child: InkWell(
             onTap: () async {
+              // email.text = "Eliasbaya1223@gmail.com";
+              // password.text = "Eliasbaya@1223";
               if (email.text.isEmpty) {
                 showSnackBar("Validation!", "Email can not be empty.", context);
                 return;

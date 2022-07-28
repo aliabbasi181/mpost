@@ -13,7 +13,8 @@ import 'package:mpost/services/utilities.dart';
 import 'package:provider/provider.dart';
 
 class MSURESignup extends StatefulWidget {
-  const MSURESignup({Key? key}) : super(key: key);
+  var stageId;
+  MSURESignup({Key? key, required this.stageId}) : super(key: key);
 
   @override
   State<MSURESignup> createState() => _MSURESignupState();
@@ -51,6 +52,12 @@ class _MSURESignupState extends State<MSURESignup> {
         this.image = File(image.path);
       });
     } catch (ex) {}
+  }
+
+  @override
+  void initState() {
+    print(widget.stageId);
+    super.initState();
   }
 
   @override
@@ -316,7 +323,7 @@ class _MSURESignupState extends State<MSURESignup> {
                     controller: phoneNumber,
                     focusNode: phoneFocusNode),
                 MSUREInputField(
-                    labelText: "Email (optional)",
+                    labelText: "Email",
                     controller: email,
                     focusNode: emailFocusNode),
                 MSUREInputField(
@@ -446,11 +453,11 @@ class _MSURESignupState extends State<MSURESignup> {
                                     child: CupertinoDatePicker(
                                         mode: CupertinoDatePickerMode.date,
                                         initialDateTime: DateTime(
-                                            DateTime.now().year - 18, 12, 31),
+                                            DateTime.now().year, 12, 31),
                                         minimumDate: DateTime(
                                             DateTime.now().year - 100, 6, 1),
                                         maximumDate: DateTime(
-                                            DateTime.now().year - 18, 12, 31),
+                                            DateTime.now().year, 12, 31),
                                         onDateTimeChanged: (value) {
                                           selectedDate = value;
                                         }),
@@ -591,6 +598,11 @@ class _MSURESignupState extends State<MSURESignup> {
                     "Validation!", "Phone number can not be empty.", context);
                 return;
               }
+              if (!isNumeric(phoneNumber.text)) {
+                showSnackBar("Validation!",
+                    "Phone number should contains only numbers.", context);
+                return;
+              }
               if (email.text.isEmpty) {
                 showSnackBar("Validation!", "Email can not be empty.", context);
                 return;
@@ -615,7 +627,9 @@ class _MSURESignupState extends State<MSURESignup> {
                     "Password and confirm password are not same.", context);
                 return;
               }
-
+              phoneNumber.text = "254" +
+                  phoneNumber.text.substring(phoneNumber.text.length - 9);
+              print(phoneNumber.text);
               final msureApplicationBloc =
                   Provider.of<MSUREApplicationBloc>(context, listen: false);
               if (await msureApplicationBloc.msureRegister(
@@ -627,6 +641,7 @@ class _MSURESignupState extends State<MSURESignup> {
                   idNumber.text,
                   dateOfBirth,
                   location.text,
+                  widget.stageId,
                   ntsNumber.text)) {
                 Navigator.pushNamed(context, '/msure_home');
               }
@@ -655,5 +670,12 @@ class _MSURESignupState extends State<MSURESignup> {
         ),
       ),
     ]));
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
   }
 }

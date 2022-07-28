@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/msure/MsureModels/payments/MsurePaymentOverviewModel.dart';
 import 'package:mpost/mpost/msure/dashboard/msure_dashboard.dart';
 
 class MsureDashboardAllPayments extends StatefulWidget {
-  const MsureDashboardAllPayments({Key? key}) : super(key: key);
+  List<MsurePaymentOverviewModel> payments;
+  MsureDashboardAllPayments({Key? key, required this.payments})
+      : super(key: key);
 
   @override
   State<MsureDashboardAllPayments> createState() =>
@@ -13,6 +16,7 @@ class MsureDashboardAllPayments extends StatefulWidget {
 }
 
 class _MsureDashboardAllPaymentsState extends State<MsureDashboardAllPayments> {
+  List<MsurePaymentOverviewModel> payments = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,9 +80,11 @@ class _MsureDashboardAllPaymentsState extends State<MsureDashboardAllPayments> {
                 bottom: Platform.isAndroid,
                 child: ListView.builder(
                   padding: const EdgeInsets.only(top: 20),
-                  itemCount: 20,
+                  itemCount: widget.payments.length,
                   itemBuilder: (context, index) {
-                    return MsurePaymentTile();
+                    return MsurePaymentTile(
+                      payment: widget.payments[index],
+                    );
                   },
                 ),
               ))

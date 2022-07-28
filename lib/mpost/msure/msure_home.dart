@@ -5,12 +5,15 @@ import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
 import 'package:mpost/mpost/home.dart';
 import 'package:mpost/mpost/msure/MsureModels/MsureUserModel.dart';
+import 'package:mpost/mpost/msure/MsureModels/MsureUserServiceAccountModel.dart';
+import 'package:mpost/mpost/msure/MsureModels/MsureUserStatusModel.dart';
 import 'package:mpost/mpost/msure/about_msure.dart';
 import 'package:mpost/mpost/msure/contact_msure.dart';
 import 'package:mpost/mpost/msure/dashboard/msure_dashboard.dart';
 import 'package:mpost/mpost/msure/insurance/insurance_home.dart';
+import 'package:mpost/mpost/msure/msure_constants.dart';
 import 'package:mpost/mpost/msure/msure_payments/payments_select_amount.dart';
-import 'package:mpost/mpost/msure/update_profile.dart';
+import 'package:mpost/mpost/msure/single_msure_plain.dart';
 import 'package:mpost/mpost/msure/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -24,16 +27,21 @@ class MSUREHome2 extends StatefulWidget {
 class _MSUREHome2State extends State<MSUREHome2> {
   @override
   void initState() {
-    // TODO: implement initState
     _getUser();
+    _getUserStaus();
+    _getUserServiceAccount();
     super.initState();
   }
 
   MsureUserModel user = MsureUserModel();
+  MsureUserServiceAccountModel userServiceAccount =
+      MsureUserServiceAccountModel(
+          billingCycleAccount: BillingCycleAccount(amount: null));
+  MsureUserStatusModel userStatus =
+      MsureUserStatusModel(products: [Products(name: null)]);
 
   _getUser() async {
     user = await SPLocalStorage.getMsureUserDetail();
-    setState(() {});
     // final msureApplicationBloc =
     //     Provider.of<MSUREApplicationBloc>(context, listen: false);
 
@@ -47,6 +55,22 @@ class _MSUREHome2State extends State<MSUREHome2> {
     //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     //       backgroundColor: Colors.red, content: const Text("Login failed!")));
     // }
+  }
+
+  _getUserServiceAccount() async {
+    final msureApplicationBloc =
+        Provider.of<MSUREApplicationBloc>(context, listen: false);
+    userServiceAccount = await msureApplicationBloc.userServiceAccounts();
+    await Future.delayed(Duration(milliseconds: 200));
+    setState(() {});
+  }
+
+  _getUserStaus() async {
+    final msureApplicationBloc =
+        Provider.of<MSUREApplicationBloc>(context, listen: false);
+    userStatus = await msureApplicationBloc.getUserStatusData();
+    await Future.delayed(Duration(milliseconds: 150));
+    setState(() {});
   }
 
   @override
@@ -63,7 +87,7 @@ class _MSUREHome2State extends State<MSUREHome2> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Bus Tickets",
+                  "MSURE",
                   style: TextStyle(
                       color: Colors.white,
                       fontFamily: "Montserrat",
@@ -104,7 +128,7 @@ class _MSUREHome2State extends State<MSUREHome2> {
                         image: DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                                "https://static.toiimg.com/thumb/61343824.cms?width=170&height=240&imgsize=20882"))),
+                                "https://media.istockphoto.com/vectors/user-icon-flat-isolated-on-white-background-user-symbol-vector-vector-id1300845620?k=20&m=1300845620&s=612x612&w=0&h=f4XTZDAv7NPuZbG0habSpU0sNgECM0X7nbKzTUta3n8="))),
                   ),
                   SizedBox(
                     width: 16,
@@ -133,9 +157,8 @@ class _MSUREHome2State extends State<MSUREHome2> {
                   )),
                   InkWell(
                     onTap: () async {
-                      await SPLocalStorage.removeMsureToken();
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/msure_splash', (Route<dynamic> route) => false);
+                      print(MsureConstants.msureUserStatus.policies!
+                          .mshuaIndividual!.first.guid);
                     },
                     child: Stack(
                       alignment: Alignment.topRight,
@@ -170,26 +193,127 @@ class _MSUREHome2State extends State<MSUREHome2> {
                   ),
                 ],
               ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // Container(
+              //   width: Constants.getWidth(context),
+              //   height: 170,
+              //   decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(6),
+              //       gradient: LinearGradient(colors: [
+              //         const Color(0xff1582BE),
+              //         const Color(0xff00C0C4),
+              //       ])),
+              //   alignment: Alignment.center,
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Container(
+              //         child: Row(
+              //           crossAxisAlignment: CrossAxisAlignment.center,
+              //           children: [
+              //             Expanded(
+              //               child: Container(
+              //                 padding: const EdgeInsets.all(20),
+              //                 child: Column(
+              //                   crossAxisAlignment: CrossAxisAlignment.start,
+              //                   children: [
+              //                     Text(
+              //                       "Total insurance savings",
+              //                       style: TextStyle(
+              //                           color: Colors.white,
+              //                           fontFamily: "Montserrat",
+              //                           fontWeight: FontWeight.w600,
+              //                           fontSize: 13),
+              //                     ),
+              //                     Text(
+              //                       "Ksh 10,000",
+              //                       style: TextStyle(
+              //                           color: Colors.white,
+              //                           fontFamily: "Montserrat",
+              //                           fontWeight: FontWeight.w900,
+              //                           fontSize: 32),
+              //                     ),
+              //                     const SizedBox(
+              //                       height: 35,
+              //                     ),
+              //                     Text(
+              //                       "Total balance",
+              //                       style: TextStyle(
+              //                           color: Colors.white,
+              //                           fontFamily: "Montserrat",
+              //                           fontWeight: FontWeight.w600,
+              //                           fontSize: 13),
+              //                     ),
+              //                     Text(
+              //                       "Ksh 5,000",
+              //                       style: TextStyle(
+              //                           color: Colors.white,
+              //                           fontFamily: "Montserrat",
+              //                           fontWeight: FontWeight.w700,
+              //                           fontSize: 19),
+              //                     ),
+              //                   ],
+              //                 ),
+              //               ),
+              //             ),
+              //             InkWell(
+              //               onTap: () {},
+              //               child: Container(
+              //                   padding: const EdgeInsets.all(13),
+              //                   margin: const EdgeInsets.only(right: 20),
+              //                   decoration: BoxDecoration(
+              //                       borderRadius: BorderRadius.circular(100),
+              //                       color: Colors.white.withOpacity(1)),
+              //                   child: Icon(
+              //                     CupertinoIcons.add,
+              //                     color: Color(0xff1483BE),
+              //                     size: 35,
+              //                   )),
+              //             )
+              //           ],
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               SizedBox(
                 height: 20,
               ),
               Container(
                 width: Constants.getWidth(context),
-                height: 170,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
                     gradient: LinearGradient(colors: [
-                      const Color(0xff1582BE),
-                      const Color(0xff00C0C4),
+                      const Color(0xff187bb2),
+                      const Color(0xffcd2631),
                     ])),
-                alignment: Alignment.center,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
+                      padding: const EdgeInsets.fromLTRB(26, 13, 20, 13),
+                      child: Text(
+                        userStatus.products!.first.name.toString() == 'null'
+                            ? "Fetching plain..."
+                            : userStatus.products!.first.name.toString(),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: "Montserrat",
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14),
+                      ),
+                    ),
+                    Divider(
+                      height: 0,
+                      color: Colors.white.withOpacity(0.08),
+                      thickness: 1,
+                    ),
+                    Container(
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: Container(
@@ -198,125 +322,186 @@ class _MSUREHome2State extends State<MSUREHome2> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Total insurance savings",
+                                    "Total Insured",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: "Montserrat",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 11),
                                   ),
                                   Text(
-                                    "Ksh 10,000",
+                                    userServiceAccount.insuranceAmount
+                                                .toString() ==
+                                            'null'
+                                        ? "..."
+                                        : userServiceAccount.insuranceAmount
+                                            .toString(),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: "Montserrat",
-                                        fontWeight: FontWeight.w900,
+                                        fontWeight: FontWeight.w700,
                                         fontSize: 32),
                                   ),
                                   const SizedBox(
                                     height: 35,
                                   ),
-                                  Text(
-                                    "Total balance",
-                                    style: TextStyle(
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        CupertinoIcons.doc_text,
                                         color: Colors.white,
-                                        fontFamily: "Montserrat",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13),
-                                  ),
-                                  Text(
-                                    "Ksh 5,000",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "Montserrat",
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 19),
-                                  ),
+                                        size: 32,
+                                      ),
+                                      const SizedBox(
+                                        width: 19,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "COVERAGE TYPE",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: "Montserrat",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 11),
+                                          ),
+                                          Text(
+                                            "Personal cover",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: "Montserrat",
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  )
                                 ],
                               ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                                padding: const EdgeInsets.all(13),
-                                margin: const EdgeInsets.only(right: 20),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: Colors.white.withOpacity(1)),
-                                child: Icon(
-                                  CupertinoIcons.add,
-                                  color: Color(0xff1483BE),
-                                  size: 35,
-                                )),
+                          Container(
+                            padding: const EdgeInsets.all(23),
+                            margin: const EdgeInsets.only(top: 20, right: 20),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Colors.white.withOpacity(0.2)),
+                            child: const Image(
+                                width: 30,
+                                height: 30,
+                                image:
+                                    AssetImage("asset/images/heart_icon.png")),
                           )
                         ],
+                      ),
+                    ),
+                    Divider(
+                      height: 0,
+                      color: Colors.white.withOpacity(0.08),
+                      thickness: 1,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => SingleMSUREPlain(
+                        //               plain: "Basic",
+                        //             )));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(26, 13, 20, 13),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "View details",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "Montserrat",
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                            ),
+                            const Spacer(),
+                            Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(100)),
+                                child: Icon(
+                                  CupertinoIcons.arrow_right,
+                                  size: 16,
+                                ))
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MSUREUpdateProfile()));
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(13),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.black12),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.09),
-                            blurRadius: 20)
-                      ],
-                      borderRadius: BorderRadius.circular(6)),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.shield_moon_rounded,
-                        color: Constants.msureRed,
-                        size: 50,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Update your profile",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: "Montserrat",
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Complete your account registration by adding your personal details e.g ID number, NTSA number etc",
-                            style: TextStyle(
-                                height: 1.3,
-                                color: const Color(0xff808689),
-                                fontFamily: "Montserrat",
-                                fontWeight: FontWeight.w500,
-                                fontSize: 11),
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                ),
-              ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // InkWell(
+              //   onTap: () {
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const MSUREUpdateProfile()));
+              //   },
+              //   child: Container(
+              //     padding: const EdgeInsets.all(13),
+              //     decoration: BoxDecoration(
+              //         color: Colors.white,
+              //         border: Border.all(color: Colors.black12),
+              //         boxShadow: [
+              //           BoxShadow(
+              //               color: Colors.black.withOpacity(0.09),
+              //               blurRadius: 20)
+              //         ],
+              //         borderRadius: BorderRadius.circular(6)),
+              //     child: Row(
+              //       children: [
+              //         Icon(
+              //           Icons.shield_moon_rounded,
+              //           color: Constants.msureRed,
+              //           size: 50,
+              //         ),
+              //         SizedBox(
+              //           width: 20,
+              //         ),
+              //         Expanded(
+              //             child: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Text(
+              //               "Update your profile",
+              //               style: TextStyle(
+              //                   color: Colors.black,
+              //                   fontFamily: "Montserrat",
+              //                   fontWeight: FontWeight.w600,
+              //                   fontSize: 14),
+              //             ),
+              //             SizedBox(
+              //               height: 5,
+              //             ),
+              //             Text(
+              //               "Complete your account registration by adding your personal details e.g ID number, NTSA number etc",
+              //               style: TextStyle(
+              //                   height: 1.3,
+              //                   color: const Color(0xff808689),
+              //                   fontFamily: "Montserrat",
+              //                   fontWeight: FontWeight.w500,
+              //                   fontSize: 11),
+              //             ),
+              //           ],
+              //         )),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               const SizedBox(
                 height: 20,
               ),

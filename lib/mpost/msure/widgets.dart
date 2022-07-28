@@ -128,3 +128,66 @@ class _MSUREMenuCardState extends State<MSUREMenuCard> {
     );
   }
 }
+
+class MsureProfileTile extends StatelessWidget {
+  String label, title;
+  IconData leading;
+  VoidCallback? onAction;
+  bool isEdit;
+  MsureProfileTile(
+      {Key? key,
+      required this.label,
+      required this.title,
+      required this.leading,
+      required this.isEdit,
+      this.onAction})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Icon(
+            leading,
+            color: Constants.msureRed,
+            size: 26,
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label,
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                      fontSize: 12)),
+              Text(title,
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                      fontSize: 16)),
+            ],
+          )),
+          Visibility(
+            visible: false,
+            child: InkWell(
+              onTap: onAction,
+              child: Icon(
+                Icons.edit,
+                color: Colors.blue,
+                size: 25,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

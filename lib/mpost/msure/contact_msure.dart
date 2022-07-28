@@ -5,6 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/msure/widgets.dart';
+import 'package:mpost/mpost/widgets.dart';
+import 'package:provider/provider.dart';
+
+import '../../blocs/msure_application_bloc.dart';
 
 class MSUREContact extends StatefulWidget {
   const MSUREContact({Key? key}) : super(key: key);
@@ -62,7 +66,7 @@ class _MSUREContactState extends State<MSUREContact> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "About us",
+                  "Contact us",
                   style: TextStyle(
                       fontFamily: "Montserrat",
                       fontWeight: FontWeight.w700,
@@ -83,11 +87,11 @@ class _MSUREContactState extends State<MSUREContact> {
                 const SizedBox(
                   height: 20,
                 ),
-                MSUREInputField(
-                  labelText: "Names as per ID",
-                  controller: name,
-                  focusNode: nameFocusNode,
-                ),
+                // MSUREInputField(
+                //   labelText: "Names as per ID",
+                //   controller: name,
+                //   focusNode: nameFocusNode,
+                // ),
                 MSUREInputField(
                   labelText: "Subject",
                   controller: subject,
@@ -132,7 +136,26 @@ class _MSUREContactState extends State<MSUREContact> {
         child: SafeArea(
           bottom: Platform.isAndroid,
           child: InkWell(
-            onTap: () {},
+            onTap: () async {
+              if (subject.text.isEmpty) {
+                showSnackBar(
+                    "Validation!", "The body field is required.", context);
+                return;
+              }
+              if (message.text.isEmpty) {
+                showSnackBar(
+                    "Validation!", "The message field is required.", context);
+                return;
+              }
+              final msureApplicationBloc =
+                  Provider.of<MSUREApplicationBloc>(context, listen: false);
+              if (await msureApplicationBloc.postContact(
+                  subject.text, message.text)) {
+                setState(() {
+                  subject.text = message.text = '';
+                });
+              }
+            },
             child: Container(
               width: Constants.getWidth(context),
               margin: const EdgeInsets.only(top: 20),

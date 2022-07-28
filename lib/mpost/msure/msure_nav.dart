@@ -11,6 +11,7 @@ import 'package:mpost/mpost/msure/about_msure.dart';
 import 'package:mpost/mpost/msure/contact_msure.dart';
 import 'package:mpost/mpost/msure/home.dart';
 import 'package:mpost/mpost/msure/msure_home.dart';
+import 'package:mpost/mpost/msure/msure_profile.dart';
 import 'package:mpost/mpost/payment.dart';
 import 'package:mpost/mpost/profile/profile.dart';
 import 'package:mpost/services/notifications.dart';
@@ -19,7 +20,7 @@ import 'package:provider/provider.dart';
 const List<Widget> _screens = <Widget>[
   MSUREHome2(),
   MSUREHome(),
-  MSUREContact()
+  MSUREProfile()
 ];
 
 int _selectedIndex = 0;

@@ -1,3 +1,5 @@
+import 'package:mpost/mpost/msure/MsureModels/MsureUserStatusModel.dart';
+
 class MsureConstants {
   static String msureBaseUrl = "https://hidden-tor-50645.herokuapp.com/api/v1";
   static String token = '';
@@ -14,4 +16,6 @@ class MsureConstants {
       'Accept': 'application/json'
     };
   }
+
+  static MsureUserStatusModel msureUserStatus = MsureUserStatusModel();
 }

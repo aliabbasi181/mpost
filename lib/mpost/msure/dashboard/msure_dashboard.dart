@@ -1,9 +1,19 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/msure_application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/msure/MsureModels/MsureUserServiceAccountModel.dart';
+import 'package:mpost/mpost/msure/MsureModels/payments/DayPaymentModel.dart';
+import 'package:mpost/mpost/msure/MsureModels/payments/MonthPaymentModel.dart';
+import 'package:mpost/mpost/msure/MsureModels/payments/MsurePaymentOverviewModel.dart';
+import 'package:mpost/mpost/msure/MsureModels/payments/YearPaymentModel.dart';
 import 'package:mpost/mpost/msure/dashboard/all_payments.dart';
 import 'package:mpost/mpost/msure/insurance/claim/all_claims.dart';
+import 'package:mpost/mpost/msure/msure_payments/payments_select_amount.dart';
+import 'package:mpost/mpost/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class MsureDashboard extends StatefulWidget {
   const MsureDashboard({Key? key}) : super(key: key);
@@ -13,6 +23,152 @@ class MsureDashboard extends StatefulWidget {
 }
 
 class _MsureDashboardState extends State<MsureDashboard> {
+  List<MsurePaymentOverviewModel> payments = [];
+  bool loadingPayments = false;
+  bool loadingGraph = false;
+  List<FlSpot> graphSpots = [];
+  var graphSelection = "Monthly";
+  double maxYVal = 5;
+  MsureUserServiceAccountModel userServiceAccount =
+      MsureUserServiceAccountModel(
+          billingCycleAccount: BillingCycleAccount(amount: null));
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    //_getServiceAccountsData();
+    _getUserPayments("", true);
+    _getGraphPayment(graphSelection);
+    _getServiceAccountsData();
+    super.initState();
+  }
+
+  _getUserServiceAccount() async {
+    final msureApplicationBloc =
+        Provider.of<MSUREApplicationBloc>(context, listen: false);
+    userServiceAccount = await msureApplicationBloc.userServiceAccounts();
+    setState(() {});
+  }
+
+  _getServiceAccountsData() async {
+    final msureApplicationBloc =
+        Provider.of<MSUREApplicationBloc>(context, listen: false);
+    userServiceAccount = await msureApplicationBloc.userServiceAccounts();
+    setState(() {});
+  }
+
+  _getUserPayments(String key, bool first) async {
+    final msureApplicationBloc =
+        Provider.of<MSUREApplicationBloc>(context, listen: false);
+    setState(() {
+      first ? loadingPayments = true : null;
+    });
+    var data = await msureApplicationBloc.getUserPayments(key);
+    for (var item in data) {
+      payments.add(MsurePaymentOverviewModel.fromJson(item));
+    }
+    if (payments.length > 1) {
+      List<MsurePaymentOverviewModel> tempPayments = [];
+      for (var i = payments.length - 1; i >= 0; i--) {
+        tempPayments.add(payments[i]);
+      }
+      payments = tempPayments;
+    }
+    setState(() {
+      first ? loadingPayments = false : null;
+    });
+    print(payments.length);
+  }
+
+  _getGraphPayment(String key) async {
+    setState(() {
+      graphSpots.clear();
+    });
+    switch (key) {
+      case "Monthly":
+        key = "/month";
+        break;
+      case "Daily":
+        key = "/day";
+        break;
+      case "Yearly":
+        key = "/year";
+        break;
+      default:
+    }
+    final msureApplicationBloc =
+        Provider.of<MSUREApplicationBloc>(context, listen: false);
+    setState(() {
+      loadingGraph = true;
+    });
+    var data = await msureApplicationBloc.getUserPayments(key);
+    print(data);
+    switch (key) {
+      case "/month":
+        List<MonthPaymentModel> payments = [];
+
+        for (var item in data) {
+          payments.add(MonthPaymentModel.fromJson(item));
+        }
+        maxYVal = 2000;
+        payments.forEach((element) {
+          if (element.month!.toLowerCase().contains('january')) {
+            graphSpots.add(FlSpot(1, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('february')) {
+            graphSpots.add(FlSpot(2, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('march')) {
+            graphSpots.add(FlSpot(3, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('april')) {
+            graphSpots.add(FlSpot(4, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('may')) {
+            graphSpots.add(FlSpot(5, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('june')) {
+            graphSpots.add(FlSpot(6, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('july')) {
+            graphSpots.add(FlSpot(7, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('august')) {
+            graphSpots.add(FlSpot(8, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('september')) {
+            graphSpots.add(FlSpot(9, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('october')) {
+            graphSpots.add(FlSpot(10, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('november')) {
+            graphSpots.add(FlSpot(11, double.parse(element.amount.toString())));
+          } else if (element.month!.toLowerCase().contains('december')) {
+            graphSpots.add(FlSpot(12, double.parse(element.amount.toString())));
+          }
+        });
+        setState(() {});
+        break;
+      case "/day":
+        List<DayPaymentModel> payments = [];
+        for (var item in data) {
+          payments.add(DayPaymentModel.fromJson(item));
+        }
+        payments.forEach((element) {
+          print(element.date);
+        });
+        break;
+      case "/year":
+        List<YearPaymentModel> payments = [];
+        for (var item in data) {
+          payments.add(YearPaymentModel.fromJson(item));
+        }
+        payments.forEach((element) {
+          print(element.year);
+        });
+        break;
+      default:
+    }
+    setState(() {
+      loadingGraph = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,80 +249,86 @@ class _MsureDashboardState extends State<MsureDashboard> {
                               fontSize: 14),
                         ),
                         InkWell(
-                          onTap: () {
-                            showCupertinoModalPopup(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CupertinoActionSheet(
-                                    actions: [
-                                      CupertinoActionSheetAction(
-                                          onPressed: () {
-                                            Navigator.pop(context, "Male");
-                                          },
-                                          child: Text(
-                                            "Daily",
-                                            style: TextStyle(
-                                                color:
-                                                    Constants.transportHeading,
-                                                fontFamily: "Montserrat",
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600),
-                                          )),
-                                      CupertinoActionSheetAction(
-                                          onPressed: () {
-                                            Navigator.pop(context, "Female");
-                                          },
-                                          child: Text(
-                                            "Monthly",
-                                            style: TextStyle(
-                                                color:
-                                                    Constants.transportHeading,
-                                                fontFamily: "Montserrat",
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600),
-                                          )),
-                                      CupertinoActionSheetAction(
-                                          onPressed: () {
-                                            Navigator.pop(context, "Female");
-                                          },
-                                          child: Text(
-                                            "Yearly",
-                                            style: TextStyle(
-                                                color:
-                                                    Constants.transportHeading,
-                                                fontFamily: "Montserrat",
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600),
-                                          ))
-                                    ],
-                                    cancelButton: CupertinoActionSheetAction(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text(
-                                        "Close",
-                                        style: const TextStyle(
-                                            color: Colors.red,
-                                            fontFamily: "Montserrat",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
+                          onTap: () async {
+                            try {
+                              graphSelection = await showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CupertinoActionSheet(
+                                      actions: [
+                                        CupertinoActionSheetAction(
+                                            onPressed: () {
+                                              Navigator.pop(context, "Daily");
+                                            },
+                                            child: Text(
+                                              "Daily",
+                                              style: TextStyle(
+                                                  color: Constants
+                                                      .transportHeading,
+                                                  fontFamily: "Montserrat",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            )),
+                                        CupertinoActionSheetAction(
+                                            onPressed: () {
+                                              Navigator.pop(context, "Monthly");
+                                            },
+                                            child: Text(
+                                              "Monthly",
+                                              style: TextStyle(
+                                                  color: Constants
+                                                      .transportHeading,
+                                                  fontFamily: "Montserrat",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            )),
+                                        CupertinoActionSheetAction(
+                                            onPressed: () {
+                                              Navigator.pop(context, "Yearly");
+                                            },
+                                            child: Text(
+                                              "Yearly",
+                                              style: TextStyle(
+                                                  color: Constants
+                                                      .transportHeading,
+                                                  fontFamily: "Montserrat",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            ))
+                                      ],
+                                      cancelButton: CupertinoActionSheetAction(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          "Close",
+                                          style: const TextStyle(
+                                              color: Colors.red,
+                                              fontFamily: "Montserrat",
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                });
+                                    );
+                                  });
+                              _getGraphPayment(graphSelection);
+                              setState(() {});
+                            } catch (ex) {
+                              print(ex);
+                            }
                           },
                           child: Row(
                             children: [
                               Text(
-                                "Monthly",
+                                graphSelection,
                                 style: TextStyle(
                                     fontFamily: "Motnserrat",
                                     fontWeight: FontWeight.w500,
                                     fontSize: 11),
                               ),
                               Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                size: 16,
+                                CupertinoIcons.chevron_down,
+                                size: 14,
                               )
                             ],
                           ),
@@ -176,89 +338,119 @@ class _MsureDashboardState extends State<MsureDashboard> {
                     const SizedBox(
                       height: 40,
                     ),
-                    Container(
-                      height: 300,
-                      width: Constants.getWidth(context),
-                      child: LineChart(
-                        LineChartData(
-                            minX: 1,
-                            maxX: 5,
-                            maxY: 5,
-                            minY: 1,
-                            gridData: FlGridData(
-                                drawHorizontalLine: true,
-                                drawVerticalLine: false),
-                            borderData: FlBorderData(show: false),
-                            titlesData: FlTitlesData(
-                                show: true,
-                                topTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false)),
-                                rightTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false)),
-                                leftTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                        showTitles: true,
-                                        getTitlesWidget: (value, meta) {
-                                          switch (value.toDouble().toString()) {
-                                            case "1.0":
+                    Stack(
+                      children: [
+                        Container(
+                          height: 300,
+                          width: Constants.getWidth(context),
+                          child: LineChart(
+                            LineChartData(
+                                minX: 1,
+                                maxX: 12,
+                                maxY: maxYVal,
+                                minY: 1,
+                                gridData: FlGridData(
+                                    drawHorizontalLine: true,
+                                    drawVerticalLine: true),
+                                borderData: FlBorderData(show: false),
+                                titlesData: FlTitlesData(
+                                    show: true,
+                                    topTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
+                                    rightTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
+                                    leftTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                            reservedSize: 30,
+                                            showTitles: true,
+                                            getTitlesWidget: (value, meta) {
+                                              if (value == 1) {
+                                                return MsureDashGraphTitle(
+                                                    title: "");
+                                              }
+                                              var data =
+                                                  (value / 1000.0).toString() +
+                                                      "K";
                                               return MsureDashGraphTitle(
-                                                  title: "1K");
-                                            case "2.0":
-                                              return MsureDashGraphTitle(
-                                                  title: "2K");
-                                            case "3.0":
-                                              return MsureDashGraphTitle(
-                                                  title: "3K");
-                                            case "4.0":
-                                              return MsureDashGraphTitle(
-                                                  title: "5K");
-                                            case "5.0":
-                                              return MsureDashGraphTitle(
-                                                  title: "10K");
-                                          }
-                                          return const Text("");
-                                        })),
-                                bottomTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                        showTitles: true,
-                                        getTitlesWidget: (value, meta) {
-                                          switch (value.toDouble().toString()) {
-                                            case "1.0":
-                                              return MsureDashGraphTitle(
-                                                  title: "JAN");
-                                            case "2.0":
-                                              return MsureDashGraphTitle(
-                                                  title: "FAB");
-                                            case "3.0":
-                                              return MsureDashGraphTitle(
-                                                  title: "MAR");
-                                            case "4.0":
-                                              return MsureDashGraphTitle(
-                                                  title: "APR");
-                                            case "5.0":
-                                              return MsureDashGraphTitle(
-                                                  title: "MAY");
-                                          }
-                                          return const Text("");
-                                        }))),
-                            lineBarsData: [
-                              LineChartBarData(
-                                  spots: [
-                                    FlSpot(1, 1),
-                                    FlSpot(3.5, 3),
-                                    FlSpot(4, 4),
-                                    FlSpot(5, 5)
-                                  ],
-                                  color: Constants.msureRed,
-                                  barWidth: 3,
-                                  isCurved: true,
-                                  shadow: Shadow(
-                                      blurRadius: 10,
-                                      color: Constants.msureRed)),
-                            ]),
-                        swapAnimationCurve: Curves.bounceIn,
-                        swapAnimationDuration: Duration(seconds: 1),
-                      ),
+                                                  title: data);
+
+                                              // return const Text("");
+                                            })),
+                                    bottomTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                            showTitles: true,
+                                            getTitlesWidget: (value, meta) {
+                                              switch (
+                                                  value.toDouble().toString()) {
+                                                case "1.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "JAN");
+                                                case "2.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "FAB");
+                                                case "3.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "MAR");
+                                                case "4.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "APR");
+                                                case "5.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "MAY");
+                                                case "6.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "JUN");
+                                                case "7.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "JUL");
+                                                case "8.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "AUG");
+                                                case "9.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "SEP");
+                                                case "10.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "OCT");
+                                                case "11.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "NOV");
+                                                case "12.0":
+                                                  return MsureDashGraphTitle(
+                                                      title: "DEC");
+                                              }
+                                              return const Text("");
+                                            }))),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                      spots: graphSpots,
+                                      //color: Constants.msureRed,
+                                      barWidth: 3,
+                                      isCurved: true,
+                                      shadow: Shadow(
+                                          blurRadius: 10,
+                                          color: Constants.msureRed)),
+                                ]),
+                            swapAnimationCurve: Curves.easeIn,
+                            swapAnimationDuration: Duration(seconds: 1),
+                          ),
+                        ),
+                        Visibility(
+                          visible: loadingGraph,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.1)),
+                            height: 300,
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 50,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        )
+                      ],
                     )
                   ],
                 ),
@@ -274,29 +466,79 @@ class _MsureDashboardState extends State<MsureDashboard> {
                         fontWeight: FontWeight.w700,
                         fontSize: 16),
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  MsureDashboardAllPayments()));
-                    },
-                    child: Text(
-                      "View all",
-                      style: TextStyle(
-                          color: Constants.primaryColor,
-                          fontFamily: "Montserrat",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13),
-                    ),
+                  Row(
+                    children: [
+                      Visibility(
+                        visible: !loadingPayments,
+                        child: InkWell(
+                          onTap: () {
+                            try {
+                              //Timestamp stamp = Timestamp.now();
+                              //DateTime date = stamp.toDate();
+                            } catch (ex) {
+                              print(ex);
+                            }
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MsureDashboardAllPayments(
+                                          payments: payments,
+                                        )));
+                          },
+                          child: Text(
+                            "View all",
+                            style: TextStyle(
+                                color: Constants.primaryColor,
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                          visible: loadingPayments,
+                          child: ShimmerBox(height: 20, width: 60)),
+                    ],
                   ),
                 ],
               ),
               const SizedBox(height: 20),
-              MsurePaymentTile(),
-              MsurePaymentTile(),
-              MsurePaymentTile(),
+              Visibility(
+                visible: loadingPayments,
+                child: Column(
+                  children: [
+                    ShimmerBox(height: 60, width: Constants.getWidth(context)),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ShimmerBox(height: 60, width: Constants.getWidth(context)),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ShimmerBox(height: 60, width: Constants.getWidth(context)),
+                  ],
+                ),
+              ),
+              Visibility(
+                  visible: payments.length >= 1,
+                  child: MsurePaymentTile(
+                    payment: payments.isNotEmpty
+                        ? payments[0]
+                        : MsurePaymentOverviewModel(),
+                  )),
+              Visibility(
+                  visible: payments.length >= 2,
+                  child: MsurePaymentTile(
+                      payment: payments.isNotEmpty
+                          ? payments[1]
+                          : MsurePaymentOverviewModel())),
+              Visibility(
+                  visible: payments.length >= 3,
+                  child: MsurePaymentTile(
+                      payment: payments.isNotEmpty
+                          ? payments[2]
+                          : MsurePaymentOverviewModel())),
               const SizedBox(height: 20),
               Container(
                 width: Constants.getWidth(context),
@@ -331,7 +573,7 @@ class _MsureDashboardState extends State<MsureDashboard> {
                                         fontSize: 13),
                                   ),
                                   Text(
-                                    "Ksh 10,000",
+                                    "Ksh ${userServiceAccount.insuranceAmount == null ? "..." : userServiceAccount.insuranceAmount.toString()}",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: "Montserrat",
@@ -350,7 +592,7 @@ class _MsureDashboardState extends State<MsureDashboard> {
                                         fontSize: 13),
                                   ),
                                   Text(
-                                    "Ksh 5,000",
+                                    "Ksh ${userServiceAccount.billingCycleAccount == null ? "..." : userServiceAccount.billingCycleAccount!.amount.toString()}",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: "Montserrat",
@@ -361,17 +603,26 @@ class _MsureDashboardState extends State<MsureDashboard> {
                               ),
                             ),
                           ),
-                          Container(
-                              padding: const EdgeInsets.all(13),
-                              margin: const EdgeInsets.only(right: 20),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: Colors.white.withOpacity(1)),
-                              child: Icon(
-                                CupertinoIcons.add,
-                                color: Color(0xff1483BE),
-                                size: 35,
-                              ))
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          MSUREPaymentSelect()));
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.all(13),
+                                margin: const EdgeInsets.only(right: 20),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.white.withOpacity(1)),
+                                child: Icon(
+                                  CupertinoIcons.add,
+                                  color: Color(0xff1483BE),
+                                  size: 35,
+                                )),
+                          )
                         ],
                       ),
                     ),
@@ -430,15 +681,20 @@ class MsureDashGraphTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        alignment: Alignment.center,
         child: Text(
-      title,
-      style: TextStyle(color: Color(0xff808689), fontSize: 12),
-    ));
+          title,
+          style: TextStyle(
+              color: Color(0xff808689),
+              fontSize: 12,
+              fontWeight: FontWeight.w600),
+        ));
   }
 }
 
 class MsurePaymentTile extends StatelessWidget {
-  const MsurePaymentTile({Key? key}) : super(key: key);
+  MsurePaymentOverviewModel payment;
+  MsurePaymentTile({Key? key, required this.payment}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -458,10 +714,10 @@ class MsurePaymentTile extends StatelessWidget {
                 color: Constants.msureRed.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(100),
               ),
-              child: Image(
-                image: AssetImage("asset/images/services-icon.png"),
-                height: 20,
-                width: 20,
+              child: Icon(
+                Icons.payment_outlined,
+                size: 20,
+                color: Constants.msureRed,
               )),
           const SizedBox(
             width: 18,
@@ -478,7 +734,8 @@ class MsurePaymentTile extends StatelessWidget {
                       fontSize: 15),
                 ),
                 Text(
-                  "12/08/2021",
+                  DateFormat('yyyy-MM-dd')
+                      .format(DateTime.parse(payment.updatedAt.toString())),
                   style: TextStyle(
                       color: const Color(0xff808689),
                       fontFamily: "Montserrat",
@@ -489,7 +746,7 @@ class MsurePaymentTile extends StatelessWidget {
             ),
           ),
           Text(
-            "KSH 500",
+            "KSH ${payment.amount}",
             style: TextStyle(
                 fontFamily: "Montserrat",
                 fontWeight: FontWeight.w700,

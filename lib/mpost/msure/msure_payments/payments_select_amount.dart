@@ -1,10 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/msure_application_bloc.dart';
 import 'package:mpost/constants.dart';
+import 'package:mpost/mpost/SharedPreferences/shared_preferences.dart';
+import 'package:mpost/mpost/msure/MsureModels/MsureProductModel.dart';
+import 'package:mpost/mpost/msure/MsureModels/MsureUserModel.dart';
+import 'package:mpost/mpost/msure/msure_constants.dart';
 import 'package:mpost/mpost/msure/msure_payments/payment_processing.dart';
 import 'package:mpost/mpost/msure/widgets.dart';
 import 'package:mpost/mpost/payment_status.dart';
+import 'package:provider/provider.dart';
 
 class MSUREPaymentSelect extends StatefulWidget {
   const MSUREPaymentSelect({Key? key}) : super(key: key);
@@ -18,6 +24,8 @@ class _MSUREPaymentSelectState extends State<MSUREPaymentSelect> {
   TextEditingController paymentController = TextEditingController();
   TextEditingController mpesaNumberController = TextEditingController();
   List<bool> amountKeys = [true, true, true, true, true, true];
+  List<MsureProductModel> products = [];
+  int recomended = 0;
   _amountSelector(var index, var amount) {
     setState(() {
       for (var i = 0; i < 6; i++) {
@@ -26,7 +34,7 @@ class _MSUREPaymentSelectState extends State<MSUREPaymentSelect> {
         else
           amountKeys[i] = true;
       }
-      paymentController.text = amount;
+      paymentController.text = amount.toString();
       //FocusScope.of(context).requestFocus(paymentFocusNode);
     });
   }
@@ -34,7 +42,23 @@ class _MSUREPaymentSelectState extends State<MSUREPaymentSelect> {
   @override
   void initState() {
     mpesaNumberController.text = Constants.user.mobile.toString();
+    _getProduct();
+    _getContributionAmount();
     super.initState();
+  }
+
+  _getProduct() async {
+    final msureApplicationBloc =
+        Provider.of<MSUREApplicationBloc>(context, listen: false);
+    products = await msureApplicationBloc.getProducts();
+  }
+
+  _getContributionAmount() async {
+    MsureUserModel user = await SPLocalStorage.getMsureUserDetail();
+    recomended = int.parse(user.stage!.dailyContribution.toString());
+    amountKeys[1] = false;
+    paymentController.text = recomended.toString();
+    setState(() {});
   }
 
   @override
@@ -142,7 +166,7 @@ class _MSUREPaymentSelectState extends State<MSUREPaymentSelect> {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            _amountSelector(1, "50");
+                            _amountSelector(1, recomended);
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 11),
@@ -152,7 +176,7 @@ class _MSUREPaymentSelectState extends State<MSUREPaymentSelect> {
                                     : Constants.msureRed,
                                 borderRadius: BorderRadius.circular(4)),
                             child: Text(
-                              "Ksh 50",
+                              "Ksh $recomended",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: amountKeys[1]
@@ -347,30 +371,40 @@ class _MSUREPaymentSelectState extends State<MSUREPaymentSelect> {
               bottom: Platform.isAndroid,
               top: false,
               child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MPOSTPaymentSuccessGeneral(
-                              buttonText: "Continue to Home",
-                              message:
-                                  "Your payment was successful! You can now continue using Msure",
-                              onTap: () {
-                                Navigator.popUntil(context,
-                                    ModalRoute.withName('/msure_home'));
-                              },
-                              title: "Payment successful")));
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => MPOSTPaymentFailedGeneral(
-                  //             buttonText: "Try again",
-                  //             message:
-                  //                 "Oh no! Something went wrong. We aren’t able to process your payment. Please try again",
-                  //             onTap: () {
-                  //               Navigator.pop(context);
-                  //             },
-                  //             title: "Payment failed")));
+                onTap: () async {
+                  final msureApplicationBloc =
+                      Provider.of<MSUREApplicationBloc>(context, listen: false);
+                  if (await msureApplicationBloc.buyPolicy(
+                      paymentController.text,
+                      mpesaNumberController.text,
+                      MsureConstants
+                          .msureUserStatus.policies!.mshuaIndividual!.first.guid
+                          .toString())) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MPOSTPaymentSuccessGeneral(
+                                buttonText: "Continue to Home",
+                                message:
+                                    "Your payment request was sent Successfully.",
+                                onTap: () {
+                                  Navigator.popUntil(context,
+                                      ModalRoute.withName('/msure_home'));
+                                },
+                                title: "Payment initiate successful")));
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MPOSTPaymentFailedGeneral(
+                                buttonText: "Try again",
+                                message:
+                                    "Oh no! Something went wrong. We aren’t able to process your payment. Please try again",
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                title: "Payment failed")));
+                  }
                 },
                 child: Container(
                   width: Constants.getWidth(context),

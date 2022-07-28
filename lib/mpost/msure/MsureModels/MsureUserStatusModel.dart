@@ -1,6 +1,5 @@
 class MsureUserStatusModel {
   bool? ussdWhitelistActive;
-  String? ussdWhitelist;
   String? guid;
   String? msisdn;
   String? nationalId;
@@ -13,13 +12,16 @@ class MsureUserStatusModel {
   String? paymentMethod;
   bool? registered;
   String? experiment;
+  int? upsellNightCover;
+  String? upsellCoverEnd;
+  int? monthlyMobileMoneyPremium;
+  int? monthlyAirtimePremium;
+  Policies? policies;
   List<Premiums>? premiums;
-  String? debitOrders;
   String? displayDateFormatPattern;
   String? callCentreNumber;
   String? serviceName;
   bool? checkAgeRange;
-  String? languages;
   String? ussdShortcode;
   String? whatsAppNumber;
   int? minimumAge;
@@ -33,7 +35,6 @@ class MsureUserStatusModel {
 
   MsureUserStatusModel(
       {this.ussdWhitelistActive,
-      this.ussdWhitelist,
       this.guid,
       this.msisdn,
       this.nationalId,
@@ -46,13 +47,16 @@ class MsureUserStatusModel {
       this.paymentMethod,
       this.registered,
       this.experiment,
+      this.upsellNightCover,
+      this.upsellCoverEnd,
+      this.monthlyMobileMoneyPremium,
+      this.monthlyAirtimePremium,
+      this.policies,
       this.premiums,
-      this.debitOrders,
       this.displayDateFormatPattern,
       this.callCentreNumber,
       this.serviceName,
       this.checkAgeRange,
-      this.languages,
       this.ussdShortcode,
       this.whatsAppNumber,
       this.minimumAge,
@@ -66,7 +70,6 @@ class MsureUserStatusModel {
 
   MsureUserStatusModel.fromJson(Map<String, dynamic> json) {
     ussdWhitelistActive = json['ussd_whitelist_active'];
-    ussdWhitelist = json['ussd_whitelist'];
     guid = json['guid'];
     msisdn = json['msisdn'];
     nationalId = json['national_id'];
@@ -79,18 +82,23 @@ class MsureUserStatusModel {
     paymentMethod = json['payment_method'];
     registered = json['registered'];
     experiment = json['experiment'];
+    upsellNightCover = json['upsell_night_cover'];
+    upsellCoverEnd = json['upsell_cover_end'];
+    monthlyMobileMoneyPremium = json['monthly_mobile_money_premium'];
+    monthlyAirtimePremium = json['monthly_airtime_premium'];
+    policies = json['policies'] != null
+        ? new Policies.fromJson(json['policies'])
+        : null;
     if (json['premiums'] != null) {
       premiums = <Premiums>[];
       json['premiums'].forEach((v) {
         premiums!.add(new Premiums.fromJson(v));
       });
     }
-    debitOrders = json['debitOrders'];
     displayDateFormatPattern = json['display_date_format_pattern'];
     callCentreNumber = json['call_centre_number'];
     serviceName = json['service_name'];
     checkAgeRange = json['check_age_range'];
-    languages = json['languages'];
     ussdShortcode = json['ussd_shortcode'];
     whatsAppNumber = json['whats_app_number'];
     minimumAge = json['minimum_age'];
@@ -112,7 +120,6 @@ class MsureUserStatusModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['ussd_whitelist_active'] = this.ussdWhitelistActive;
-    data['ussd_whitelist'] = this.ussdWhitelist;
     data['guid'] = this.guid;
     data['msisdn'] = this.msisdn;
     data['national_id'] = this.nationalId;
@@ -125,15 +132,20 @@ class MsureUserStatusModel {
     data['payment_method'] = this.paymentMethod;
     data['registered'] = this.registered;
     data['experiment'] = this.experiment;
+    data['upsell_night_cover'] = this.upsellNightCover;
+    data['upsell_cover_end'] = this.upsellCoverEnd;
+    data['monthly_mobile_money_premium'] = this.monthlyMobileMoneyPremium;
+    data['monthly_airtime_premium'] = this.monthlyAirtimePremium;
+    if (this.policies != null) {
+      data['policies'] = this.policies!.toJson();
+    }
     if (this.premiums != null) {
       data['premiums'] = this.premiums!.map((v) => v.toJson()).toList();
     }
-    data['debitOrders'] = this.debitOrders;
     data['display_date_format_pattern'] = this.displayDateFormatPattern;
     data['call_centre_number'] = this.callCentreNumber;
     data['service_name'] = this.serviceName;
     data['check_age_range'] = this.checkAgeRange;
-    data['languages'] = this.languages;
     data['ussd_shortcode'] = this.ussdShortcode;
     data['whats_app_number'] = this.whatsAppNumber;
     data['minimum_age'] = this.minimumAge;
@@ -152,39 +164,188 @@ class MsureUserStatusModel {
   }
 }
 
-class Premiums {
+class Policies {
+  List<MshuaIndividual>? mshuaIndividual;
+
+  Policies({this.mshuaIndividual});
+
+  Policies.fromJson(Map<String, dynamic> json) {
+    if (json['mshua_individual'] != null) {
+      mshuaIndividual = <MshuaIndividual>[];
+      json['mshua_individual'].forEach((v) {
+        mshuaIndividual!.add(new MshuaIndividual.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.mshuaIndividual != null) {
+      data['mshua_individual'] =
+          this.mshuaIndividual!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class MshuaIndividual {
   String? guid;
-  String? granularity;
-  int? cardinality;
+  String? channel;
+  String? status;
+  bool? active;
+  bool? debit;
+  String? customerGuid;
+  String? policyNumber;
+  String? customerFullName;
+  String? customerMsisdn;
   String? productGuid;
-  int? amountInCents;
+  String? partnerGuid;
+  String? productName;
+  String? productType;
+  String? productCoverType;
+  int? productVariableBenefit;
+  int? productFixedBenefit;
+  bool? productCashbackEnabled;
+  String? startDate;
+  String? endDate;
+  bool? hasCoolOff;
   String? paymentMethod;
+  int? balanceInCents;
 
-  Premiums(
+  MshuaIndividual(
       {this.guid,
-      this.granularity,
-      this.cardinality,
+      this.channel,
+      this.status,
+      this.active,
+      this.debit,
+      this.customerGuid,
+      this.policyNumber,
+      this.customerFullName,
+      this.customerMsisdn,
       this.productGuid,
-      this.amountInCents,
-      this.paymentMethod});
+      this.partnerGuid,
+      this.productName,
+      this.productType,
+      this.productCoverType,
+      this.productVariableBenefit,
+      this.productFixedBenefit,
+      this.productCashbackEnabled,
+      this.startDate,
+      this.endDate,
+      this.hasCoolOff,
+      this.paymentMethod,
+      this.balanceInCents});
 
-  Premiums.fromJson(Map<String, dynamic> json) {
+  MshuaIndividual.fromJson(Map<String, dynamic> json) {
     guid = json['guid'];
-    granularity = json['granularity'];
-    cardinality = json['cardinality'];
+    channel = json['channel'];
+    status = json['status'];
+    active = json['active'];
+    debit = json['debit'];
+    customerGuid = json['customer_guid'];
+    policyNumber = json['policy_number'];
+    customerFullName = json['customer_full_name'];
+    customerMsisdn = json['customer_msisdn'];
     productGuid = json['product_guid'];
-    amountInCents = json['amount_in_cents'];
+    partnerGuid = json['partner_guid'];
+    productName = json['product_name'];
+    productType = json['product_type'];
+    productCoverType = json['product_cover_type'];
+    productVariableBenefit = json['product_variable_benefit'];
+    productFixedBenefit = json['product_fixed_benefit'];
+    productCashbackEnabled = json['product_cashback_enabled'];
+    startDate = json['start_date'];
+    endDate = json['end_date'];
+    hasCoolOff = json['has_cool_off'];
     paymentMethod = json['payment_method'];
+    balanceInCents = json['balance_in_cents'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['guid'] = this.guid;
-    data['granularity'] = this.granularity;
-    data['cardinality'] = this.cardinality;
+    data['channel'] = this.channel;
+    data['status'] = this.status;
+    data['active'] = this.active;
+    data['debit'] = this.debit;
+    data['customer_guid'] = this.customerGuid;
+    data['policy_number'] = this.policyNumber;
+    data['customer_full_name'] = this.customerFullName;
+    data['customer_msisdn'] = this.customerMsisdn;
     data['product_guid'] = this.productGuid;
-    data['amount_in_cents'] = this.amountInCents;
+    data['partner_guid'] = this.partnerGuid;
+    data['product_name'] = this.productName;
+    data['product_type'] = this.productType;
+    data['product_cover_type'] = this.productCoverType;
+    data['product_variable_benefit'] = this.productVariableBenefit;
+    data['product_fixed_benefit'] = this.productFixedBenefit;
+    data['product_cashback_enabled'] = this.productCashbackEnabled;
+    data['start_date'] = this.startDate;
+    data['end_date'] = this.endDate;
+    data['has_cool_off'] = this.hasCoolOff;
     data['payment_method'] = this.paymentMethod;
+    data['balance_in_cents'] = this.balanceInCents;
+    return data;
+  }
+}
+
+class Premiums {
+  String? guid;
+  bool? valid;
+  bool? active;
+  String? channel;
+  String? policyGuid;
+  String? productName;
+  int? amountInCents;
+  String? startDate;
+  String? endDate;
+  String? mnoReference;
+  String? subChannel;
+  String? createdAt;
+
+  Premiums(
+      {this.guid,
+      this.valid,
+      this.active,
+      this.channel,
+      this.policyGuid,
+      this.productName,
+      this.amountInCents,
+      this.startDate,
+      this.endDate,
+      this.mnoReference,
+      this.subChannel,
+      this.createdAt});
+
+  Premiums.fromJson(Map<String, dynamic> json) {
+    guid = json['guid'];
+    valid = json['valid'];
+    active = json['active'];
+    channel = json['channel'];
+    policyGuid = json['policy_guid'];
+    productName = json['product_name'];
+    amountInCents = json['amount_in_cents'];
+    startDate = json['start_date'];
+    endDate = json['end_date'];
+    mnoReference = json['mno_reference'];
+    subChannel = json['sub_channel'];
+    createdAt = json['created_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['guid'] = this.guid;
+    data['valid'] = this.valid;
+    data['active'] = this.active;
+    data['channel'] = this.channel;
+    data['policy_guid'] = this.policyGuid;
+    data['product_name'] = this.productName;
+    data['amount_in_cents'] = this.amountInCents;
+    data['start_date'] = this.startDate;
+    data['end_date'] = this.endDate;
+    data['mno_reference'] = this.mnoReference;
+    data['sub_channel'] = this.subChannel;
+    data['created_at'] = this.createdAt;
     return data;
   }
 }
@@ -242,7 +403,6 @@ class Upsell {
   int? minimumNights;
   int? maximumNights;
   int? fixedBenefitAmount;
-  Null? eligibilityThreshold;
   int? waitingPeriodDays;
   int? minimumAge;
   int? maximumAge;
@@ -253,7 +413,6 @@ class Upsell {
       this.minimumNights,
       this.maximumNights,
       this.fixedBenefitAmount,
-      this.eligibilityThreshold,
       this.waitingPeriodDays,
       this.minimumAge,
       this.maximumAge,
@@ -264,7 +423,6 @@ class Upsell {
     minimumNights = json['minimum_nights'];
     maximumNights = json['maximum_nights'];
     fixedBenefitAmount = json['fixed_benefit_amount'];
-    eligibilityThreshold = json['eligibility_threshold'];
     waitingPeriodDays = json['waiting_period_days'];
     minimumAge = json['minimum_age'];
     maximumAge = json['maximum_age'];
@@ -277,7 +435,6 @@ class Upsell {
     data['minimum_nights'] = this.minimumNights;
     data['maximum_nights'] = this.maximumNights;
     data['fixed_benefit_amount'] = this.fixedBenefitAmount;
-    data['eligibility_threshold'] = this.eligibilityThreshold;
     data['waiting_period_days'] = this.waitingPeriodDays;
     data['minimum_age'] = this.minimumAge;
     data['maximum_age'] = this.maximumAge;

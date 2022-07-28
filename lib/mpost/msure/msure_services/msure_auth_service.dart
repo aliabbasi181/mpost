@@ -31,12 +31,12 @@ class MsureAuthService {
           return false;
         }
         Constants.showLoader("Fetching details...");
-        await msureUserService.getUserDetail();
-        EasyLoading.dismiss();
         MsureConstants.token =
             "${response.data['token_type']} ${response.data['token']}";
         MsureConstants.setToken(
             "${response.data['token_type']} ${response.data['token']}");
+        await msureUserService.getUserDetail();
+        EasyLoading.dismiss();
         return true;
       } else {
         print(response.data);
@@ -61,6 +61,7 @@ class MsureAuthService {
       var nationalId,
       var dateOfBirth,
       var location,
+      var stageId,
       var ntsaNumber) async {
     var headers = {'Accept': 'application/json'};
     Map<String, dynamic> payload = {
@@ -72,22 +73,25 @@ class MsureAuthService {
       "national_id": nationalId,
       "date_of_birth": dateOfBirth,
       "location": location,
-      "ntsa_number": ntsaNumber
+      "ntsa_number": ntsaNumber,
+      "stage_id": stageId.toString()
     };
     print(payload);
     String url = MsureConstants.msureBaseUrl + "/register";
     try {
       var response =
           await http.post(Uri.parse(url), body: payload, headers: headers);
-      print(response.body);
+      var json = jsonDecode(response.body);
+      print(json);
       if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
         MsureConstants.token = "${json['token_type']} ${json['token']}";
         MsureConstants.setToken("${json['token_type']} ${json['token']}");
         SPLocalStorage.setMsureToken(MsureConstants.token);
         print(await SPLocalStorage.preferences!
             .getString(SPLocalStorage.keyMsureToken));
         return true;
+      } else {
+        EasyLoading.showError(json['message']);
       }
     } catch (ex) {
       print(ex);
