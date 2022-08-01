@@ -477,22 +477,22 @@ class _HomeState extends State<Home> {
                           width: Constants.getWidth(context) * 0.20,
                           child: MenuIcon(
                               onPress: () async {
-                                // showDialog(
-                                //   context: context,
-                                //   builder: (BuildContext context) => messageDialog(
-                                //       context,
-                                //       "Coming soon!",
-                                //       "Stay tuned to this. We are launching soon",
-                                //       "OK"),
-                                // );
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => messageDialog(
+                                      context,
+                                      "Coming soon!",
+                                      "Stay tuned to this. We are launching soon",
+                                      "OK"),
+                                );
                                 // String URL =
                                 //     "https://directory.mpostfintech.co.ke/";
                                 // Linking.openMyLink(URL, context);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const Directory()));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             const Directory()));
                               },
                               title: "Directory",
                               image: "asset/images/directory-icon.png"),

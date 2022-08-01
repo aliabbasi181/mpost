@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mpost/blocs/social_auth_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/log_and_reg.dart';
 import 'package:mpost/mpost/activity/activity.dart';
@@ -495,6 +496,9 @@ class _UserProfileState extends State<UserProfile> {
                                 ))) {
                           case "Logout":
                             await DatabaseHandler.instance.removeUser();
+                            await Provider.of<SocailAuthBloc>(context,
+                                    listen: false)
+                                .googleSignOut();
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(

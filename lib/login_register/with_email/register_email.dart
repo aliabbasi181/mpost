@@ -1,5 +1,6 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mpost/blocs/application_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/mpost/nav.dart';
@@ -8,7 +9,8 @@ import 'package:mpost/widgets.dart';
 import 'package:provider/provider.dart';
 
 class RegisterWithEmail extends StatefulWidget {
-  const RegisterWithEmail({Key? key}) : super(key: key);
+  GoogleSignInAccount? googleAccount;
+  RegisterWithEmail({Key? key, this.googleAccount}) : super(key: key);
 
   @override
   _RegisterWithEmailState createState() => _RegisterWithEmailState();
@@ -22,6 +24,14 @@ class _RegisterWithEmailState extends State<RegisterWithEmail> {
   TextEditingController identity = TextEditingController();
   TextEditingController passport = TextEditingController();
   int _value = 2;
+  @override
+  void initState() {
+    if (widget.googleAccount != null) {
+      name.text = widget.googleAccount!.displayName.toString();
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);

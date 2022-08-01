@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mpost/blocs/application_bloc.dart';
+import 'package:mpost/blocs/social_auth_bloc.dart';
 import 'package:mpost/constants.dart';
 import 'package:mpost/login_register/with_email/register_email.dart';
 import 'package:mpost/mpost/nav.dart';
@@ -23,6 +25,22 @@ class _LoginSignupEmailState extends State<LoginSignupEmail> {
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
   bool _hidePassword = true;
+  GoogleSignInAccount? googleAccount;
+
+  _signInWithGoogle() async {
+    try {
+      googleAccount = await Provider.of<SocailAuthBloc>(context, listen: false)
+          .googleLogin();
+      if (googleAccount != null) {
+        if (!loginSelected) {
+          email.text = googleAccount!.email;
+        }
+      }
+    } catch (ex) {
+      print(ex);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicaitonBloc>(context);
@@ -130,7 +148,8 @@ class _LoginSignupEmailState extends State<LoginSignupEmail> {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap: () {
+                          onTap: () async {
+                            // await _signInWithGoogle();
                             showDialog(
                               context: context,
                               builder: (BuildContext context) => messageDialog(
@@ -377,7 +396,7 @@ class _LoginSignupEmailState extends State<LoginSignupEmail> {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap: () {
+                          onTap: () async {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) => messageDialog(
@@ -386,6 +405,7 @@ class _LoginSignupEmailState extends State<LoginSignupEmail> {
                                   "Stay tuned to this. We are launching soon",
                                   "OK"),
                             );
+                            //await _signInWithGoogle();
                           },
                           child: Container(
                             margin: const EdgeInsets.only(top: 15),
@@ -532,8 +552,9 @@ class _LoginSignupEmailState extends State<LoginSignupEmail> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RegisterWithEmail()));
+                                      builder: (context) => RegisterWithEmail(
+                                            googleAccount: googleAccount,
+                                          )));
                             }),
                         const SizedBox(
                           height: 20,

@@ -13,6 +13,7 @@ import 'package:mpost/mpost/msure/dashboard/msure_dashboard.dart';
 import 'package:mpost/mpost/msure/insurance/insurance_home.dart';
 import 'package:mpost/mpost/msure/msure_constants.dart';
 import 'package:mpost/mpost/msure/msure_payments/payments_select_amount.dart';
+import 'package:mpost/mpost/msure/msure_profile.dart';
 import 'package:mpost/mpost/msure/single_msure_plain.dart';
 import 'package:mpost/mpost/msure/widgets.dart';
 import 'package:provider/provider.dart';
@@ -515,7 +516,7 @@ class _MSUREHome2State extends State<MSUREHome2> {
                       height: 27,
                     ),
                     title: "Dashboard",
-                    subTitle: "Maecenas egestas donec sed interdum tristique",
+                    subTitle: "Overview of your payments & claims",
                     iconBackgroundColor: const Color(0xff60D836),
                     onTap: () {
                       Navigator.push(
@@ -530,7 +531,7 @@ class _MSUREHome2State extends State<MSUREHome2> {
                       color: Colors.white,
                     ),
                     title: "Payments",
-                    subTitle: "Maecenas egestas donec sed interdum tristique",
+                    subTitle: "Make your daily payments here",
                     iconBackgroundColor: const Color(0xff4D36D8),
                     onTap: () {
                       Navigator.push(
@@ -550,7 +551,8 @@ class _MSUREHome2State extends State<MSUREHome2> {
                       color: Colors.white,
                     ),
                     title: "Insurance",
-                    subTitle: "Maecenas egestas donec sed interdum tristique",
+                    subTitle:
+                        "Check policy status, add a cover or make a claim",
                     iconBackgroundColor: const Color(0xff36D8CE),
                     onTap: () {
                       Navigator.push(
@@ -565,9 +567,14 @@ class _MSUREHome2State extends State<MSUREHome2> {
                       color: Colors.white,
                     ),
                     title: "Personal Details",
-                    subTitle: "Maecenas egestas donec sed interdum tristique",
+                    subTitle: "Update your personal details",
                     iconBackgroundColor: const Color(0xffD8AB36),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MSUREProfile()));
+                    },
                   )
                 ],
               ),
@@ -580,7 +587,7 @@ class _MSUREHome2State extends State<MSUREHome2> {
                       color: Colors.white,
                     ),
                     title: "Contact us",
-                    subTitle: "Maecenas egestas donec sed interdum tristique",
+                    subTitle: "Need any help? Get in touch with us",
                     iconBackgroundColor: const Color(0xffD536D8),
                     onTap: () {
                       Navigator.push(
@@ -595,7 +602,7 @@ class _MSUREHome2State extends State<MSUREHome2> {
                       color: Colors.white,
                     ),
                     title: "About Msure",
-                    subTitle: "Maecenas egestas donec sed interdum tristique",
+                    subTitle: "Who we are and how Msure works",
                     iconBackgroundColor: const Color(0xffD8364D),
                     onTap: () {
                       Navigator.push(
